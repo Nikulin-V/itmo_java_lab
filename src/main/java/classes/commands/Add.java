@@ -37,9 +37,6 @@ public class Add extends NamedCommand implements Commandable {
             Movie movie = inputHandler.readMovie();
             collectionManager.addMovie(movie);
         }
-        InputHandler inputHandler = new InputHandler();
-        Movie movie = inputHandler.readMovie();
-        collectionManager.addMovie(movie);
     }
 
 }
