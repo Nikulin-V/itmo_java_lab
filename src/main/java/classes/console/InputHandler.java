@@ -33,6 +33,16 @@ public class InputHandler {
         return movie;
     }
 
+    public Movie updateMovie(Movie movie) {
+            movie.setName(readMovieName());
+            movie.setCoordinates(readCoordinates());
+            movie.setOscarsCount(readOscarsCount());
+            movie.setGoldenPalmCount(readGoldenPalmCount());
+            movie.setBudget(readBudget());
+            movie.setMpaaRating(readMpaaRating());
+            movie.setDirector(readDirector());
+        return movie;
+    }
     private Person readDirector() {
         System.out.println(TextColor.green("Director: "));
         Person director = null;
