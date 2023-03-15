@@ -35,5 +35,4 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
         } else System.out.println(TextColor.yellow("Неверное количество аргументов для этой команды\n" +
                 "Введите имя режиссёра без пробелов"));
     }
-
 }
