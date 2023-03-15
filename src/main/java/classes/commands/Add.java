@@ -18,9 +18,8 @@ public class Add extends NamedCommand implements Commandable {
 
     @Override
     public void execute(String... args) {
-
         CollectionManager collectionManager = new CollectionManager();
-        if (Objects.equals(args[0], "random")) {
+        if (args != null && (Objects.equals(args[0], "random"))) {
             if (args.length == 2) {
                 int m = Integer.parseInt(args[1]);
                 for (int i = 0; i < m; i++) {
@@ -31,7 +30,6 @@ public class Add extends NamedCommand implements Commandable {
             } else {
                 System.out.println(TextColor.yellow("Неверное количество аргументов для этой команды"));
             }
-
         } else {
             InputHandler inputHandler = new InputHandler();
             Movie movie = inputHandler.readMovie();
