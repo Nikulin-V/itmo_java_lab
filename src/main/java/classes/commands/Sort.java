@@ -45,5 +45,4 @@ public class Sort extends NamedCommand implements Commandable {
             System.out.println(TextColor.cyan("Коллекция успешно отсортирована в порядке убывания"));
         } else System.out.println(TextColor.cyan("Коллекция пустая, нечего сортировать"));
     }
-
 }
