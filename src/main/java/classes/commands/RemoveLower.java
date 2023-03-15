@@ -17,7 +17,6 @@ public class RemoveLower extends NamedCommand implements Commandable {
     public String getInfo() {
         return getName() + "\t-\tудалить из коллекции все элементы, меньшие, чем заданный";
     }
-
     @Override
     public void execute(String... args) {
         if (args.length == 2) {
@@ -31,11 +30,6 @@ public class RemoveLower extends NamedCommand implements Commandable {
             } catch (NullValueException e) {
                 e.printMessage();
             }
-
-        } else {
-            System.out.println(TextColor.yellow("Некорректный ввод. Введите координаты в формате: x y"));
-        }
-
-
+        } else System.out.println(TextColor.yellow("Некорректный ввод. Введите координаты в формате: x y"));
     }
 }

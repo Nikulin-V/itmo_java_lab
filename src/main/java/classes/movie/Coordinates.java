@@ -62,12 +62,10 @@ public class Coordinates implements Comparable<Coordinates> {
 
     @Override
     public int compareTo(Coordinates o) {
-        if ((getX() == o.getX()) && (getY()==o.getY())){
+        if ((getX() == o.getX()) && (getY()==o.getY()))
             return 0;
-        }else if (getX() != o.getX()){
+        else if (getX() != o.getX())
             return (int) (o.getX() - getX());
-        }else{
-            return o.getY() - getY();
-        }
+        else return o.getY() - getY();
     }
 }
