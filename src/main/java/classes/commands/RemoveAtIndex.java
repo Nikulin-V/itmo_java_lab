@@ -9,7 +9,7 @@ public class RemoveAtIndex extends NamedCommand implements Commandable {
 
     @Override
     public String getInfo() {
-        return getName() + "\t-\tудалить элемент, находящийся в заданной позиции коллекции (index)";
+        return getName() + " <index>\t-\tудалить элемент, находящийся в заданной позиции коллекции";
     }
 
     @Override
@@ -25,6 +25,6 @@ public class RemoveAtIndex extends NamedCommand implements Commandable {
                 System.out.println(TextColor.yellow("Введенный индекс выходит за пределы размера нынешней коллекции"));
             }
         } else
-            System.out.println(TextColor.yellow("Неверный формат ввода. Введите индекс в формате целочисленного числа через пробел"));
+            System.out.println(TextColor.yellow("Неверное количество аргументов. Введите индекс в формате целочисленного числа через пробел"));
     }
 }

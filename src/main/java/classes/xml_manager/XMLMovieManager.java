@@ -3,6 +3,7 @@ package classes.xml_manager;
 import classes.DataStorage;
 import classes.console.TextColor;
 import classes.movie.Movies;
+import exceptions.DangerException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -74,10 +75,11 @@ public class XMLMovieManager {
             writer.print(sw);
             writer.close();
         } catch (FileNotFoundException e) {
-            System.out.println(TextColor.grey("File not found error"));
-            e.printStackTrace();
+            new DangerException("Файл не найден").printMessage();
         } catch (IOException e) {
-            System.out.println(TextColor.grey("An IO error occurred"));
+            new DangerException("Ошибка ввода-вывода").printMessage();
+
+            System.out.println(TextColor.grey("File not found error"));
             e.printStackTrace();
         } catch (JAXBException e) {
             System.out.println(TextColor.grey("Ошибка чтения XML файла"));
