@@ -5,7 +5,7 @@ import classes.collection.CollectionManager;
 import classes.console.TextColor;
 import interfaces.Commandable;
 
-public class RemoveAtIndex extends NamedCommand implements Commandable {
+public class RemoveAt extends NamedCommand implements Commandable {
 
     @Override
     public String getInfo() {
