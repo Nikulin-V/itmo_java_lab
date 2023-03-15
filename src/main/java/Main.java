@@ -37,30 +37,33 @@ public class Main {
                 for (Movie movie : enteredMovies) {
                     cm.addMovie(movie);
                 }
+                System.out.println(TextColor.purple("Файл коллекции был прочитан..."));
             } else {
-                System.out.println(TextColor.purple("Провал\nВводите в аргументы программы только одно слово - имя файла с расширением"));
-                Runtime.getRuntime().exit(0);
+                System.out.println(TextColor.purple("Файл коллекции оказался пуст"));
             }
-            while (true) {
-                System.out.print(TextColor.green("> "));
-                try {
-                    String inputString = scanner.nextLine();
-                    String commandName = inputString.split(" ")[0];
-                    String[] commandArgument = null;
-                    if (inputString.split(" ").length > 1) {
-                        String[] arr = inputString.split(" ");
-                        commandArgument = Arrays.copyOfRange(arr, 1, arr.length);
-                    }
-                    if (!commandName.isBlank()) {
-                        Commandable command = commandHandler.getCommand(commandName);
-                        command.execute(commandArgument);
-                    }
-                } catch (NoSuchCommandException e) {
-                    e.printMessage();
-                } catch (NoSuchMethodException | InvocationTargetException |
-                         InstantiationException | IllegalAccessException e) {
-                    new SystemException().printMessage();
+        } else {
+            System.out.println(TextColor.purple("Провал\nВводите в аргументы программы только одно слово - имя файла с расширением"));
+            Runtime.getRuntime().exit(0);
+        }
+        while (true) {
+            System.out.print(TextColor.green("> "));
+            try {
+                String inputString = scanner.nextLine();
+                String commandName = inputString.split(" ")[0];
+                String[] commandArgument = null;
+                if (inputString.split(" ").length > 1) {
+                    String[] arr = inputString.split(" ");
+                    commandArgument = Arrays.copyOfRange(arr, 1, arr.length);
                 }
+                if (!commandName.isBlank()) {
+                    Commandable command = commandHandler.getCommand(commandName);
+                    command.execute(commandArgument);
+                }
+            } catch (NoSuchCommandException e) {
+                e.printMessage();
+            } catch (NoSuchMethodException | InvocationTargetException |
+                     InstantiationException | IllegalAccessException e) {
+                new SystemException().printMessage();
             }
         }
     }
