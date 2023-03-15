@@ -104,12 +104,12 @@ public class XMLMovieManager {
 
 
     public static List<String> readEmptyXMLCollection() throws IOException {
-        List<String> strs = new ArrayList<>();
+        List<String> strings = new ArrayList<>();
         BufferedReader in = new BufferedReader(new FileReader(DataStorage.EMPTY_STORAGE_SAMPLE_FILE_PATH));
         String str;
         while ((str = in.readLine()) != null) {
-            strs.add(str);
+            strings.add(str);
         }
-        return strs;
+        return strings;
     }
 }

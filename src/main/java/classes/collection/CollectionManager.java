@@ -3,10 +3,13 @@ package classes.collection;
 import classes.movie.Movie;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 public class CollectionManager {
     private static ArrayList<Movie> collection = null;
+    private static final String type = "ArrayList";
+    private static final Date initDate = new Date();
 
     public CollectionManager() {
         if (CollectionManager.collection == null)
@@ -15,6 +18,14 @@ public class CollectionManager {
 
     public ArrayList<Movie> getCollection() {
         return CollectionManager.collection;
+    }
+
+    public static String getType() {
+        return type;
+    }
+
+    public static Date getInitDate() {
+        return initDate;
     }
 
     public void addMovie(Movie movie) {
