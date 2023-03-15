@@ -10,6 +10,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static classes.xml_manager.XMLMovieManager.readEmptyXMLCollection;
+
 public class ClearFile extends NamedCommand implements Commandable {
 
     @Override
@@ -33,14 +35,5 @@ public class ClearFile extends NamedCommand implements Commandable {
         return getName() + " <file_name>\t-\tочистить файл коллекции";
     }
 
-    List<String> readEmptyXMLCollection() throws IOException {
-        List<String> strings = new ArrayList<>();
-        BufferedReader in = new BufferedReader(new FileReader(DataStorage.EMPTY_STORAGE_SAMPLE_FILE_PATH));
-        String str;
-        while ((str = in.readLine()) != null) {
-            strings.add(str);
-        }
-        return strings;
-    }
 }
 
