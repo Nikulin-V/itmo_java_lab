@@ -10,11 +10,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static classes.xml_manager.XMLMovieManager.readEmptyXMLCollection;
+
 public class ClearFile extends NamedCommand implements Commandable {
 
     @Override
     public void execute(String... args) {
-        File file = new File(DataStorage.STORAGE_FILE_PATH);
+        File file = new File(DataStorage.getCurrentStorageFilePath());
         try {
             PrintWriter writer = new PrintWriter(file);
             writer.print("");
@@ -30,17 +32,8 @@ public class ClearFile extends NamedCommand implements Commandable {
 
     @Override
     public String getInfo() {
-        return getName() + "\t-\tочистить файл коллекции";
+        return getName() + " <file_name>\t-\tочистить файл коллекции";
     }
 
-    List<String> readEmptyXMLCollection() throws IOException {
-        List<String> strs = new ArrayList<>();
-        BufferedReader in = new BufferedReader(new FileReader(DataStorage.EMPTY_STORAGE_SAMPLE_FILE_PATH));
-        String str;
-        while ((str = in.readLine()) != null) {
-            strs.add(str);
-        }
-        return strs;
-    }
 }
 

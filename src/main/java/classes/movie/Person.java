@@ -14,6 +14,8 @@ public class Person {
     private String passportID; //Значение этого поля должно быть уникальным, Длина строки должна быть не меньше 7, Строка не может быть пустой, Поле не может быть null
     private Color eyeColor; //Поле не может быть null
 
+    private Person(){}
+
     public Person(String name, Date birthday, Double height, String passportID, Color eyeColor) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
         this.name = new FieldHandler(name, NOT_NULL, NOT_BLANK).handleString();
         this.birthday = birthday;
