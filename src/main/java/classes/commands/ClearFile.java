@@ -14,7 +14,7 @@ public class ClearFile extends NamedCommand implements Commandable {
 
     @Override
     public void execute(String... args) {
-        File file = new File(DataStorage.STORAGE_FILE_PATH);
+        File file = new File(DataStorage.getCurrentStorageFilePath());
         try {
             PrintWriter writer = new PrintWriter(file);
             writer.print("");

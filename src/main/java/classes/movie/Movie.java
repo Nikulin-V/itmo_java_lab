@@ -95,6 +95,10 @@ public class Movie {
         return creationDate;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * Restrictions: Field should be unique & generating automatically
      *
