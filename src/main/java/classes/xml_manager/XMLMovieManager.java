@@ -3,6 +3,7 @@ package classes.xml_manager;
 import classes.DataStorage;
 import classes.console.TextColor;
 import classes.movie.Movies;
+import exceptions.DangerException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -104,12 +105,40 @@ public class XMLMovieManager {
 
 
 
+
     public static List<String> readEmptyXMLCollection() throws IOException {
         List<String> strs = new ArrayList<>();
         BufferedReader in = new BufferedReader(new FileReader(DataStorage.EMPTY_STORAGE_SAMPLE_FILE_PATH));
         String str;
         while ((str = in.readLine()) != null) {
             strs.add(str);
+
+    public void saveCollectionToXML(Movies movies) {
+        JAXBContext jaxbContext;
+        try {
+            jaxbContext = JAXBContext.newInstance(BASE_CLASS);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            File file = new File(DataStorage.getCurrentStorageFilePath());
+            file.createNewFile(); // checks existence of file and create if necessary
+            Movies m = new Movies();
+            StringWriter sw = new StringWriter();
+            jaxbMarshaller.marshal(movies, sw);
+            sw.close();
+            PrintWriter writer = new PrintWriter(DataStorage.getCurrentStorageFilePath());
+            writer.print(sw);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            new DangerException("Файл не найден").printMessage();
+        } catch (IOException e) {
+            new DangerException("Ошибка ввода-вывода").printMessage();
+
+            System.out.println(TextColor.grey("File not found error"));
+            e.printStackTrace();
+        } catch (JAXBException e) {
+            System.out.println(TextColor.grey("Ошибка чтения XML файла"));
+            e.printStackTrace();
+
         }
         return strs;
     }

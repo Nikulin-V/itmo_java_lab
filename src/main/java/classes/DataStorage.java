@@ -11,6 +11,8 @@ public class DataStorage {
     public final static String EMPTY_STORAGE_SAMPLE_FILE_PATH = "src/main/resources/empty_collection_sample.xml";
     public final static String XML = ".xml";
 
+
+
     public static String getCurrentStorageFilePath() {
         return CURRENT_STORAGE_FILE_PATH;
     }
@@ -26,4 +28,5 @@ public class DataStorage {
     public static void setCurrentStorageFileName(String currentStorageFileName) {
         CURRENT_STORAGE_FILE_NAME = currentStorageFileName;
     }
+
 }

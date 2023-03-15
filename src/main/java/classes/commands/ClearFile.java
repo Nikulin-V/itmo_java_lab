@@ -32,9 +32,8 @@ public class ClearFile extends NamedCommand implements Commandable {
 
     @Override
     public String getInfo() {
-        return getName() + "\t-\tочистить файл коллекции";
+        return getName() + " <file_name>\t-\tочистить файл коллекции";
     }
-
 
 }
 
