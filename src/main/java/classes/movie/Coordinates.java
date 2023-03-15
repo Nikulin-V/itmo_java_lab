@@ -50,8 +50,8 @@ public class Coordinates implements Comparable<Coordinates> {
     public boolean equals(Object obj) {
         return (
                 obj instanceof Coordinates &&
-                        this.getX() == ((Coordinates) obj).getX() &&
-                        this.getY() == ((Coordinates) obj).getY()
+                this.getX() == ((Coordinates) obj).getX() &&
+                this.getY() == ((Coordinates) obj).getY()
         );
     }
 
@@ -65,7 +65,7 @@ public class Coordinates implements Comparable<Coordinates> {
         if ((getX() == o.getX()) && (getY()==o.getY()))
             return 0;
         else if (getX() != o.getX())
-            return (int) (o.getX() - getX());
-        else return o.getY() - getY();
+                return (int) (o.getX() - getX());
+             return o.getY() - getY();
     }
 }
