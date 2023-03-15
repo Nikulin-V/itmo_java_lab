@@ -17,6 +17,7 @@ public class RemoveLower extends NamedCommand implements Commandable {
     public String getInfo() {
         return getName() + "\t-\tудалить из коллекции все элементы, меньшие, чем заданный";
     }
+    
     @Override
     public void execute(String... args) {
         if (args.length == 2) {
