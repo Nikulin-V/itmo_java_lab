@@ -6,9 +6,9 @@ import classes.NamedCommand;
 import classes.console.TextColor;
 import interfaces.Commandable;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import static classes.xml_manager.XMLMovieManager.readEmptyXMLCollection;
 
@@ -19,10 +19,7 @@ public class ClearFile extends NamedCommand implements Commandable {
         File file = new File(DataStorage.getCurrentStorageFilePath());
         try {
             PrintWriter writer = new PrintWriter(file);
-            writer.print("");
-            for (String line : readEmptyXMLCollection()) {
-                writer.print(line + "\n");
-            }
+            writer.print(readEmptyXMLCollection());
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

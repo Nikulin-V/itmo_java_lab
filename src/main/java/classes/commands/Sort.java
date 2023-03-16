@@ -22,9 +22,8 @@ public class Sort extends NamedCommand implements Commandable {
         List<Coordinates> moviesCoordinatesList = new ArrayList<>();
         CollectionManager collectionManager = new CollectionManager();
         if (!collectionManager.getCollection().isEmpty()) {
-            for (Movie movies : collectionManager.getCollection()) {
+            for (Movie movies : collectionManager.getCollection())
                 moviesCoordinatesList.add(movies.getCoordinates());
-            }
             moviesCoordinatesList.sort((o1, o2) -> {
                 Long x1 = o1.getX();
                 Long y1 = (long) o1.getY();
