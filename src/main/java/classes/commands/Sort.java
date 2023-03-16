@@ -22,25 +22,7 @@ public class Sort extends NamedCommand implements Commandable {
         List<Coordinates> moviesCoordinatesList = new ArrayList<>();
         CollectionManager collectionManager = new CollectionManager();
         if (!collectionManager.getCollection().isEmpty()) {
-            for (Movie movies : collectionManager.getCollection())
-                moviesCoordinatesList.add(movies.getCoordinates());
-            moviesCoordinatesList.sort((o1, o2) -> {
-                Long x1 = o1.getX();
-                Long y1 = (long) o1.getY();
-                Long x2 = o2.getX();
-                Long y2 = (long) o2.getY();
-                return !x1.equals(x2) ? x1.compareTo(x2) : y1.compareTo(y2);
-            });
-            for (int i = 0; i < moviesCoordinatesList.size(); i++) {
-                Coordinates m = moviesCoordinatesList.get(i);
-                ArrayList<Movie> collection = collectionManager.getCollection();
-                for (int j = 0; j < collection.size(); j++) {
-                    Movie movies = collection.get(j);
-                    if (m.equals(movies.getCoordinates())) {
-                        Collections.swap(collectionManager.getCollection(), i, j);
-                    }
-                }
-            }
+           CollectionManager.sort(collectionManager.getCollection());
             System.out.println(TextColor.cyan("Коллекция успешно отсортирована в порядке убывания"));
         } else System.out.println(TextColor.cyan("Коллекция пустая, нечего сортировать"));
     }
