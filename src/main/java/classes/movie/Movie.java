@@ -38,7 +38,7 @@ public class Movie {
                  Float budget,
                  MpaaRating mpaaRating,
                  Person director) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
-        id = java.util.UUID.randomUUID();
+        id = generateUUID();
         this.name = new FieldHandler(name, FieldProperty.NOT_NULL, FieldProperty.NOT_BLANK).handleString();
         this.coordinates = (Coordinates) new FieldHandler(coordinates, FieldProperty.NOT_NULL).handleObject();
         creationDate = new Date();
@@ -47,6 +47,10 @@ public class Movie {
         this.budget = new FieldHandler(budget, FieldProperty.GREAT_THAN_ZERO).handleFloat();
         this.mpaaRating = mpaaRating;
         this.director = (Person) new FieldHandler(director, FieldProperty.NOT_NULL).handleObject();
+    }
+
+    private UUID generateUUID() {
+        return java.util.UUID.randomUUID();
     }
 
     /**

@@ -9,8 +9,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -38,10 +36,7 @@ public class XMLMovieManager {
                 System.out.println(TextColor.cyan("Файл коллекции по-умолчанию не был найден, был создан новый"));
                 try {
                     PrintWriter writer = new PrintWriter(file);
-                    writer.print("");
-                    for (String line : readEmptyXMLCollection()) {
-                        writer.print(line + "\n");
-                    }
+                    writer.print(readEmptyXMLCollection());
                     writer.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -103,13 +98,10 @@ public class XMLMovieManager {
     }
 
 
-    public static List<String> readEmptyXMLCollection() throws IOException {
-        List<String> strings = new ArrayList<>();
-        BufferedReader in = new BufferedReader(new FileReader(DataStorage.EMPTY_STORAGE_SAMPLE_FILE_PATH));
-        String str;
-        while ((str = in.readLine()) != null) {
-            strings.add(str);
-        }
-        return strings;
+    public static String readEmptyXMLCollection() throws IOException {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                "<movies>\n" +
+                "\n" +
+                "</movies>";
     }
 }

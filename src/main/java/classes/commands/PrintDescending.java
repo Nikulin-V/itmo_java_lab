@@ -24,7 +24,6 @@ public class PrintDescending extends NamedCommand implements Commandable {
         for (Movie movies : collectionManager.getCollection()) {
             moviesCoordinatesList.add(movies.getCoordinates());
         }
-
         moviesCoordinatesList.sort((o1, o2) -> {
             Long x1 = o1.getX();
             Long y1 = (long) o1.getY();

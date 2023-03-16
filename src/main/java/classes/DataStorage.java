@@ -7,8 +7,6 @@ public class DataStorage {
     public static String CURRENT_STORAGE_FILE_PATH;
     public static String CURRENT_STORAGE_FILE_NAME;
     public final static String DEFAULT_STORAGE_FILE_NAME = "storage.xml";
-    public final static String EMPTY_STORAGE_SAMPLE_FILE_NAME = "empty_collection_sample.xml";
-    public final static String EMPTY_STORAGE_SAMPLE_FILE_PATH = "src/main/resources/empty_collection_sample.xml";
     public final static String XML = ".xml";
 
 

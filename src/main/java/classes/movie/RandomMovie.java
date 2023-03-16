@@ -7,9 +7,8 @@ import java.util.Random;
 public class RandomMovie {
     public static Movie generate() {
         Random r = new Random();
-        Person director;
         try {
-            director = new Person(
+            Person director = new Person(
                     "Director" + r.nextInt(100),
                     null,
                     null,
