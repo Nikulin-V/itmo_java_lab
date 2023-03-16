@@ -15,10 +15,10 @@ public class Info extends NamedCommand implements Commandable {
     public void execute(String... args) {
         CollectionManager collectionManager = new CollectionManager();
         System.out.println(TextColor.cyan(
-                "Info:\n" +
-                        "\tType: " + CollectionManager.getType() + "\n" +
-                        "\tInitialization date: " + CollectionManager.getInitDate() + "\n" +
-                        "\tLength: " + collectionManager.getCollection().size()
+                "Информация о коллекции:\n" +
+                        "\tТип коллекции: " + CollectionManager.getType() + "\n" +
+                        "\tДата инициализации: " + CollectionManager.getInitDate() + "\n" +
+                        "\tКоличество элементов: " + collectionManager.getCollection().size()
         ));
     }
 
