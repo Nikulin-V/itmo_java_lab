@@ -18,13 +18,12 @@ public class Add extends NamedCommand implements Commandable {
 
     @Override
     public void execute(String... args) {
-        CollectionManager collectionManager = new CollectionManager();
         if (args == null) {
             InputHandler inputHandler = new InputHandler();
             Movie movie = inputHandler.readMovie();
-            collectionManager.addMovie(movie);
+            CollectionManager.addMovie(movie);
         } else if (args.length == 1 && Objects.equals(args[0], "random")) {
-            collectionManager.addMovie(RandomMovie.generate());
+            CollectionManager.addMovie(RandomMovie.generate());
         } else new WarningException("У команды не должно быть аргументов или аргумент \"random\"").printMessage();
     }
 }

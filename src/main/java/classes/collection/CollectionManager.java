@@ -1,8 +1,10 @@
 package classes.collection;
 
+import classes.DataStorage;
 import classes.console.TextColor;
 import classes.movie.Coordinates;
 import classes.movie.Movie;
+import classes.xml_manager.XMLMovieManager;
 
 import java.util.*;
 
@@ -28,7 +30,7 @@ public class CollectionManager {
         return initDate;
     }
 
-    public void addMovie(Movie movie) {
+    public static void addMovie(Movie movie) {
         CollectionManager.collection.add(movie);
     }
 
@@ -74,5 +76,26 @@ public class CollectionManager {
                     Collections.swap(collection, i, j);
             }
         }
+    }
+
+    public static void readFile(String[] args) {
+        if (args.length > 1) {
+            System.out.println(TextColor.purple("Провал\nВводите в аргументы программы только одно слово - имя файла с расширением"));
+            Runtime.getRuntime().exit(0);
+        }
+        List<Movie> enteredMovies;
+        if (args.length == 0) {
+            System.out.println(TextColor.purple("Файл коллекции не был указан. Была выбран файл коллекции по умолчанию"));
+            DataStorage.setCurrentStorageFilePath(DataStorage.DEFAULT_STORAGE_FILE_PATH);
+            enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML().getMovies();
+        } else {
+            System.out.println(TextColor.purple("Пытаюсь прочитать файл коллекции..."));
+            enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML(args[0]).getMovies();
+        }
+        if (enteredMovies != null && !enteredMovies.isEmpty()) {
+            for (Movie movie : enteredMovies)
+                addMovie(movie);
+            System.out.println(TextColor.purple("Файл коллекции был прочитан..."));
+        } else System.out.println(TextColor.purple("Файл коллекции оказался пуст"));
     }
 }
