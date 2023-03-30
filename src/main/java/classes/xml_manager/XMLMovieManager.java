@@ -1,13 +1,11 @@
 package classes.xml_manager;
 
 import classes.DataStorage;
+import classes.commands.Exit;
 import classes.console.TextColor;
 import classes.movie.Movies;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import java.io.*;
 
 
@@ -27,7 +25,7 @@ public class XMLMovieManager {
     }
 
     public Movies readCollectionFromXML() {
-        Movies movies;
+        Movies movies = null;
         try {
             JAXBContext context = JAXBContext.newInstance(BASE_CLASS);
             Unmarshaller jaxbUnmarshaller = context.createUnmarshaller();
@@ -43,10 +41,13 @@ public class XMLMovieManager {
                 }
             }
             movies = (Movies) jaxbUnmarshaller.unmarshal(file);
-            return movies;
+        } catch (UnmarshalException e) {
+            System.out.println(TextColor.red("Нарушена структура файла"));
+            new Exit().execute();
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
+        return movies;
     }
 
     public Movies readCollectionFromXML(String filepath) {
@@ -64,6 +65,9 @@ public class XMLMovieManager {
             JAXBContext context = JAXBContext.newInstance(BASE_CLASS);
             Unmarshaller jaxbUnmarshaller = context.createUnmarshaller();
             movies = (Movies) jaxbUnmarshaller.unmarshal(file);
+        } catch (UnmarshalException e) {
+            System.out.println(TextColor.red("Нарушена структура файла"));
+            new Exit().execute();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
