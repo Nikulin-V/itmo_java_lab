@@ -23,7 +23,9 @@ public class Add extends NamedCommand implements Commandable {
             Movie movie = inputHandler.readMovie();
             CollectionManager.addMovie(movie);
         } else if (args.length == 1 && Objects.equals(args[0], "random")) {
-            CollectionManager.addMovie(RandomMovie.generate());
+            Movie movie = RandomMovie.generate();
+            if (movie != null)
+                CollectionManager.addMovie(movie);
         } else new WarningException("У команды не должно быть аргументов или аргумент \"random\"").printMessage();
     }
 }
