@@ -7,14 +7,9 @@ import classes.movie.Movie;
 import java.util.*;
 
 public class CollectionManager {
-    private static ArrayList<Movie> collection = null;
+    private static final ArrayList<Movie> collection = new ArrayList<>();
     private static final String type = "ArrayList";
     private static final Date initDate = new Date();
-
-    public CollectionManager() {
-        if (CollectionManager.collection == null)
-            CollectionManager.collection = new ArrayList<>();
-    }
 
     public ArrayList<Movie> getCollection() {
         return CollectionManager.collection;

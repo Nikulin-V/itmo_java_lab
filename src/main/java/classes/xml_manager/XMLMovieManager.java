@@ -44,8 +44,7 @@ public class XMLMovieManager {
         } catch (UnmarshalException e) {
             System.out.println(TextColor.red("Нарушена структура файла"));
             new Exit().execute();
-        }
-        catch (JAXBException e) {
+        } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
         return movies;
@@ -66,6 +65,9 @@ public class XMLMovieManager {
             JAXBContext context = JAXBContext.newInstance(BASE_CLASS);
             Unmarshaller jaxbUnmarshaller = context.createUnmarshaller();
             movies = (Movies) jaxbUnmarshaller.unmarshal(file);
+        } catch (UnmarshalException e) {
+            System.out.println(TextColor.red("Нарушена структура файла"));
+            new Exit().execute();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
