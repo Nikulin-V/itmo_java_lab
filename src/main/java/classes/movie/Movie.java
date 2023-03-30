@@ -81,7 +81,7 @@ public class Movie {
     }
 
     /**
-     * Restrictions: Field should be unique & generating automatically
+     * Restrictions: Field should be unique and generating automatically
      *
      * @param coordinates Value of field coordinates
      */
@@ -104,7 +104,7 @@ public class Movie {
     }
 
     /**
-     * Restrictions: Field should be unique & generating automatically
+     * Restrictions: Field should be unique and generating automatically
      *
      * @param creationDate Value of field creationDate
      */
@@ -149,7 +149,7 @@ public class Movie {
     }
 
     /**
-     * Restrictions: Field should be greater than zero & cannot be null
+     * Restrictions: Field should be greater than zero and cannot be null
      *
      * @return Value of field budget
      */

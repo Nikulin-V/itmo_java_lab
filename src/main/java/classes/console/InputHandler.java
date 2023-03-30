@@ -216,8 +216,16 @@ public class InputHandler {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         while (!wasInput) {
             try {
-                directorBirthday = formatter.parse(scanner.nextLine(TextColor.green("Birthday (yyyy-MM-dd): ")));
-                wasInput = true;
+                String inputString = scanner.nextLine(TextColor.green("Birthday (yyyy-MM-dd): "));
+                String[] inputDate = inputString.split("-");
+                if (inputDate.length == 3) {
+                    int month = Integer.parseInt(inputDate[1]);
+                    int day = Integer.parseInt(inputDate[2]);
+                    directorBirthday = formatter.parse(inputString);
+                    if (1 <= month && month <= 12 && 1 <= day && day <= 31)
+                        wasInput = true;
+                    else System.out.println(TextColor.yellow("Неверный формат даты"));
+                } else System.out.println(TextColor.yellow("Неверный формат даты"));
             } catch (ParseException e) {
                 System.out.println(TextColor.yellow("Неверный формат даты"));
             }
