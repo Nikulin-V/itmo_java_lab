@@ -21,7 +21,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
 
     @Override
     public String getInfo() {
-        return getName() + " <file_name>\t\t-\tсчитать и исполнить скрипт из указанного файла";
+        return getName() + " <file_name>\t\t\t\t\t-\tсчитать и исполнить скрипт из указанного файла";
     }
 
     @Override

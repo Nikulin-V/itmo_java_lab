@@ -12,7 +12,7 @@ import java.util.List;
 public class Sort extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + " <file_name>\t\t-\tотсортировать коллекцию в естественном порядке";
+        return getName() + " <file_name>\t\t\t\t\t\t\t-\tотсортировать коллекцию в естественном порядке";
     }
 
     @Override

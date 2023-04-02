@@ -13,7 +13,7 @@ import java.util.List;
 public class CountGreaterThanDirector extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + " <file_name>\t-\tвывести количество элементов, значение поля director которых больше заданного";
+        return getName() + " <file_name>\t\t-\tвывести количество элементов, значение поля director которых больше заданного";
     }
 
     @Override

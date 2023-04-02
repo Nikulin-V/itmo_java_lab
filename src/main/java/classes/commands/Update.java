@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Update extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t-\tобновить значение элемента коллекции, id которого равен заданному";
+        return getName() + "\t\t\t\t\t\t\t\t\t\t-\tобновить значение элемента коллекции, id которого равен заданному";
     }
 
     @Override

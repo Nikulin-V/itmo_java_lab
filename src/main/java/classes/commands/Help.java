@@ -10,7 +10,7 @@ import java.util.Set;
 public class Help extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t-\tвывести справку по доступным командам";
+        return getName() + "\t\t\t\t\t\t\t\t\t\t-\tвывести справку по доступным командам";
     }
 
     @Override

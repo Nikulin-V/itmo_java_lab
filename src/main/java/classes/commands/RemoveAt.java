@@ -9,7 +9,7 @@ public class RemoveAt extends NamedCommand implements Commandable {
 
     @Override
     public String getInfo() {
-        return getName() + " <index>\t-\tудалить элемент, находящийся в заданной позиции коллекции";
+        return getName() + " <index>\t\t\t\t\t\t\t-\tудалить элемент, находящийся в заданной позиции коллекции";
     }
 
     @Override

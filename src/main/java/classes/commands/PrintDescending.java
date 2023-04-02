@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PrintDescending extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t-\tвывести элементы коллекции в порядке убывания";
+        return getName() + "\t\t\t\t\t\t\t-\tвывести элементы коллекции в порядке убывания";
     }
 
     @Override

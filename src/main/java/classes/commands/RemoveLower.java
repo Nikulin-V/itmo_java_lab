@@ -12,7 +12,7 @@ import interfaces.Commandable;
 public class RemoveLower extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t-\tудалить из коллекции все элементы, меньшие, чем заданный";
+        return getName() + "\t\t\t\t\t\t\t\t-\tудалить из коллекции все элементы, меньшие, чем заданный";
     }
     
     @Override

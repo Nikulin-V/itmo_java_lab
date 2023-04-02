@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Add extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t\t-\tдобавить новый элемент в коллекцию";
+        return getName() + "\t\t\t\t\t\t\t\t\t\t\t-\tдобавить новый элемент в коллекцию";
     }
 
     @Override

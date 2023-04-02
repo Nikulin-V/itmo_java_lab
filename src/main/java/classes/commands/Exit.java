@@ -6,7 +6,7 @@ import interfaces.Commandable;
 public class Exit extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t-\tзавершить программу (без сохранения в файл)";
+        return getName() + "\t\t\t\t\t\t\t\t\t\t-\tзавершить программу (без сохранения в файл)";
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Show extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t-\tвывести в стандартный поток вывода все элементы коллекции в строковом представлении";
+        return getName() + "\t\t\t\t\t\t\t\t\t\t-\tвывести в стандартный поток вывода все элементы коллекции в строковом представлении";
     }
 
     @Override

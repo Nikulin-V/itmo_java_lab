@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class CountByOscarsCount extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + " <UUID>\t-\t вывести количество элементов, значение поля oscarsCount которых равно заданному";
+        return getName() + " <int>\t\t\t\t\t-\tвывести количество элементов, значение поля oscarsCount которых равно заданному";
     }
 
     @Override

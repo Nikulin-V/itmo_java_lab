@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Save extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t-\tсохранить коллекцию в файл";
+        return getName() + "\t\t\t\t\t\t\t\t\t\t-\tсохранить коллекцию в файл";
     }
 
     @Override

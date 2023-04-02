@@ -13,7 +13,7 @@ public class RemoveById extends NamedCommand implements Commandable {
 
     @Override
     public String getInfo() {
-        return getName() + " <UUID>\t-\tудалить элемент из коллекции по его id";
+        return getName() + " <UUID>\t\t\t\t\t\t\t-\tудалить элемент из коллекции по его id";
     }
 
     @Override
