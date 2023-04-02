@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Main {
+public class Client {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         CommandHandler commandHandler = new CommandHandler();
