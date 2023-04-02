@@ -10,8 +10,9 @@ public class Exit extends NamedCommand implements Commandable {
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(String... args) {
         System.out.println("Завершение работы...");
         Runtime.getRuntime().exit(0);
+        return "Выполнено";
     }
 }

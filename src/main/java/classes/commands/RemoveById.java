@@ -17,7 +17,7 @@ public class RemoveById extends NamedCommand implements Commandable {
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(String... args) {
         if (args.length == 1) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
             boolean isFound = false;
@@ -31,12 +31,12 @@ public class RemoveById extends NamedCommand implements Commandable {
                     }
                 }
                 if (isFound)
-                    System.out.println(TextColor.cyan("Элемент успешно удалён"));
-                else System.out.println(TextColor.yellow("Элемент с ID=" + args[0] + " не найден"));
+                    return TextColor.cyan("Элемент успешно удалён");
+                return TextColor.yellow("Элемент с ID=" + args[0] + " не найден");
             } catch (IllegalArgumentException e) {
-                System.out.println(TextColor.yellow("Неверный формат ввода. Введите id в формате UUID"));
+                return TextColor.yellow("Неверный формат ввода. Введите id в формате UUID");
             }
-        } else
-            System.out.println(TextColor.yellow("Неверное количество аргументов. Введите индекс в формате целочисленного числа через пробел"));
+        }
+        return TextColor.yellow("Неверное количество аргументов. Введите индекс в формате целочисленного числа через пробел");
     }
 }

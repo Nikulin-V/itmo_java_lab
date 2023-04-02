@@ -9,22 +9,24 @@ import interfaces.Commandable;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import static classes.xml_manager.XMLMovieManager.readEmptyXMLCollection;
 
 public class ClearFile extends NamedCommand implements Commandable {
 
     @Override
-    public void execute(String... args) {
+    public String execute(String... args) {
         File file = new File(DataStorage.getCurrentStorageFilePath());
         try {
             PrintWriter writer = new PrintWriter(file);
             writer.print(readEmptyXMLCollection());
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            return Arrays.toString(e.getStackTrace());
         }
         System.out.println(TextColor.cyan("Файл коллекции был очищен"));
+        return "Выполнено";
     }
 
     @Override

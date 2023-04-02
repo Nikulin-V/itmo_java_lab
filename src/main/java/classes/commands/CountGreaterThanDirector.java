@@ -17,8 +17,8 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
     }
 
     @Override
-    public void execute(String... args) {
-        if (args.length == 1) {
+    public String execute(String... args) {
+        if (args != null && args.length == 1) {
             List<String> directorsList = new ArrayList<>();
             for (Movie movie : new CollectionManager().getCollection()) {
                 directorsList.add(movie.getDirector().getName());
@@ -31,8 +31,8 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
                     count++;
                 else break;
             }
-            System.out.println(TextColor.cyan("Число фильмов, удовлетворяющих условию: " + count));
-        } else System.out.println(TextColor.yellow("Неверное количество аргументов для этой команды\n" +
-                "Введите имя режиссёра без пробелов"));
+            return TextColor.cyan("Число фильмов, удовлетворяющих условию: " + count);
+        }
+        return TextColor.yellow("Неверное количество аргументов для этой команды\n" + "Введите имя режиссёра без пробелов");
     }
 }

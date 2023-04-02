@@ -16,7 +16,7 @@ public class Update extends NamedCommand implements Commandable {
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(String... args) {
         Movie changingMovie = null;
         try {
             UUID uuid = UUID.fromString(args[0]);
@@ -29,9 +29,10 @@ public class Update extends NamedCommand implements Commandable {
             }
             if (changingMovie != null) {
                 new InputHandler().updateMovie(changingMovie);
-            } else System.out.println(TextColor.yellow("Не найден фильм с введённым UUID"));
+            } else return TextColor.yellow("Не найден фильм с введённым UUID");
         } catch (IllegalArgumentException exception) {
-            System.out.println(TextColor.yellow("Некорректно введён UUID фильма, повторите попытку"));
+            return TextColor.yellow("Некорректно введён UUID фильма, повторите попытку");
         }
+        return "Выполнено";
     }
 }

@@ -15,7 +15,7 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(String... args) {
         if (args.length == 1) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
             int searchMoviesCount = 0;
@@ -26,12 +26,13 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
                         searchMoviesCount += 1;
                     }
                 }
-                System.out.println("Количество фильмов с " + searchOscarsCount + " наградами \"Оскар\": " + searchMoviesCount);
+                return "Количество фильмов с " + searchOscarsCount + " наградами \"Оскар\": " + searchMoviesCount;
             } catch (NumberFormatException e) {
-                System.out.println(TextColor.yellow("Неверный формат ввода. \n" +
-                        "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел"));
+                return TextColor.yellow("Неверный формат ввода. \n" +
+                        "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел");
             }
-        } else System.out.println(TextColor.yellow("Неверное количество аргументов. \n" +
-                "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел"));
+        }
+        return TextColor.yellow("Неверное количество аргументов. \n" +
+                "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел");
     }
 }

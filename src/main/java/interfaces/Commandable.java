@@ -1,9 +1,11 @@
 package interfaces;
 
-public interface Commandable {
+import java.io.Serializable;
+
+public interface Commandable extends Serializable {
     String getName();
 
     String getInfo();
 
-    void execute(String... args);
+    String execute(String... args);
 }

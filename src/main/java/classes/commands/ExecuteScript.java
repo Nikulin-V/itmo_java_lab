@@ -25,8 +25,8 @@ public class ExecuteScript extends NamedCommand implements Commandable {
     }
 
     @Override
-    public void execute(String... args) {
-        if (args.length == 1) {
+    public String execute(String... args) {
+        if (args!= null && args.length == 1) {
             try {
                 File file = new File(args[0]);
                 assert file.exists() && file.isFile();
@@ -37,26 +37,25 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         String inputString = (String) line;
                         String commandName = inputString.split(" ")[0];
                         String commandArgument = null;
-                        if (inputString.split(" ").length > 1) {
+                        if (inputString.split(" ").length > 1)
                             commandArgument = inputString.split(" ")[1];
-                        }
                         Commandable command = commandHandler.getCommand(commandName);
                         if (Objects.equals(command.getName(), "execute_script"))
                             scriptTransitionCount += 1;
                         if (scriptTransitionCount > MAX_SCRIPT_TRANSITION_COUNT) {
-                            new WarningException("Произошло зацикливание выполнения скриптов. Программа остановлена").printMessage();
                             scriptTransitionCount = 0;
-                            break;
+                            return new WarningException("Произошло зацикливание выполнения скриптов. Программа остановлена").getMessage();
                         }
-                        command.execute(commandArgument);
+                        return command.execute(commandArgument);
                     } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
-                             InstantiationException
-                             | IllegalAccessException ignored) {
+                             InstantiationException | IllegalAccessException e) {
+                        return e.getMessage();
                     }
             } catch (AssertionError | FileNotFoundException e) {
-                new DangerException("Файл не найден").printMessage();
                 scriptTransitionCount = 0;
+                return new DangerException("Файл не найден").getMessage();
             }
-        } else System.out.println(TextColor.yellow("Неверное количество аргументов. Введите имя файла через пробел"));
+        }
+        return TextColor.yellow("Неверное количество аргументов. Введите имя файла через пробел");
     }
 }

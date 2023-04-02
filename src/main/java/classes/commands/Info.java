@@ -12,14 +12,14 @@ public class Info extends NamedCommand implements Commandable {
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(String... args) {
         CollectionManager collectionManager = new CollectionManager();
-        System.out.println(TextColor.cyan(
+        return TextColor.cyan(
                 "Информация о коллекции:\n" +
                         "\tТип коллекции: " + CollectionManager.getType() + "\n" +
                         "\tДата инициализации: " + CollectionManager.getInitDate() + "\n" +
                         "\tКоличество элементов: " + collectionManager.getCollection().size()
-        ));
+        );
     }
 
 }

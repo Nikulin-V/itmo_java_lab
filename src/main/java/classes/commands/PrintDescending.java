@@ -15,14 +15,15 @@ public class PrintDescending extends NamedCommand implements Commandable {
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(String... args) {
         CollectionManager collectionManager = new CollectionManager();
         ArrayList<Movie> collection = new ArrayList<>(collectionManager.getCollection());
         CollectionManager.sort(collection);
-        System.out.println(TextColor.cyan("Содержимое коллекции в порядке убывания: "));
+        String output = TextColor.cyan("Содержимое коллекции в порядке убывания: \n");
         if (collection.size() != 0)
             for (Movie movie : collection)
-                System.out.println("\t" + movie.toString());
-        else System.out.println(TextColor.cyan("\tПусто"));
+                output += "\t" + movie.toString() + "\n";
+        else output = TextColor.cyan("\tПусто");
+        return output;
     }
 }

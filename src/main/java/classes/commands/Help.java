@@ -14,17 +14,19 @@ public class Help extends NamedCommand implements Commandable {
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(String... args) {
         Reflections reflections = new Reflections("classes.commands");
         Set<Class<? extends Commandable>> allCommands = reflections.getSubTypesOf(Commandable.class);
+        String output = "";
         for (Class<? extends Commandable> command : allCommands) {
             try {
-                System.out.println(command.getDeclaredConstructor().newInstance().getInfo());
+                output += command.getDeclaredConstructor().newInstance().getInfo() + "\n";
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException |
                      NoSuchMethodException e) {
-                throw new RuntimeException(e);
+                return new RuntimeException(e).getMessage();
             }
         }
+        return output;
     }
 
 
