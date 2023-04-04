@@ -25,6 +25,7 @@ public class Client {
         if (args.length != 2) {
             System.out.println(TextColor.red("Неверное число аргументов"));
             System.out.println(TextColor.red("При запуске программы введите в аргументах имя хоста и номер порта (0-65535)"));
+            new Exit().execute();
         }
 
         String host = args[0];
