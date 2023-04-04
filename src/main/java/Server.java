@@ -15,22 +15,24 @@ import java.util.Arrays;
 
 public class Server {
     public static void main(String[] args) {
-        if (args.length >= 3) {
+        if (args == null || args.length == 0 || args.length >= 3) {
             System.out.println(TextColor.red("Слишком много аргументов"));
             System.out.println(TextColor.red("При запуске программы введите в аргументах номер порта (0-65535) и имя файла коллекции"));
+            new Exit().execute();
         }
 
         String fileName = args[0];
         CollectionManager.readFile(fileName);
 
         int port = 14600;
-        if (args.length == 1)
+
+        if (args.length <= 2)
             try {
                 port = Integer.parseInt(args[0]);
                 if (0 > port || port > 65535)
                     throw new NumberFormatException();
             } catch (NumberFormatException e) {
-                System.out.println(TextColor.red("Номер порта должен быть в диапазоне от 0 до 65535"));
+                System.out.println(TextColor.red("Неправильный формат ввода порта\nномер порта должен быть в диапазоне от 0 до 65535"));
                 new Exit().execute();
             }
         System.out.println(TextColor.green("Сервер запущен на " + port + " порту"));
