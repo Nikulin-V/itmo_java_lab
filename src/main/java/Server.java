@@ -21,7 +21,7 @@ public class Server {
             new Exit().execute();
         }
 
-        String fileName = args[0];
+        String fileName = args[1];
         CollectionManager.readFile(fileName);
         int port = 14600;
 
@@ -72,7 +72,7 @@ public class Server {
                 }
             }
         } catch (IOException e) {
-            System.out.println(TextColor.grey("Соединение разорвано"));
+            System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
             start(port);
         }
     }

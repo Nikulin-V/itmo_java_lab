@@ -6,6 +6,9 @@ import classes.movie.Coordinates;
 import classes.movie.Movie;
 import classes.xml_manager.XMLMovieManager;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.channels.SocketChannel;
 import java.util.*;
 
 public class CollectionManager {
@@ -89,5 +92,11 @@ public class CollectionManager {
                 addMovie(movie);
             System.out.println(TextColor.purple("Файл коллекции был прочитан..."));
         } else System.out.println(TextColor.purple("Файл коллекции оказался пуст"));
+    }
+    public static void saveObject(Movie movie, SocketChannel sChannel) throws IOException {
+        ObjectOutputStream  oos = new
+                ObjectOutputStream(sChannel.socket().getOutputStream());
+        oos.writeObject(movie);
+        oos.close();
     }
 }
