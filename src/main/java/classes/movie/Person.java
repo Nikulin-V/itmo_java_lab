@@ -3,11 +3,13 @@ package classes.movie;
 import classes.console.TextColor;
 import exceptions.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import static classes.movie.FieldProperty.*;
 
-public class Person {
+public class Person implements Serializable {
+    private static final long serialVersionUID = 20161017L;
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Date birthday; //Поле может быть null
     private Double height; //Поле может быть null, Значение поля должно быть больше 0

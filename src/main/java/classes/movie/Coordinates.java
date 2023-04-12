@@ -4,6 +4,8 @@ import exceptions.GreatThanException;
 import exceptions.NotGreatThanException;
 import exceptions.NullValueException;
 
+import java.io.Serializable;
+
 import static classes.movie.FieldProperty.GREAT_THAN_X;
 import static classes.movie.FieldProperty.MAX_VALUE;
 
@@ -11,7 +13,8 @@ import static classes.movie.FieldProperty.MAX_VALUE;
  * Model of Coordinates. Sub-model of the <code>Route</code>. Contains getters/setters of each class fields.
  * Some fields have restrictions. It's signed under every method of field.
  */
-public class Coordinates implements Comparable<Coordinates> {
+public class Coordinates implements Comparable<Coordinates>, Serializable {
+    private static final long serialVersionUID = 20161019L;
     private long x; //Максимальное значение поля: 279
     private int y; //Значение поля должно быть больше -230
 
