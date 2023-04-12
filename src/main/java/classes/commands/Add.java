@@ -18,7 +18,7 @@ public class Add extends NamedCommand implements Commandable {
 
     @Override
     public String execute(String... args) {
-        if (args == null) {
+        if (args == null || args.length == 0) {
             InputHandler inputHandler = new InputHandler();
             // TODO: Move movie input to client. Send movie serialized object to server
             Movie movie = inputHandler.readMovie();

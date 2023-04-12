@@ -1,6 +1,8 @@
 import classes.commands.Exit;
 import classes.console.CommandHandler;
+import classes.console.InputHandler;
 import classes.console.TextColor;
+import classes.movie.Movie;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 import interfaces.Commandable;
@@ -65,12 +67,16 @@ public class Client {
                     }
                     if (!commandName.isBlank()) {
                         Commandable command = commandHandler.getCommand(commandName);
-                        if (!Objects.equals(command.getName(), "exit")) {
+                        if (!Objects.equals(command.getName(), "exit") && !Objects.equals(command.getName(), "add")) {
                             if (commandArguments == null)
                                 out.writeUTF(command.getName());
                             else out.writeUTF(command.getName() + " " + String.join(" ", commandArguments));
                             out.flush();
-                        } else command.execute();
+                        } else {
+                            InputHandler inputHandler = new InputHandler();
+                            Movie movie = inputHandler.readMovie();
+                            out.writeObject(movie);
+                        }
                     }
                     String input = in.readUTF();
                     System.out.println(input);
