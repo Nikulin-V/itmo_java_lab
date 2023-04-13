@@ -1,6 +1,6 @@
 package classes.commands;
 
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import interfaces.Commandable;
 import org.reflections.Reflections;
 
@@ -14,7 +14,7 @@ public class Help extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(String... args) {
+    public String execute(Object inputData) {
         Reflections reflections = new Reflections("classes.commands");
         Set<Class<? extends Commandable>> allCommands = reflections.getSubTypesOf(Commandable.class);
         String output = "";

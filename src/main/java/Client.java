@@ -1,9 +1,6 @@
 import classes.commands.Exit;
 import classes.console.CommandHandler;
-import classes.console.InputHandler;
 import classes.console.TextColor;
-import classes.movie.Movie;
-import classes.movie.RandomMovie;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 import interfaces.Commandable;
@@ -21,15 +18,14 @@ import java.util.Scanner;
 
 public class Client {
     private static int connectAttemptsCount = 0;
-    private static final int maxConnectAttemptsCount = 10;
-    private static final int timeoutMilliseconds = 500;
+    private static final int maxConnectAttemptsCount = 15;
+    private static final int timeoutMilliseconds = 1000;
     private static String lastRequest;
-
     public static void main(String[] args) throws InterruptedException {
         if (args.length != 2) {
             System.out.println(TextColor.red("Неверное число аргументов"));
             System.out.println(TextColor.red("При запуске программы введите в аргументах имя хоста и номер порта (0-65535)"));
-            new Exit().execute();
+            new Exit().execute(null);
         }
 
         String host = args[0];
@@ -40,7 +36,7 @@ public class Client {
                 throw new NumberFormatException();
         } catch (NumberFormatException e) {
             System.out.println(TextColor.red("Номер порта должен быть в диапазоне от 0 до 65535"));
-            new Exit().execute();
+            new Exit().execute(null);
         }
         connect(host, port);
     }
@@ -69,23 +65,22 @@ public class Client {
                     }
                     if (!commandName.isBlank()) {
                         Commandable command = commandHandler.getCommand(commandName);
-                        if (!Objects.equals(command.getName(), "exit") && !Objects.equals(command.getName(), "add")) {
-                            if (commandArguments == null)
-                                out.writeUTF(command.getName());
-                            else out.writeUTF(command.getName() + " " + String.join(" ", commandArguments));
+                        if (Objects.equals(command.getName(), "exit"))
+                            command.execute(null);
+                        if (command.isNeedInput()) {
+                            if (Objects.equals(command.getName(), "add")) {
+                                Movie movie = null;
+                                if (commandArguments == null) {
+                                    InputHandler inputHandler = new InputHandler();
+                                    movie = inputHandler.readMovie();
+                                } else if (commandArguments[0].equals("random")) {
+                                    movie = RandomMovie.generate();
+                                } else System.out.println("невалидный ввод");
+                                out.writeObject(command);
+                                out.writeObject(movie);
+                            } else out.writeObject(command);
                             out.flush();
-                        } else if (Objects.equals(command.getName(), "add")) {
-                            Movie movie = null;
-                            if (commandArguments == null) {
-                                InputHandler inputHandler = new InputHandler();
-                                movie = inputHandler.readMovie();
-                            } else if (commandArguments[0].equals("random")) {
-                                movie = RandomMovie.generate();
-                            } else System.out.println("невалидный ввод");
-                            out.writeObject(movie);
-                            out.flush();
-                        } else command.execute();
-
+                        }
                     }
                     String input = in.readUTF();
                     System.out.println(input);

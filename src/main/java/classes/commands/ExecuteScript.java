@@ -1,6 +1,6 @@
 package classes.commands;
 
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import classes.console.CommandHandler;
 import classes.console.TextColor;
 import exceptions.DangerException;
@@ -25,7 +25,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(String... args) {
+    public String execute(Object inputData) {
         if (args!= null && args.length == 1) {
             try {
                 File file = new File(args[0]);

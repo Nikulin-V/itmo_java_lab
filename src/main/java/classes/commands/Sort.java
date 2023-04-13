@@ -1,13 +1,9 @@
 package classes.commands;
 
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
-import classes.movie.Coordinates;
 import interfaces.Commandable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Sort extends NamedCommand implements Commandable {
     @Override
@@ -16,7 +12,7 @@ public class Sort extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(String... args) {
+    public String execute(Object inputData) {
         CollectionManager collectionManager = new CollectionManager();
         if (!collectionManager.getCollection().isEmpty()) {
            CollectionManager.sort(collectionManager.getCollection());

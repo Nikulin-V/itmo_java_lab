@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Server {
     public static void main(String[] args) {
@@ -51,14 +52,13 @@ public class Server {
 
                 while (!client.isClosed()) {
                     try {
-                        String inputString = inputStream.readUTF();
-                        String commandName = inputString.split(" ")[0];
-                        String[] commandArguments = null;
-                        if (inputString.split(" ").length > 1) {
-                            String[] arr = inputString.split(" ");
-                            commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
-                        }
-                        Commandable command = commandHandler.getCommand(commandName);
+                        Object inputObject = inputStream.readObject();
+                        if (inputObject instanceof Commandable command) {
+                            if (command.hasTransferData()) {
+                                Object inputData = inputStream.readObject();
+                                outputStream.writeUTF(command.execute(inputData));
+                            }
+                        } else throw new ClassNotFoundException();
                         if (!command.getName().equals("exit")) {
                             outputStream.writeUTF(command.execute(commandArguments));
                             outputStream.flush();
@@ -68,6 +68,9 @@ public class Server {
                         throw new RuntimeException(e);
                     } catch (NoSuchCommandException e) {
                         outputStream.writeUTF(TextColor.yellow(e.getMessage()));
+                        outputStream.flush();
+                    } catch (ClassNotFoundException e) {
+                        outputStream.writeUTF(TextColor.yellow("Передана неизвестная команда"));
                         outputStream.flush();
                     }
                 }

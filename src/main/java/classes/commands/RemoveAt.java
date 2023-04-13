@@ -1,6 +1,6 @@
 package classes.commands;
 
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
 import interfaces.Commandable;
@@ -13,10 +13,10 @@ public class RemoveAt extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(String... args) {
-        if (args.length == 1) {
+    public String execute(Object inputData) {
+        if (inputData instanceof Integer) {
             try {
-                int index = Integer.parseInt(args[0]);
+                int index = (Integer) inputData;
                 new CollectionManager().getCollection().remove(index);
                 return TextColor.cyan("Элемент успешно удалён");
             } catch (NumberFormatException e) {

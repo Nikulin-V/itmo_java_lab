@@ -1,6 +1,6 @@
 package classes.commands;
 
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
 import classes.movie.Movie;
@@ -15,7 +15,7 @@ public class Show extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(String... args) {
+    public String execute(Object inputData) {
         CollectionManager collectionManager = new CollectionManager();
         ArrayList<Movie> movies = collectionManager.getCollection();
         String output = TextColor.cyan("Содержимое коллекции:\n");

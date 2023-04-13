@@ -1,6 +1,6 @@
 package classes.commands;
 
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
 import classes.movie.Movie;
@@ -17,7 +17,7 @@ public class Save extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(String... args) {
+    public String execute(Object inputData) {
         CollectionManager collectionManager = new CollectionManager();
         ArrayList<Movie> moviesList = collectionManager.getCollection();
         if (moviesList.size() != 0) {
