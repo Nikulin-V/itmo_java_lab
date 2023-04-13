@@ -4,7 +4,6 @@ import classes.console.InputHandler;
 import classes.console.TextColor;
 import classes.movie.Movie;
 import classes.movie.RandomMovie;
-import classes.console.TextColor;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 import interfaces.Commandable;
@@ -25,6 +24,7 @@ public class Client {
     private static final int maxConnectAttemptsCount = 15;
     private static final int timeoutMilliseconds = 1000;
     private static String lastRequest;
+
     public static void main(String[] args) throws InterruptedException {
         if (args.length != 2) {
             System.out.println(TextColor.red("Неверное число аргументов"));
@@ -79,9 +79,22 @@ public class Client {
                                     movie = inputHandler.readMovie();
                                 } else if (commandArguments[0].equals("random")) {
                                     movie = RandomMovie.generate();
-                                } else System.out.println("невалидный ввод");
+                                }
                                 out.writeObject(command);
+                                out.flush();
                                 out.writeObject(movie);
+                            } else if (Objects.equals(command.getName(), "update")) {
+                                Movie movie = null;
+                                out.writeObject(command);
+                                out.flush();
+                                out.writeObject(commandArguments[0]);
+                                out.flush();
+                                out.writeObject(movie);
+                            } else if (Objects.equals(command.getName(), "remove_by_id") || Objects.equals(command.getName(), "remove_lower")
+                                    || Objects.equals(command.getName(), "count_by_oscars_count") || Objects.equals(command.getName(), "count_greater_than_director")) {
+                                out.writeObject(command);
+                                out.flush();
+                                out.writeObject(commandArguments[0]);
                             } else out.writeObject(command);
                             out.flush();
                         }
