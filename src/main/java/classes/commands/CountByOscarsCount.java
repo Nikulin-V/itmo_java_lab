@@ -9,8 +9,6 @@ import interfaces.Commandable;
 import java.util.ArrayList;
 
 public class CountByOscarsCount extends NamedCommand implements Commandable {
-    private final static boolean needInput = true;
-
     @Override
     public String getInfo() {
         return getName() + " <int>\t\t\t\t\t-\tвывести количество элементов, значение поля oscarsCount которых равно заданному";
@@ -20,13 +18,14 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
     public String execute(Object inputData) {
         if (inputData instanceof Integer) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
-            long searchMoviesCount = 0;
+            int searchMoviesCount = 0;
             try {
-                long searchOscarsCount = (Integer) inputData;
-                searchMoviesCount = movies
-                        .stream()
-                        .filter(movie -> movie.getOscarsCount() == searchOscarsCount)
-                        .count();
+                int searchOscarsCount = (Integer) inputData;
+                for (Movie movie : movies) {
+                    if (movie.getOscarsCount() == searchOscarsCount) {
+                        searchMoviesCount += 1;
+                    }
+                }
                 return "Количество фильмов с " + searchOscarsCount + " наградами \"Оскар\": " + searchMoviesCount;
             } catch (NumberFormatException e) {
                 return TextColor.yellow("Неверный формат ввода. \n" +
@@ -35,5 +34,10 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
         }
         return TextColor.yellow("Неверное количество аргументов. \n" +
                 "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел");
+    }
+
+    @Override
+    public boolean isNeedInput() {
+        return true;
     }
 }

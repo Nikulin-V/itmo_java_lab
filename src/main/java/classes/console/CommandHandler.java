@@ -1,7 +1,7 @@
 package classes.console;
 
+import classes.abs.NamedCommand;
 import exceptions.NoSuchCommandException;
-import interfaces.Commandable;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,15 +11,15 @@ import java.util.Set;
  * Class, which manages implemented commands
  */
 public class CommandHandler {
-    private final Set<Class<? extends Commandable>>
-            allCommands = new Reflections("classes.commands").getSubTypesOf(Commandable.class);
+    private final Set<Class<? extends NamedCommand>>
+            allCommands = new Reflections("classes.commands").getSubTypesOf(NamedCommand.class);
 
     /**
      * @param commandName String with name of command
      * @return Command instance
      */
-    public Commandable getCommand(String commandName) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchCommandException {
-        for (Class<? extends Commandable> command : allCommands) {
+    public NamedCommand getCommand(String commandName) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchCommandException {
+        for (Class<? extends NamedCommand> command : allCommands) {
             if (camelToSnake(command.getName().split("\\.")[2]).equals(commandName))
                 return command.getDeclaredConstructor().newInstance();
         }

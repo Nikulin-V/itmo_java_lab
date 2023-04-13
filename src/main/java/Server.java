@@ -1,19 +1,14 @@
+import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.commands.Exit;
 import classes.commands.Save;
-import classes.console.CommandHandler;
 import classes.console.TextColor;
-import interfaces.Commandable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.Objects;
 
 public class Server {
     public static void main(String[] args) {
@@ -46,22 +41,21 @@ public class Server {
                 ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
                 ObjectOutputStream outputStream = new ObjectOutputStream(client.getOutputStream());
                 System.out.println(TextColor.grey("Соединение установлено: " + client.getInetAddress()));
-                CommandHandler commandHandler = new CommandHandler();
 
                 while (!client.isClosed()) {
                     try {
                         Object inputObject = inputStream.readObject();
-                        if (inputObject instanceof Commandable command) {
+                        if (inputObject instanceof NamedCommand command) {
                             if (command.hasTransferData()) {
                                 Object inputData = inputStream.readObject();
-                                outputStream.writeObject(command.execute(inputData));
+                                outputStream.writeUTF((String) command.execute(inputData));
                             } else {
-                                outputStream.writeObject(command.execute(null));
-                                outputStream.flush();
+                                outputStream.writeUTF((String) command.execute(null));
                             }
                         } else throw new ClassNotFoundException();
                     } catch (ClassNotFoundException e) {
                         outputStream.writeUTF(TextColor.yellow("Передана неизвестная команда"));
+                    } finally {
                         outputStream.flush();
                     }
                 }

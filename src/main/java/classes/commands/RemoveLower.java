@@ -30,6 +30,12 @@ public class RemoveLower extends NamedCommand implements Commandable {
             } catch (NullValueException e) {
                 return e.getMessage();
             }
-        } return TextColor.yellow("Некорректный ввод. Введите координаты в формате: x y");
+        }
+        return TextColor.yellow("Некорректный ввод. Введите координаты в формате: x y");
+    }
+
+    @Override
+    public boolean hasTransferData() {
+        return true;
     }
 }
