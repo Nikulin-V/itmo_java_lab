@@ -7,7 +7,6 @@ import classes.movie.Movie;
 import interfaces.Commandable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class CountGreaterThanDirector extends NamedCommand implements Commandable {
@@ -27,13 +26,10 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
                 directorsList.add(movie.getDirector().getName());
             }
             directorsList.add(referenceDirector);
-            directorsList.sort(Comparator.naturalOrder());
-            int count = 0;
-            for (String director : directorsList) {
-                if (!director.equals(referenceDirector))
-                    count++;
-                else break;
-            }
+            long count = directorsList
+                    .stream()
+                    .filter(director -> !director.equals(referenceDirector))
+                    .count();
             return TextColor.cyan("Число фильмов, удовлетворяющих условию: " + count);
         }
         return TextColor.yellow("Неверное количество аргументов для этой команды\n" + "Введите имя режиссёра без пробелов");

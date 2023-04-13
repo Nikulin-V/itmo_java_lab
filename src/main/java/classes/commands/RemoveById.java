@@ -20,19 +20,10 @@ public class RemoveById extends NamedCommand implements Commandable {
     public String execute(Object inputData) {
         if (inputData instanceof String stringUTF) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
-            boolean isFound = false;
             try {
                 UUID uuid = UUID.fromString(stringUTF);
-                for (Movie movie : movies) {
-                    if (movie.getId().equals(uuid)) {
-                        movies.remove(movie);
-                        isFound = true;
-                        break;
-                    }
-                }
-                if (isFound)
-                    return TextColor.cyan("Элемент успешно удалён");
-                return TextColor.yellow("Элемент с ID=" + stringUTF + " не найден");
+                CollectionManager.setCollection(movies.stream().filter(movie -> !movie.getId().equals(uuid)).toList());
+                return TextColor.cyan("Операция выполнена");
             } catch (IllegalArgumentException e) {
                 return TextColor.yellow("Неверный формат ввода. Введите id в формате UUID");
             }
