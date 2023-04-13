@@ -3,6 +3,7 @@ import classes.console.CommandHandler;
 import classes.console.InputHandler;
 import classes.console.TextColor;
 import classes.movie.Movie;
+import classes.movie.RandomMovie;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 import interfaces.Commandable;
@@ -23,6 +24,7 @@ public class Client {
     private static final int maxConnectAttemptsCount = 10;
     private static final int timeoutMilliseconds = 500;
     private static String lastRequest;
+
     public static void main(String[] args) throws InterruptedException {
         if (args.length != 2) {
             System.out.println(TextColor.red("Неверное число аргументов"));
@@ -72,11 +74,18 @@ public class Client {
                                 out.writeUTF(command.getName());
                             else out.writeUTF(command.getName() + " " + String.join(" ", commandArguments));
                             out.flush();
-                        } else {
-                            InputHandler inputHandler = new InputHandler();
-                            Movie movie = inputHandler.readMovie();
+                        } else if (Objects.equals(command.getName(), "add")) {
+                            Movie movie = null;
+                            if (commandArguments == null) {
+                                InputHandler inputHandler = new InputHandler();
+                                movie = inputHandler.readMovie();
+                            } else if (commandArguments[0].equals("random")) {
+                                movie = RandomMovie.generate();
+                            } else System.out.println("невалидный ввод");
                             out.writeObject(movie);
-                        }
+                            out.flush();
+                        } else command.execute();
+
                     }
                     String input = in.readUTF();
                     System.out.println(input);
