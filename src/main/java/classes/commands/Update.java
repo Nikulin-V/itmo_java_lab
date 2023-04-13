@@ -10,8 +10,6 @@ import interfaces.Commandable;
 import java.util.UUID;
 
 public class Update extends NamedCommand implements Commandable {
-    private final static boolean needInput = true;
-
     @Override
     public String getInfo() {
         return getName() + "\t\t\t\t\t\t\t\t\t\t-\tобновить значение элемента коллекции, id которого равен заданному";
@@ -38,5 +36,10 @@ public class Update extends NamedCommand implements Commandable {
             return TextColor.yellow("Некорректно введён UUID фильма, повторите попытку");
         }
         return "Выполнено";
+    }
+
+    @Override
+    public boolean isNeedInput() {
+        return true;
     }
 }

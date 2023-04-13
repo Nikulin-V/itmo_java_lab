@@ -21,5 +21,4 @@ public class Info extends NamedCommand implements Commandable {
                         "\tКоличество элементов: " + collectionManager.getCollection().size()
         );
     }
-
 }

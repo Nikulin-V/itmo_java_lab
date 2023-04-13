@@ -1,13 +1,12 @@
+import classes.abs.NamedCommand;
 import classes.commands.Exit;
 import classes.console.CommandHandler;
 import classes.console.InputHandler;
 import classes.console.TextColor;
 import classes.movie.Movie;
 import classes.movie.RandomMovie;
-import classes.console.TextColor;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
-import interfaces.Commandable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -25,6 +24,7 @@ public class Client {
     private static final int maxConnectAttemptsCount = 15;
     private static final int timeoutMilliseconds = 1000;
     private static String lastRequest;
+
     public static void main(String[] args) throws InterruptedException {
         if (args.length != 2) {
             System.out.println(TextColor.red("Неверное число аргументов"));
@@ -68,23 +68,27 @@ public class Client {
                         commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
                     }
                     if (!commandName.isBlank()) {
-                        Commandable command = commandHandler.getCommand(commandName);
+                        NamedCommand command = commandHandler.getCommand(commandName);
                         if (Objects.equals(command.getName(), "exit"))
                             command.execute(null);
+                        if (Objects.equals(command.getName(), "execute_script")) {
+                            // TODO: execute_script
+                        }
                         if (command.isNeedInput()) {
                             if (Objects.equals(command.getName(), "add")) {
                                 Movie movie = null;
                                 if (commandArguments == null) {
                                     InputHandler inputHandler = new InputHandler();
                                     movie = inputHandler.readMovie();
-                                } else if (commandArguments[0].equals("random")) {
+                                } else if (commandArguments.length == 1 && commandArguments[0].equals("random")) {
                                     movie = RandomMovie.generate();
-                                } else System.out.println("невалидный ввод");
+                                } else System.out.println("Невалидный ввод");
                                 out.writeObject(command);
+                                out.flush();
                                 out.writeObject(movie);
-                            } else out.writeObject(command);
-                            out.flush();
-                        }
+                            }
+                        } else out.writeObject(command);
+                        out.flush();
                     }
                     String input = in.readUTF();
                     System.out.println(input);

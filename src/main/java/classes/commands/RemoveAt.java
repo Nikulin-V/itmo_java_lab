@@ -6,7 +6,7 @@ import classes.console.TextColor;
 import interfaces.Commandable;
 
 public class RemoveAt extends NamedCommand implements Commandable {
-
+    public final boolean hasTransferData = true;
     @Override
     public String getInfo() {
         return getName() + " <index>\t\t\t\t\t\t\t-\tудалить элемент, находящийся в заданной позиции коллекции";
@@ -26,5 +26,10 @@ public class RemoveAt extends NamedCommand implements Commandable {
             }
         } else
             return TextColor.yellow("Неверное количество аргументов. Введите индекс в формате целочисленного числа через пробел");
+    }
+
+    @Override
+    public boolean hasTransferData() {
+        return true;
     }
 }
