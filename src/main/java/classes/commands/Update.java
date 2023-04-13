@@ -1,6 +1,6 @@
 package classes.commands;
 
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.InputHandler;
 import classes.console.TextColor;
@@ -10,28 +10,33 @@ import interfaces.Commandable;
 import java.util.UUID;
 
 public class Update extends NamedCommand implements Commandable {
+    private final static boolean needInput = true;
+
     @Override
     public String getInfo() {
-        return getName() + "\t-\tобновить значение элемента коллекции, id которого равен заданному";
+        return getName() + "\t\t\t\t\t\t\t\t\t\t-\tобновить значение элемента коллекции, id которого равен заданному";
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(Object inputData) {
         Movie changingMovie = null;
         try {
-            UUID uuid = UUID.fromString(args[0]);
-            CollectionManager cm = new CollectionManager();
-            for (Movie movie : cm.getCollection()) {
-                if (movie.getId().equals(uuid)) {
-                    changingMovie = movie;
-                    break;
+            if (inputData instanceof String stringUTF) {
+                UUID uuid = UUID.fromString(stringUTF);
+                CollectionManager cm = new CollectionManager();
+                for (Movie movie : cm.getCollection()) {
+                    if (movie.getId().equals(uuid)) {
+                        changingMovie = movie;
+                        break;
+                    }
                 }
-            }
-            if (changingMovie != null) {
-                new InputHandler().updateMovie(changingMovie);
-            } else System.out.println(TextColor.yellow("Не найден фильм с введённым UUID"));
+                if (changingMovie != null) {
+                    new InputHandler().updateMovie(changingMovie);
+                } else return TextColor.yellow("Не найден фильм с введённым UUID");
+            } else throw new IllegalArgumentException();
         } catch (IllegalArgumentException exception) {
-            System.out.println(TextColor.yellow("Некорректно введён UUID фильма, повторите попытку"));
+            return TextColor.yellow("Некорректно введён UUID фильма, повторите попытку");
         }
+        return "Выполнено";
     }
 }

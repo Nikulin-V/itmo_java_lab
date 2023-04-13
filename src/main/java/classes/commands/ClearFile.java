@@ -2,34 +2,35 @@ package classes.commands;
 
 
 import classes.DataStorage;
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import classes.console.TextColor;
 import interfaces.Commandable;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import static classes.xml_manager.XMLMovieManager.readEmptyXMLCollection;
 
 public class ClearFile extends NamedCommand implements Commandable {
 
     @Override
-    public void execute(String... args) {
+    public String execute(Object inputData) {
         File file = new File(DataStorage.getCurrentStorageFilePath());
         try {
             PrintWriter writer = new PrintWriter(file);
             writer.print(readEmptyXMLCollection());
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            return Arrays.toString(e.getStackTrace());
         }
-        System.out.println(TextColor.cyan("Файл коллекции был очищен"));
+        return TextColor.cyan("Файл коллекции был очищен");
     }
 
     @Override
     public String getInfo() {
-        return getName() + " <file_name>\t-\tочистить файл коллекции";
+        return getName() + " <file_name>\t\t\t\t\t\t-\tочистить файл коллекции";
     }
 
 }

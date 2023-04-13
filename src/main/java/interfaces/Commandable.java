@@ -1,9 +1,21 @@
 package interfaces;
 
-public interface Commandable {
+import java.io.Serializable;
+
+public interface Commandable extends Serializable {
+    boolean needInput = false;
+    boolean hasTransferData = false;
     String getName();
 
     String getInfo();
 
-    void execute(String... args);
+    String execute(Object inputData);
+
+    default boolean isNeedInput() {
+        return needInput;
+    }
+
+    default boolean hasTransferData() {
+        return hasTransferData;
+    }
 }

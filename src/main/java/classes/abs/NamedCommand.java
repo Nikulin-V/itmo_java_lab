@@ -1,4 +1,4 @@
-package classes;
+package classes.abs;
 
 import classes.console.CommandHandler;
 

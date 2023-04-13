@@ -6,6 +6,9 @@ import classes.movie.Coordinates;
 import classes.movie.Movie;
 import classes.xml_manager.XMLMovieManager;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.channels.SocketChannel;
 import java.util.*;
 
 public class CollectionManager {
@@ -73,24 +76,27 @@ public class CollectionManager {
         }
     }
 
-    public static void readFile(String[] args) {
-        if (args.length > 1) {
-            System.out.println(TextColor.purple("Провал\nВводите в аргументы программы только одно слово - имя файла с расширением"));
-            Runtime.getRuntime().exit(0);
-        }
+    public static void readFile(String fileName) {
+
         List<Movie> enteredMovies;
-        if (args.length == 0) {
+        if (fileName == null) {
             System.out.println(TextColor.purple("Файл коллекции не был указан. Была выбран файл коллекции по умолчанию"));
             DataStorage.setCurrentStorageFilePath(DataStorage.DEFAULT_STORAGE_FILE_PATH);
             enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML().getMovies();
         } else {
             System.out.println(TextColor.purple("Пытаюсь прочитать файл коллекции..."));
-            enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML(args[0]).getMovies();
+            enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML(fileName).getMovies();
         }
         if (enteredMovies != null && !enteredMovies.isEmpty()) {
             for (Movie movie : enteredMovies)
                 addMovie(movie);
             System.out.println(TextColor.purple("Файл коллекции был прочитан..."));
         } else System.out.println(TextColor.purple("Файл коллекции оказался пуст"));
+    }
+    public static void saveObject(Movie movie, SocketChannel sChannel) throws IOException {
+        ObjectOutputStream  oos = new
+                ObjectOutputStream(sChannel.socket().getOutputStream());
+        oos.writeObject(movie);
+        oos.close();
     }
 }

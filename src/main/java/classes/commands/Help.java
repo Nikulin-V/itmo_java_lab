@@ -1,6 +1,6 @@
 package classes.commands;
 
-import classes.NamedCommand;
+import classes.abs.NamedCommand;
 import interfaces.Commandable;
 import org.reflections.Reflections;
 
@@ -10,21 +10,23 @@ import java.util.Set;
 public class Help extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t-\tвывести справку по доступным командам";
+        return getName() + "\t\t\t\t\t\t\t\t\t\t-\tвывести справку по доступным командам";
     }
 
     @Override
-    public void execute(String... args) {
+    public String execute(Object inputData) {
         Reflections reflections = new Reflections("classes.commands");
         Set<Class<? extends Commandable>> allCommands = reflections.getSubTypesOf(Commandable.class);
+        String output = "";
         for (Class<? extends Commandable> command : allCommands) {
             try {
-                System.out.println(command.getDeclaredConstructor().newInstance().getInfo());
+                output += command.getDeclaredConstructor().newInstance().getInfo() + "\n";
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException |
                      NoSuchMethodException e) {
-                throw new RuntimeException(e);
+                return new RuntimeException(e).getMessage();
             }
         }
+        return output;
     }
 
 
