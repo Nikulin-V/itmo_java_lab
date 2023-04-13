@@ -26,9 +26,9 @@ public class ExecuteScript extends NamedCommand implements Commandable {
 
     @Override
     public String execute(Object inputData) {
-        if (args!= null && args.length == 1) {
+        if (inputData instanceof String scriptName) {
             try {
-                File file = new File(args[0]);
+                File file = new File(scriptName);
                 assert file.exists() && file.isFile();
                 BufferedReader reader = new BufferedReader(new FileReader(file));
                 CommandHandler commandHandler = new CommandHandler();

@@ -17,10 +17,11 @@ public class RemoveLower extends NamedCommand implements Commandable {
     
     @Override
     public String execute(Object inputData) {
-        if (inputData instanceof Coordinates referenceCoordinates) {
+        if (inputData instanceof long[] coordinatesArray && coordinatesArray.length == 2) {
             try {
-                // TODO: implement Coordinates creation on client side
-                Coordinates inputCoordinates = new Coordinates(Long.parseLong(args[0]), Integer.parseInt(args[1]));
+                long x = coordinatesArray[0];
+                long y = coordinatesArray[1];
+                Coordinates inputCoordinates = new Coordinates(x, y);
                 CollectionManager cm = new CollectionManager();
                 cm.getCollection().removeIf(m -> inputCoordinates.compareTo(m.getCoordinates()) < 0);
                 return TextColor.cyan("Успешно удалено");
