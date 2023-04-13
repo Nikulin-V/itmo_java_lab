@@ -12,7 +12,7 @@ import java.nio.channels.SocketChannel;
 import java.util.*;
 
 public class CollectionManager {
-    private static final ArrayList<Movie> collection = new ArrayList<>();
+    private static ArrayList<Movie> collection = new ArrayList<>();
     private static final String type = "ArrayList";
     private static final Date initDate = new Date();
 
@@ -30,6 +30,10 @@ public class CollectionManager {
 
     public static void addMovie(Movie movie) {
         CollectionManager.collection.add(movie);
+    }
+
+    public static void setCollection(List<Movie> collection) {
+        CollectionManager.collection = (ArrayList<Movie>) collection;
     }
 
     public void removeMovie(UUID MovieId) {
@@ -93,8 +97,9 @@ public class CollectionManager {
             System.out.println(TextColor.purple("Файл коллекции был прочитан..."));
         } else System.out.println(TextColor.purple("Файл коллекции оказался пуст"));
     }
+
     public static void saveObject(Movie movie, SocketChannel sChannel) throws IOException {
-        ObjectOutputStream  oos = new
+        ObjectOutputStream oos = new
                 ObjectOutputStream(sChannel.socket().getOutputStream());
         oos.writeObject(movie);
         oos.close();

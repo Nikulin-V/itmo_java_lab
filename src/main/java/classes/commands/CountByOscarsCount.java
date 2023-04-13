@@ -20,14 +20,13 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
     public String execute(Object inputData) {
         if (inputData instanceof Integer) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
-            int searchMoviesCount = 0;
+            long searchMoviesCount = 0;
             try {
-                int searchOscarsCount = (Integer) inputData;
-                for (Movie movie : movies) {
-                    if (movie.getOscarsCount() == searchOscarsCount) {
-                        searchMoviesCount += 1;
-                    }
-                }
+                long searchOscarsCount = (Integer) inputData;
+                searchMoviesCount = movies
+                        .stream()
+                        .filter(movie -> movie.getOscarsCount() == searchOscarsCount)
+                        .count();
                 return "Количество фильмов с " + searchOscarsCount + " наградами \"Оскар\": " + searchMoviesCount;
             } catch (NumberFormatException e) {
                 return TextColor.yellow("Неверный формат ввода. \n" +
