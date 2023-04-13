@@ -4,6 +4,7 @@ import classes.console.InputHandler;
 import classes.console.TextColor;
 import classes.movie.Movie;
 import classes.movie.RandomMovie;
+import classes.console.TextColor;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 import interfaces.Commandable;

@@ -10,6 +10,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Server {
     public static void main(String[] args) {
@@ -42,6 +46,7 @@ public class Server {
                 ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
                 ObjectOutputStream outputStream = new ObjectOutputStream(client.getOutputStream());
                 System.out.println(TextColor.grey("Соединение установлено: " + client.getInetAddress()));
+                CommandHandler commandHandler = new CommandHandler();
 
                 while (!client.isClosed()) {
                     try {
