@@ -43,7 +43,7 @@ public class XMLMovieManager {
             movies = (Movies) jaxbUnmarshaller.unmarshal(file);
         } catch (UnmarshalException e) {
             System.out.println(TextColor.red("Нарушена структура файла"));
-            new Exit().execute();
+            new Exit().execute(null);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -67,7 +67,7 @@ public class XMLMovieManager {
             movies = (Movies) jaxbUnmarshaller.unmarshal(file);
         } catch (UnmarshalException e) {
             System.out.println(TextColor.red("Нарушена структура файла"));
-            new Exit().execute();
+            new Exit().execute(null);
         } catch (JAXBException e) {
             e.printStackTrace();
         }
@@ -82,7 +82,6 @@ public class XMLMovieManager {
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             File file = new File(DataStorage.getCurrentStorageFilePath());
             file.createNewFile(); // checks existence of file and create if necessary
-            Movies m = new Movies();
             StringWriter sw = new StringWriter();
             jaxbMarshaller.marshal(movies, sw);
             sw.close();
@@ -103,9 +102,10 @@ public class XMLMovieManager {
 
 
     public static String readEmptyXMLCollection() throws IOException {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                "<movies>\n" +
-                "\n" +
-                "</movies>";
+        return """
+                <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                <movies>
+
+                </movies>""";
     }
 }

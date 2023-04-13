@@ -18,10 +18,9 @@ public class Coordinates implements Comparable<Coordinates>, Serializable {
     private long x; //Максимальное значение поля: 279
     private int y; //Значение поля должно быть больше -230
 
-    private Coordinates() {
-    }
+    private Coordinates() {}
 
-    public Coordinates(long x, int y) throws NotGreatThanException, NullValueException, GreatThanException {
+    public Coordinates(long x, long y) throws NotGreatThanException, NullValueException, GreatThanException {
         this.x = new FieldHandler(x, MAX_VALUE).handleLong();
         this.y = new FieldHandler(y, GREAT_THAN_X).handleInt();
     }
