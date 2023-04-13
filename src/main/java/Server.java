@@ -1,6 +1,5 @@
 import classes.collection.CollectionManager;
 import classes.commands.Exit;
-import classes.commands.Save;
 import classes.console.CommandHandler;
 import classes.console.TextColor;
 import interfaces.Commandable;
@@ -10,10 +9,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.Objects;
 
 public class Server {
     public static void main(String[] args) {
@@ -68,7 +63,7 @@ public class Server {
             }
         } catch (IOException e) {
             System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
-            new Save().execute(null);
+            CollectionManager.saveCollection();
             System.out.println(TextColor.green("Хранилище сохранено в файл"));
             start(port);
         }
