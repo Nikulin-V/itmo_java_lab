@@ -4,6 +4,7 @@ import classes.DataStorage;
 import classes.console.TextColor;
 import classes.movie.Coordinates;
 import classes.movie.Movie;
+import classes.movie.Movies;
 import classes.xml_manager.XMLMovieManager;
 
 import java.util.*;
@@ -71,6 +72,17 @@ public class CollectionManager {
                     Collections.swap(collection, i, j);
             }
         }
+    }
+
+    public static String saveCollection() {
+        CollectionManager collectionManager = new CollectionManager();
+        ArrayList<Movie> moviesList = collectionManager.getCollection();
+        if (moviesList.size() != 0) {
+            Movies movies = new Movies();
+            movies.setMovies(moviesList);
+            XMLMovieManager.getInstance().saveCollectionToXML(movies);
+            return TextColor.cyan("\tТекущая коллекция сохранена в файл");
+        } return TextColor.cyan("\tКоллекция пуста. Сохранять нечего");
     }
 
     public static void readFile(String fileName) {

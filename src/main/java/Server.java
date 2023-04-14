@@ -1,7 +1,8 @@
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.commands.Exit;
-import classes.commands.Save;
+
+import classes.console.CommandHandler;
 import classes.console.TextColor;
 
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class Server {
             }
         } catch (IOException e) {
             System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
-            new Save().execute(null);
+            CollectionManager.saveCollection();
             System.out.println(TextColor.green("Хранилище сохранено в файл"));
             start(port);
         }

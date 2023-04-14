@@ -82,13 +82,25 @@ public class Client {
                                     movie = inputHandler.readMovie();
                                 } else if (commandArguments.length == 1 && commandArguments[0].equals("random")) {
                                     movie = RandomMovie.generate();
-                                } else System.out.println("Невалидный ввод");
+                                }
                                 out.writeObject(command);
                                 out.flush();
                                 out.writeObject(movie);
-                            }
-                        } else out.writeObject(command);
-                        out.flush();
+                            } else if (Objects.equals(command.getName(), "update")) {
+                                Movie movie = null;
+                                out.writeObject(command);
+                                out.flush();
+                                out.writeObject(commandArguments[0]);
+                                out.flush();
+                                out.writeObject(movie);
+                            } else if (Objects.equals(command.getName(), "remove_by_id") || Objects.equals(command.getName(), "remove_lower")
+                                    || Objects.equals(command.getName(), "count_by_oscars_count") || Objects.equals(command.getName(), "count_greater_than_director")) {
+                                out.writeObject(command);
+                                out.flush();
+                                out.writeObject(commandArguments[0]);
+                            } else out.writeObject(command);
+                            out.flush();
+                        }
                     }
                     String input = in.readUTF();
                     System.out.println(input);
@@ -97,7 +109,7 @@ public class Client {
                     e.printMessage();
                 } catch (NoSuchMethodException | InvocationTargetException |
                          InstantiationException | IllegalAccessException e) {
-                    new SystemException().printMessage();
+                   new SystemException().printMessage();
                 }
                 System.out.print(TextColor.green("> "));
             }
