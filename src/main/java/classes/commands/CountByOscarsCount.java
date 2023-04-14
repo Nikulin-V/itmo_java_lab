@@ -9,8 +9,6 @@ import interfaces.Commandable;
 import java.util.ArrayList;
 
 public class CountByOscarsCount extends NamedCommand implements Commandable {
-    private final static boolean needInput = true;
-
     @Override
     public String getInfo() {
         return getName() + " <int>\t\t\t\t\t-\tвывести количество элементов, значение поля oscarsCount которых равно заданному";
@@ -36,5 +34,10 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
         }
         return TextColor.yellow("Неверное количество аргументов. \n" +
                 "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел");
+    }
+
+    @Override
+    public boolean isNeedInput() {
+        return true;
     }
 }

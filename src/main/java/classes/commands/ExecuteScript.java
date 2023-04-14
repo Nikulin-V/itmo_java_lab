@@ -39,14 +39,14 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         String commandArgument = null;
                         if (inputString.split(" ").length > 1)
                             commandArgument = inputString.split(" ")[1];
-                        Commandable command = commandHandler.getCommand(commandName);
+                        NamedCommand command = commandHandler.getCommand(commandName);
                         if (Objects.equals(command.getName(), "execute_script"))
                             scriptTransitionCount += 1;
                         if (scriptTransitionCount > MAX_SCRIPT_TRANSITION_COUNT) {
                             scriptTransitionCount = 0;
                             return new WarningException("Произошло зацикливание выполнения скриптов. Программа остановлена").getMessage();
                         }
-                        return command.execute(commandArgument);
+                        return (String) command.execute(commandArgument);
                     } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
                              InstantiationException | IllegalAccessException e) {
                         return e.getMessage();

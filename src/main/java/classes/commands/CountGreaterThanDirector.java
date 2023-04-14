@@ -11,8 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CountGreaterThanDirector extends NamedCommand implements Commandable {
-    private final static boolean needInput = true;
-
     @Override
     public String getInfo() {
         return getName() + " <file_name>\t\t-\tвывести количество элементов, значение поля director которых больше заданного";
@@ -20,8 +18,7 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
 
     @Override
     public String execute(Object inputData) {
-        if (inputData instanceof String) {
-            String referenceDirector = (String) inputData;
+        if (inputData instanceof String referenceDirector) {
             List<String> directorsList = new ArrayList<>();
             for (Movie movie : new CollectionManager().getCollection()) {
                 directorsList.add(movie.getDirector().getName());
@@ -37,5 +34,10 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
             return TextColor.cyan("Число фильмов, удовлетворяющих условию: " + count);
         }
         return TextColor.yellow("Неверное количество аргументов для этой команды\n" + "Введите имя режиссёра без пробелов");
+    }
+
+    @Override
+    public boolean isNeedInput() {
+        return true;
     }
 }

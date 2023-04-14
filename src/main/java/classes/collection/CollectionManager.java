@@ -7,9 +7,6 @@ import classes.movie.Movie;
 import classes.movie.Movies;
 import classes.xml_manager.XMLMovieManager;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.nio.channels.SocketChannel;
 import java.util.*;
 
 public class CollectionManager {
@@ -61,9 +58,9 @@ public class CollectionManager {
             moviesCoordinatesList.add(movies.getCoordinates());
         moviesCoordinatesList.sort((o1, o2) -> {
             Long x1 = o1.getX();
-            Long y1 = (long) o1.getY();
+            Long y1 = o1.getY();
             Long x2 = o2.getX();
-            Long y2 = (long) o2.getY();
+            Long y2 = o2.getY();
             return !x1.equals(x2) ? x1.compareTo(x2) : y1.compareTo(y2);
         });
         for (int i = 0; i < moviesCoordinatesList.size(); i++) {
@@ -104,11 +101,5 @@ public class CollectionManager {
                 addMovie(movie);
             System.out.println(TextColor.purple("Файл коллекции был прочитан..."));
         } else System.out.println(TextColor.purple("Файл коллекции оказался пуст"));
-    }
-    public static void saveObject(Movie movie, SocketChannel sChannel) throws IOException {
-        ObjectOutputStream  oos = new
-                ObjectOutputStream(sChannel.socket().getOutputStream());
-        oos.writeObject(movie);
-        oos.close();
     }
 }

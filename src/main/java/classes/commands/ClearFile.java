@@ -14,7 +14,6 @@ import java.util.Arrays;
 import static classes.xml_manager.XMLMovieManager.readEmptyXMLCollection;
 
 public class ClearFile extends NamedCommand implements Commandable {
-
     @Override
     public String execute(Object inputData) {
         File file = new File(DataStorage.getCurrentStorageFilePath());

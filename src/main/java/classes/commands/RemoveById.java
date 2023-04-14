@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class RemoveById extends NamedCommand implements Commandable {
-
     @Override
     public String getInfo() {
         return getName() + " <UUID>\t\t\t\t\t\t\t-\tудалить элемент из коллекции по его id";
@@ -38,5 +37,10 @@ public class RemoveById extends NamedCommand implements Commandable {
             }
         }
         return TextColor.yellow("Неверное количество аргументов. Введите индекс в формате целочисленного числа через пробел");
+    }
+
+    @Override
+    public boolean hasTransferData() {
+        return true;
     }
 }
