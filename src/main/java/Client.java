@@ -4,7 +4,6 @@ import classes.console.CommandHandler;
 import classes.console.InputHandler;
 import classes.console.TextColor;
 import classes.movie.Movie;
-import classes.movie.RandomMovie;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 
@@ -75,17 +74,21 @@ public class Client {
                         if (Objects.equals(command.getName(), "execute_script")) {
                             // TODO: execute_script
                         }
-                        if (command.isNeedInput() && commandArguments != null) {
+                        if (command.isNeedInput()) {
                             if (Objects.equals(command.getName(), "add")) {
-                                Movie movie = null;
-                                if (commandArguments.length == 1 && commandArguments[0].equals("random")) {
-                                    //TODO transfer executing random movie generating to server side
-                                    movie = RandomMovie.generate();
+                                Movie movie;
+                                if (commandArguments != null && commandArguments.length == 1 && commandArguments[0].equals("random")) {
+                                    out.writeObject(command);
+                                    out.flush();
+                                    out.writeObject(commandArguments);
+                                } else if (commandArguments == null || commandArguments.length == 0) {
+                                    InputHandler inputHandler = new InputHandler();
+                                    movie = inputHandler.readMovie();
+                                    out.writeObject(command);
+                                    out.flush();
+                                    out.writeObject(movie);
                                 }
-                                out.writeObject(command);
-                                out.flush();
-                                out.writeObject(movie);
-                            } else if (Objects.equals(command.getName(), "update")) {
+                            } else if (Objects.equals(command.getName(), "update") && commandArguments != null) {
                                 Movie movie;
                                 InputHandler inputHandler = new InputHandler();
                                 movie = inputHandler.readMovie();
@@ -100,7 +103,7 @@ public class Client {
 
                             }
                         } else if
-                                (Objects.equals(command.getName(), "remove_by_id")
+                        (Objects.equals(command.getName(), "remove_by_id")
                                         || Objects.equals(command.getName(), "remove_lower")
                                         || Objects.equals(command.getName(), "count_by_oscars_count")
                                         || Objects.equals(command.getName(), "count_greater_than_director")) {
