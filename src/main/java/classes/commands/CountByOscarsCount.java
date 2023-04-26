@@ -16,11 +16,12 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
 
     @Override
     public String execute(Object inputData) {
-        if (inputData instanceof Integer) {
+        String[] arg = (String[]) inputData;
+        if (arg != null && String.valueOf(arg[0]).chars().allMatch(Character::isDigit)) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
             int searchMoviesCount = 0;
             try {
-                int searchOscarsCount = (Integer) inputData;
+                int searchOscarsCount = Integer.parseInt(arg[0]);
                 for (Movie movie : movies) {
                     if (movie.getOscarsCount() == searchOscarsCount) {
                         searchMoviesCount += 1;
@@ -37,7 +38,7 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
     }
 
     @Override
-    public boolean isNeedInput() {
+    public boolean hasTransferData() {
         return true;
     }
 }

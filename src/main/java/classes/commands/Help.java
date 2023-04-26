@@ -28,6 +28,13 @@ public class Help extends NamedCommand implements Commandable {
         }
         return output;
     }
-
+    @Override
+    public boolean isNeedInput() {
+        return false;
+    }
+    @Override
+    public boolean hasTransferData() {
+        return false;
+    }
 
 }

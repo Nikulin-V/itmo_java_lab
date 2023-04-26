@@ -25,4 +25,13 @@ public class Show extends NamedCommand implements Commandable {
         else output += TextColor.cyan("\tПусто");
         return output;
     }
+    @Override
+    public boolean isNeedInput() {
+        return false;
+    }
+
+    @Override
+    public boolean hasTransferData() {
+        return false;
+    }
 }

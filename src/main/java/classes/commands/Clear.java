@@ -17,5 +17,13 @@ public class Clear extends NamedCommand implements Commandable {
     public String getInfo() {
         return getName() + "\t\t\t\t\t\t\t\t\t\t-\tочистить коллекцию";
     }
+    @Override
+    public boolean isNeedInput() {
+        return false;
+    }
+    @Override
+    public boolean hasTransferData() {
+        return false;
+    }
 }
 
