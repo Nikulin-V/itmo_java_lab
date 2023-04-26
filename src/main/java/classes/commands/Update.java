@@ -7,8 +7,6 @@ import classes.console.TextColor;
 import classes.movie.Movie;
 import interfaces.Commandable;
 
-import java.util.UUID;
-
 public class Update extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
@@ -17,14 +15,13 @@ public class Update extends NamedCommand implements Commandable {
 
     @Override
     public String execute(Object inputData) {
-        Movie changingMovie = null;
         try {
-            if (inputData instanceof String stringUTF) {
-                UUID uuid = UUID.fromString(stringUTF);
+            if (inputData instanceof Movie movie) {
+                Movie changingMovie = null;
                 CollectionManager cm = new CollectionManager();
-                for (Movie movie : cm.getCollection()) {
-                    if (movie.getId().equals(uuid)) {
-                        changingMovie = movie;
+                for (Movie elem : cm.getCollection()) {
+                    if (elem.getId().equals(movie.getId())) {
+                        changingMovie = elem;
                         break;
                     }
                 }
@@ -40,6 +37,11 @@ public class Update extends NamedCommand implements Commandable {
 
     @Override
     public boolean isNeedInput() {
+        return true;
+    }
+
+    @Override
+    public boolean hasTransferData() {
         return true;
     }
 }

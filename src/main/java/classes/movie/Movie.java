@@ -62,6 +62,9 @@ public class Movie implements Serializable {
     public UUID getId() {
         return id;
     }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     /**
      * Restrictions:  Field cannot be null or empty string

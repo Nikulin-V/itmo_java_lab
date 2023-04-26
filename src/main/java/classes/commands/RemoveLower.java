@@ -14,13 +14,12 @@ public class RemoveLower extends NamedCommand implements Commandable {
     public String getInfo() {
         return getName() + "\t\t\t\t\t\t\t\t-\tудалить из коллекции все элементы, меньшие, чем заданный";
     }
-    
     @Override
     public String execute(Object inputData) {
-        if (inputData instanceof long[] coordinatesArray && coordinatesArray.length == 2) {
+        if (inputData instanceof String[] coordinatesArray && coordinatesArray.length == 2) {
             try {
-                long x = coordinatesArray[0];
-                long y = coordinatesArray[1];
+                long x = Long.parseLong(coordinatesArray[0]);
+                long y = Long.parseLong(coordinatesArray[1]);
                 Coordinates inputCoordinates = new Coordinates(x, y);
                 CollectionManager cm = new CollectionManager();
                 cm.getCollection().removeIf(m -> inputCoordinates.compareTo(m.getCoordinates()) < 0);
@@ -29,9 +28,10 @@ public class RemoveLower extends NamedCommand implements Commandable {
                 return e.getMessage();
             } catch (NullValueException e) {
                 return e.getMessage();
+            } catch (NumberFormatException ignored) {
             }
         }
-        return TextColor.yellow("Некорректный ввод. Введите координаты в формате: x y");
+        return TextColor.yellow("Некорректный ввод. Введите координаты в формате чисел: x y");
     }
 
     @Override

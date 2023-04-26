@@ -13,12 +13,14 @@ import java.util.List;
 public class CountGreaterThanDirector extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + " <file_name>\t\t-\tвывести количество элементов, значение поля director которых больше заданного";
+        return getName() + " <person_name>\t\t-\tвывести количество элементов, значение поля director которых больше заданного";
     }
 
     @Override
     public String execute(Object inputData) {
-        if (inputData instanceof String referenceDirector) {
+        String[] arg = (String[]) inputData;
+        if (arg != null) {
+            String referenceDirector = arg[0];
             List<String> directorsList = new ArrayList<>();
             for (Movie movie : new CollectionManager().getCollection()) {
                 directorsList.add(movie.getDirector().getName());
@@ -37,7 +39,7 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
     }
 
     @Override
-    public boolean isNeedInput() {
+    public boolean hasTransferData() {
         return true;
     }
 }

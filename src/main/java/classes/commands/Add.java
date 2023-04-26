@@ -15,11 +15,9 @@ public class Add extends NamedCommand implements Commandable {
 
     @Override
     public String execute(Object inputData) {
-        if (!(inputData instanceof Movie || inputData instanceof String))
-            return new WarningException("У команды не должно быть аргументов или аргумент \"random\"").getMessage();
         if (inputData instanceof Movie movie) {
             CollectionManager.addMovie(movie);
-        } else if (inputData.equals("random")) {
+        } else if (inputData instanceof String[] arg && arg[0].equals("random")) {
             CollectionManager.addMovie(RandomMovie.generate());
         } else return new WarningException("У команды не должно быть аргументов или аргумент \"random\"").getMessage();
         return "Выполнено";

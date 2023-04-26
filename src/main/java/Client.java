@@ -4,7 +4,6 @@ import classes.console.CommandHandler;
 import classes.console.InputHandler;
 import classes.console.TextColor;
 import classes.movie.Movie;
-import classes.movie.RandomMovie;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 
@@ -18,6 +17,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Client {
     private static int connectAttemptsCount = 0;
@@ -76,40 +76,52 @@ public class Client {
                         }
                         if (command.isNeedInput()) {
                             if (Objects.equals(command.getName(), "add")) {
-                                Movie movie = null;
-                                if (commandArguments == null) {
+                                Movie movie;
+                                if (commandArguments != null && commandArguments.length == 1 && commandArguments[0].equals("random")) {
+                                    out.writeObject(command);
+                                    out.flush();
+                                    out.writeObject(commandArguments);
+                                } else if (commandArguments == null || commandArguments.length == 0) {
                                     InputHandler inputHandler = new InputHandler();
                                     movie = inputHandler.readMovie();
-                                } else if (commandArguments.length == 1 && commandArguments[0].equals("random")) {
-                                    movie = RandomMovie.generate();
+                                    out.writeObject(command);
+                                    out.flush();
+                                    out.writeObject(movie);
                                 }
+                            } else if (Objects.equals(command.getName(), "update") && commandArguments != null) {
+                                Movie movie;
+                                InputHandler inputHandler = new InputHandler();
+                                movie = inputHandler.readMovie();
+                                movie.setId(UUID.fromString(commandArguments[0]));
                                 out.writeObject(command);
                                 out.flush();
                                 out.writeObject(movie);
-                            } else if (Objects.equals(command.getName(), "update")) {
-                                Movie movie = null;
-                                out.writeObject(command);
-                                out.flush();
-                                out.writeObject(commandArguments[0]);
-                                out.flush();
-                                out.writeObject(movie);
-                            } else if (Objects.equals(command.getName(), "remove_by_id") || Objects.equals(command.getName(), "remove_lower")
-                                    || Objects.equals(command.getName(), "count_by_oscars_count") || Objects.equals(command.getName(), "count_greater_than_director")) {
-                                out.writeObject(command);
-                                out.flush();
-                                out.writeObject(commandArguments[0]);
-                            } else out.writeObject(command);
+                                // remove by id = просто отправить id
+                                // count_by_oscars_count - отправить циферку для вывода фильмов с таким-то кол-вом оскаров
+                                // remove_lower - X, Y coords
+                                // count greater than director - сравниваем строчки
+
+                            }
+                        } else if
+                        (Objects.equals(command.getName(), "remove_by_id")
+                                        || Objects.equals(command.getName(), "remove_lower")
+                                        || Objects.equals(command.getName(), "count_by_oscars_count")
+                                        || Objects.equals(command.getName(), "count_greater_than_director")) {
+                            out.writeObject(command);
                             out.flush();
-                        }
+                            out.writeObject(commandArguments);
+                        } else out.writeObject(command);
+                        out.flush();
                     }
                     String input = in.readUTF();
                     System.out.println(input);
                     lastRequest = null;
                 } catch (NoSuchCommandException e) {
                     e.printMessage();
+                    lastRequest = null;
                 } catch (NoSuchMethodException | InvocationTargetException |
                          InstantiationException | IllegalAccessException e) {
-                   new SystemException().printMessage();
+                    new SystemException().printMessage();
                 }
                 System.out.print(TextColor.green("> "));
             }
