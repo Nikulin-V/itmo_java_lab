@@ -1,6 +1,7 @@
 package classes.commands;
 
 import classes.abs.NamedCommand;
+import classes.console.TextColor;
 import interfaces.Commandable;
 
 public class Exit extends NamedCommand implements Commandable {
@@ -13,6 +14,6 @@ public class Exit extends NamedCommand implements Commandable {
     public String execute(Object inputData) {
         System.out.println("Завершение работы...");
         Runtime.getRuntime().exit(0);
-        return "Выполнено";
+        return TextColor.green("Выполнено");
     }
 }

@@ -33,10 +33,10 @@ public class RemoveById extends NamedCommand implements Commandable {
                     return TextColor.cyan("Элемент успешно удалён");
                 return TextColor.yellow("Элемент с ID=" + stringUTF + " не найден");
             } catch (IllegalArgumentException e) {
-                return TextColor.yellow("Неверный формат ввода. Введите id в формате UUID");
+                return TextColor.yellow("Неверный формат ввода.");
             }
         }
-        return TextColor.yellow("Неверное количество аргументов. Введите индекс в формате целочисленного числа через пробел");
+        return TextColor.yellow("Неверное количество аргументов. Введите id в формате UUID через пробел");
     }
 
     @Override

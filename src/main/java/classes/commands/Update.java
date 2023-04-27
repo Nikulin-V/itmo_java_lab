@@ -33,7 +33,7 @@ public class Update extends NamedCommand implements Commandable {
         } catch (IllegalArgumentException exception) {
             return TextColor.yellow("Некорректно введён UUID фильма, повторите попытку");
         }
-        return "Выполнено";
+        return TextColor.green("Выполнено");
     }
 
     @Override
