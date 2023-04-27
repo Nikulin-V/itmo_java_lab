@@ -1,9 +1,7 @@
-import classes.abs.NamedCommand;
+import classes.commands.ExecuteScript;
 import classes.commands.Exit;
 import classes.console.CommandHandler;
-import classes.console.InputHandler;
 import classes.console.TextColor;
-import classes.movie.Movie;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 
@@ -15,9 +13,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class Client {
     private static int connectAttemptsCount = 0;
@@ -53,7 +49,6 @@ public class Client {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             Scanner scanner = new Scanner(System.in);
-            CommandHandler commandHandler = new CommandHandler();
             if (lastRequest == null)
                 System.out.print(TextColor.green("> "));
 
@@ -61,59 +56,19 @@ public class Client {
                 try {
                     String inputString = lastRequest == null ? scanner.nextLine() : lastRequest;
                     lastRequest = inputString;
-                    String commandName = inputString.split(" ")[0];
-                    String[] commandArguments = null;
-                    if (inputString.split(" ").length > 1) {
-                        String[] arr = inputString.split(" ");
-                        commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
-                    }
-                    if (!commandName.isBlank()) {
-                        NamedCommand command = commandHandler.getCommand(commandName);
-                        if (Objects.equals(command.getName(), "exit"))
-                            command.execute(null);
-                        if (Objects.equals(command.getName(), "execute_script")) {
-                            // TODO: execute_script
+                    String input = "";
+                    if (!inputString.startsWith("execute_script")) {
+                        CommandHandler.handle(inputString, out);
+                        input = in.readUTF();
+                    } else {
+                        String[] commandArguments = null;
+                        if (inputString.split(" ").length > 1) {
+                            String[] arr = inputString.split(" ");
+                            commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
                         }
-                        if (command.isNeedInput()) {
-                            if (Objects.equals(command.getName(), "add")) {
-                                Movie movie;
-                                if (commandArguments != null && commandArguments.length == 1 && commandArguments[0].equals("random")) {
-                                    out.writeObject(command);
-                                    out.flush();
-                                    out.writeObject(commandArguments);
-                                } else if (commandArguments == null || commandArguments.length == 0) {
-                                    InputHandler inputHandler = new InputHandler();
-                                    movie = inputHandler.readMovie();
-                                    out.writeObject(command);
-                                    out.flush();
-                                    out.writeObject(movie);
-                                }
-                            } else if (Objects.equals(command.getName(), "update") && commandArguments != null) {
-                                Movie movie;
-                                InputHandler inputHandler = new InputHandler();
-                                movie = inputHandler.readMovie();
-                                movie.setId(UUID.fromString(commandArguments[0]));
-                                out.writeObject(command);
-                                out.flush();
-                                out.writeObject(movie);
-                                // remove by id = просто отправить id
-                                // count_by_oscars_count - отправить циферку для вывода фильмов с таким-то кол-вом оскаров
-                                // remove_lower - X, Y coords
-                                // count greater than director - сравниваем строчки
-
-                            }
-                        } else if
-                        (Objects.equals(command.getName(), "remove_by_id")
-                                        || Objects.equals(command.getName(), "remove_lower")
-                                        || Objects.equals(command.getName(), "count_by_oscars_count")
-                                        || Objects.equals(command.getName(), "count_greater_than_director")) {
-                            out.writeObject(command);
-                            out.flush();
-                            out.writeObject(commandArguments);
-                        } else out.writeObject(command);
-                        out.flush();
+                        if (commandArguments != null && commandArguments.length == 1)
+                            input = new ExecuteScript().execute(commandArguments[0], in, out);
                     }
-                    String input = in.readUTF();
                     System.out.println(input);
                     lastRequest = null;
                 } catch (NoSuchCommandException e) {

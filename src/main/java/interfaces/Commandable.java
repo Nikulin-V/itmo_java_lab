@@ -7,5 +7,5 @@ public interface Commandable extends Serializable {
 
     String getInfo();
 
-    String execute(Object inputData);
+    Object execute(Object inputData);
 }
