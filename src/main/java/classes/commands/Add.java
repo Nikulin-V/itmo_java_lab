@@ -2,6 +2,7 @@ package classes.commands;
 
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
+import classes.console.TextColor;
 import classes.movie.Movie;
 import classes.movie.RandomMovie;
 import exceptions.WarningException;
@@ -20,7 +21,7 @@ public class Add extends NamedCommand implements Commandable {
         } else if (inputData instanceof String[] arg && arg[0].equals("random")) {
             CollectionManager.addMovie(RandomMovie.generate());
         } else return new WarningException("У команды не должно быть аргументов или аргумент \"random\"").getMessage();
-        return "Выполнено";
+        return TextColor.green("Выполнено");
     }
 
     @Override

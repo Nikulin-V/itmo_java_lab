@@ -10,20 +10,13 @@ public class Clear extends NamedCommand implements Commandable {
     public String execute(Object inputData) {
         new CollectionManager().clear();
         System.out.println(TextColor.cyan("Коллекция был очищена"));
-        return "Выполнено";
+        return TextColor.green("Выполнено");
     }
 
     @Override
     public String getInfo() {
         return getName() + "\t\t\t\t\t\t\t\t\t\t-\tочистить коллекцию";
     }
-    @Override
-    public boolean isNeedInput() {
-        return false;
-    }
-    @Override
-    public boolean hasTransferData() {
-        return false;
-    }
+
 }
 
