@@ -55,22 +55,24 @@ public class Client {
             while (lastRequest != null || scanner.hasNextLine()) {
                 try {
                     String inputString = lastRequest == null ? scanner.nextLine() : lastRequest;
-                    lastRequest = inputString;
-                    String input = "";
-                    if (!inputString.startsWith("execute_script")) {
-                        CommandHandler.handle(inputString, out);
-                        input = in.readUTF();
-                    } else {
-                        String[] commandArguments = null;
-                        if (inputString.split(" ").length > 1) {
-                            String[] arr = inputString.split(" ");
-                            commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
+                    if (!inputString.isBlank()) {
+                        lastRequest = inputString;
+                        String input = "";
+                        if (!inputString.startsWith("execute_script")) {
+                            CommandHandler.handle(inputString, out);
+                            input = in.readUTF();
+                        } else {
+                            String[] commandArguments = null;
+                            if (inputString.split(" ").length > 1) {
+                                String[] arr = inputString.split(" ");
+                                commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
+                            }
+                            if (commandArguments != null && commandArguments.length == 1)
+                                input = new ExecuteScript().execute(commandArguments[0], in, out);
                         }
-                        if (commandArguments != null && commandArguments.length == 1)
-                            input = new ExecuteScript().execute(commandArguments[0], in, out);
+                        System.out.println(input);
+                        lastRequest = null;
                     }
-                    System.out.println(input);
-                    lastRequest = null;
                 } catch (NoSuchCommandException e) {
                     e.printMessage();
                     lastRequest = null;
@@ -92,7 +94,7 @@ public class Client {
                 connect(host, port);
             } else System.out.println(TextColor.red("Не удаётся установить соединение"));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(TextColor.red("Ошибка соединения"));
         }
     }
 }

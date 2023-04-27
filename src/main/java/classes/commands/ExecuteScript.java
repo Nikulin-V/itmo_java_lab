@@ -41,7 +41,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                              InstantiationException | IllegalAccessException e) {
                         return e.getMessage();
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        System.out.println(TextColor.red("Ошибка соединения"));
                     }
                 return "Скрипт " + TextColor.green(scriptName) + " успешно выполнен";
             } catch (AssertionError | FileNotFoundException e) {
