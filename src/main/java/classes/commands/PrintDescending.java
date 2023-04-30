@@ -19,11 +19,11 @@ public class PrintDescending extends NamedCommand implements Commandable {
         CollectionManager collectionManager = new CollectionManager();
         ArrayList<Movie> collection = new ArrayList<>(collectionManager.getCollection());
         CollectionManager.sort(collection);
-        String output = TextColor.cyan("Содержимое коллекции в порядке убывания: \n");
+        StringBuilder output = new StringBuilder(TextColor.cyan("Содержимое коллекции в порядке убывания: \n"));
         if (collection.size() != 0)
             for (Movie movie : collection)
-                output += "\t" + movie.toString() + "\n";
-        else output = TextColor.cyan("\tПусто");
-        return output;
+                output.append("\t").append(movie.toString()).append("\n");
+        else output = new StringBuilder(TextColor.cyan("\tПусто"));
+        return output.toString();
     }
 }

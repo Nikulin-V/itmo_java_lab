@@ -9,8 +9,7 @@ public class Clear extends NamedCommand implements Commandable {
     @Override
     public String execute(Object inputData) {
         new CollectionManager().clear();
-        System.out.println(TextColor.cyan("Коллекция был очищена"));
-        return TextColor.green("Выполнено");
+        return TextColor.cyan("Коллекция была очищена");
     }
 
     @Override
