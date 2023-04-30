@@ -34,6 +34,8 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                             return new WarningException("Произошло зацикливание выполнения скриптов. Программа остановлена").getMessage();
                         }
                         String inputString = (String) line;
+                        while (inputString.startsWith(" "))
+                            inputString = inputString.substring(1);
                         CommandHandler.handle(inputString, out);
                         String input = in.readUTF();
                         System.out.println(input);

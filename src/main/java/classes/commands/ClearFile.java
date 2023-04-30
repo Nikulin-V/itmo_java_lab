@@ -17,10 +17,8 @@ public class ClearFile extends NamedCommand implements Commandable {
     @Override
     public String execute(Object inputData) {
         File file = new File(DataStorage.getCurrentStorageFilePath());
-        try {
-            PrintWriter writer = new PrintWriter(file);
+        try (PrintWriter writer = new PrintWriter(file)) {
             writer.print(readEmptyXMLCollection());
-            writer.close();
         } catch (IOException e) {
             return Arrays.toString(e.getStackTrace());
         }
@@ -31,10 +29,12 @@ public class ClearFile extends NamedCommand implements Commandable {
     public String getInfo() {
         return getName() + " <file_name>\t\t\t\t\t\t-\tочистить файл коллекции";
     }
+
     @Override
     public boolean isNeedInput() {
         return false;
     }
+
     @Override
     public boolean hasTransferData() {
         return false;
