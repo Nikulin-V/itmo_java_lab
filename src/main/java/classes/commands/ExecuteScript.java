@@ -25,6 +25,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                 File file = new File(scriptName);
                 assert file.exists() && file.isFile();
                 BufferedReader reader = new BufferedReader(new FileReader(file));
+
                 for (Object line : reader.lines().toArray())
                     try {
                         scriptTransitionCount += 1;
@@ -37,14 +38,14 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         while (inputString.startsWith(" "))
                             inputString = inputString.substring(1);
                         CommandHandler.handle(inputString, out);
-                        String input = in.readUTF();
-                        System.out.println(input);
+                        Response response = (Response) in.readObject();
+                        System.out.println(response.getData());
                     } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
                              InstantiationException | IllegalAccessException e) {
                         return new Response(1).setData(TextColor.red("Произошла ошибка считывания " +
                                 "команд из файла"));
-                    } catch (IOException e) {
-                        return new Response(1).setData(TextColor.yellow("Ошибка соединения"));
+                    } catch (IOException | ClassNotFoundException e) {
+                        return new Response(1).setData(TextColor.yellow("Ошибка чтения файла"));
                     }
                 return new Response(0).setData("Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
             } catch (AssertionError | FileNotFoundException e) {

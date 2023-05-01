@@ -65,7 +65,13 @@ public class Client {
                         CommandHandler.setLastRequest(inputString);
                         Response response = Response.getEmptyResponce();
                         if (!inputString.startsWith("execute_script")) {
+
+
+
                             CommandHandler.handle(inputString, out);
+
+
+
                             response = (Response) in.readObject();
                         } else {
                             String[] commandArguments = null;
