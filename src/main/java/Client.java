@@ -1,4 +1,5 @@
 import classes.Response;
+import classes.ExceptionCommandHandler;
 import classes.commands.ExecuteScript;
 import classes.commands.Exit;
 import classes.console.CommandHandler;
@@ -66,13 +67,9 @@ public class Client {
                         Response response = Response.getEmptyResponce();
                         if (!inputString.startsWith("execute_script")) {
 
-
-
-                            CommandHandler.handle(inputString, out);
-
-
-
-                            response = (Response) in.readObject();
+                            response = ExceptionCommandHandler.handleExceptions(inputString, out);
+                            if (response == null)
+                                response = (Response) in.readObject();
                         } else {
                             String[] commandArguments = null;
                             if (inputString.split(" ").length > 1) {

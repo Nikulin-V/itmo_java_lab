@@ -22,7 +22,7 @@ public class RemoveById extends NamedCommand implements Commandable {
         if (inputData instanceof String[] arg) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
             boolean isFound = false;
-            try {
+
                 UUID uuid = UUID.fromString(arg[0]);
                 for (Movie movie : movies) {
                     if (movie.getId().equals(uuid)) {
@@ -34,9 +34,6 @@ public class RemoveById extends NamedCommand implements Commandable {
                 if (isFound)
                     return new Response(0).setData(TextColor.cyan("Элемент успешно удалён"));
                 return new Response(0).setData(TextColor.yellow("Элемент с ID=" + arg[0] + " не найден"));
-            } catch (IllegalArgumentException e) {
-                return new Response(1).setData(TextColor.yellow("Неверный формат ввода."));
-            }
         }
         return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите id в " +
                 "формате UUID через пробел"));

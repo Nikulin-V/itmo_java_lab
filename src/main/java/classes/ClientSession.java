@@ -7,6 +7,7 @@ import classes.console.TextColor;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 
 public class ClientSession implements Runnable {
@@ -24,7 +25,7 @@ public class ClientSession implements Runnable {
             System.out.println(TextColor.grey("Соединение установлено: " + socket.getInetAddress()));
 
             while (!socket.isClosed()) {
-                try {
+
                     Object inputObject = inputStream.readObject();
                     if (inputObject instanceof NamedCommand command) {
                         Response outputData;
@@ -35,14 +36,13 @@ public class ClientSession implements Runnable {
                             outputData = command.execute(null);
                         if (outputData != null)
                             outputStream.writeObject(outputData);
-                    } else throw new ClassNotFoundException();
-                } catch (ClassNotFoundException e) {
-                    outputStream.writeObject(new Response(1).setData(TextColor.yellow("Передана неизвестная команда")));
-                } finally {
+                    } else outputStream.writeObject(new Response(1).setData(TextColor.yellow("Передана неизвестная команда")));
+
                     outputStream.flush();
-                }
+
             }
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                 InstantiationException | IllegalAccessException e) {
             System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
             CollectionManager.saveCollection();
             System.out.println(TextColor.green("Хранилище сохранено в файл"));

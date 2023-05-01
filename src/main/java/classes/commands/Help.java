@@ -2,10 +2,8 @@ package classes.commands;
 
 import classes.Response;
 import classes.abs.NamedCommand;
-import classes.console.TextColor;
 import interfaces.Commandable;
 import org.reflections.Reflections;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
@@ -16,19 +14,14 @@ public class Help extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Reflections reflections = new Reflections("classes.commands");
         Set<Class<? extends Commandable>> allCommands = reflections.getSubTypesOf(Commandable.class);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for (Class<? extends Commandable> command : allCommands) {
-            try {
-                output += command.getDeclaredConstructor().newInstance().getInfo() + "\n";
-            } catch (IllegalAccessException | InstantiationException | InvocationTargetException |
-                     NoSuchMethodException e) {
-                return new Response(1).setData(TextColor.red("Фатальная ошибка исполнения программы"));
-            }
+                output.append(command.getDeclaredConstructor().newInstance().getInfo()).append("\n");
         }
-        return new Response(0).setData(output);
+        return new Response(0).setData(output.toString());
     }
 
     @Override

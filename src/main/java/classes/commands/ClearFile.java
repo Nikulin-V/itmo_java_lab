@@ -20,7 +20,7 @@ public class ClearFile extends NamedCommand implements Commandable {
         try (PrintWriter writer = new PrintWriter(file)) {
             writer.print(readEmptyXMLCollection());
         } catch (IOException e) {
-            return new Response(1).setData(TextColor.red("Проблема с очисткой файла коллекции"));
+            return new Response(1).setData(TextColor.red("Проблема чтением файла коллекции"));
         }
         return new Response(0).setData(TextColor.cyan("Файл коллекции был очищен"));
     }
@@ -29,16 +29,5 @@ public class ClearFile extends NamedCommand implements Commandable {
     public String getInfo() {
         return getName() + " <file_name>\t\t\t\t\t\t-\tочистить файл коллекции";
     }
-
-    @Override
-    public boolean isNeedInput() {
-        return false;
-    }
-
-    @Override
-    public boolean hasTransferData() {
-        return false;
-    }
-
 }
 

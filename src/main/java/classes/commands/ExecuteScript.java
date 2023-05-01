@@ -19,15 +19,14 @@ public class ExecuteScript extends NamedCommand implements Commandable {
         return getName() + " <file_name>\t\t\t\t\t-\tсчитать и исполнить скрипт из указанного файла";
     }
 
-    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out) {
+    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out) throws NoSuchCommandException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         if (inputData instanceof String scriptName) {
-            try {
+
                 File file = new File(scriptName);
                 assert file.exists() && file.isFile();
                 BufferedReader reader = new BufferedReader(new FileReader(file));
 
-                for (Object line : reader.lines().toArray())
-                    try {
+                for (Object line : reader.lines().toArray()){
                         scriptTransitionCount += 1;
                         if (scriptTransitionCount > MAX_SCRIPT_TRANSITION_COUNT) {
                             scriptTransitionCount = 0;
@@ -40,18 +39,8 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         CommandHandler.handle(inputString, out);
                         Response response = (Response) in.readObject();
                         System.out.println(response.getData());
-                    } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
-                             InstantiationException | IllegalAccessException e) {
-                        return new Response(1).setData(TextColor.red("Произошла ошибка считывания " +
-                                "команд из файла"));
-                    } catch (IOException | ClassNotFoundException e) {
-                        return new Response(1).setData(TextColor.yellow("Ошибка чтения файла"));
-                    }
-                return new Response(0).setData("Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
-            } catch (AssertionError | FileNotFoundException e) {
-                scriptTransitionCount = 0;
-                return new Response(1).setData(TextColor.red("Файл не найден"));
             }
+                return new Response(0).setData("Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
         }
         return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите имя файла через пробел"));
     }

@@ -18,7 +18,7 @@ public class RemoveAt extends NamedCommand implements Commandable {
     public Response execute(Object inputData) {
         String[] arg = (String[]) inputData;
         if (arg != null && String.valueOf(arg[0]).chars().allMatch(Character::isDigit)) {
-            try {
+
                 int index = Integer.parseInt(arg[0]);
                 CollectionManager cm = new CollectionManager();
                 if (cm.getCollection().size() >= index + 1) {
@@ -27,13 +27,6 @@ public class RemoveAt extends NamedCommand implements Commandable {
                 }
                 return new Response(0).setData(TextColor.yellow("Элемент с индексом ") +
                         TextColor.red(String.valueOf(index)) + TextColor.yellow(" не существует"));
-            } catch (NumberFormatException e) {
-                return new Response(1).setData(TextColor.yellow("Неверный формат ввода. Введите индекс в " +
-                        "формате целочисленного числа через пробел"));
-            } catch (IndexOutOfBoundsException e) {
-                return new Response(1).setData(TextColor.yellow(TextColor.yellow("Введенный индекс выходит" +
-                        " за пределы размера нынешней коллекции")));
-            }
         }
         return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите индекс в " +
                 "формате целого неотрицательного числа через пробел"));
