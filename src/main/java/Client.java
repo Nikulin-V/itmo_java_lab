@@ -1,3 +1,5 @@
+import classes.Response;
+import classes.ExceptionCommandHandler;
 import classes.commands.ExecuteScript;
 import classes.commands.Exit;
 import classes.console.CommandHandler;
@@ -62,10 +64,12 @@ public class Client {
                         inputString = inputString.substring(1);
                     if (!(inputString == null || inputString.isBlank())) {
                         CommandHandler.setLastRequest(inputString);
-                        String inputData = "";
+                        Response response = Response.getEmptyResponce();
                         if (!inputString.startsWith("execute_script")) {
-                            CommandHandler.handle(inputString, out);
-                            inputData = in.readUTF();
+
+                            response = ExceptionCommandHandler.handleExceptions(inputString, out);
+                            if (response == null)
+                                response = (Response) in.readObject();
                         } else {
                             String[] commandArguments = null;
                             if (inputString.split(" ").length > 1) {
@@ -73,16 +77,16 @@ public class Client {
                                 commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
                             }
                             if (commandArguments != null && commandArguments.length == 1)
-                                inputData = new ExecuteScript().execute(commandArguments[0], in, out);
+                                response = new ExecuteScript().execute(commandArguments[0], in, out);
                         }
-                        System.out.println(inputData);
+                        System.out.println(response.getData());
                         CommandHandler.clearLastRequest();
                     }
                 } catch (NoSuchCommandException e) {
                     e.printMessage();
                     CommandHandler.clearLastRequest();
-                } catch (NoSuchMethodException | InvocationTargetException |
-                         InstantiationException | IllegalAccessException e) {
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                         IllegalAccessException | ClassNotFoundException e) {
                     new SystemException().printMessage();
                 }
                 System.out.print(TextColor.green("> "));

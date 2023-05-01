@@ -1,5 +1,6 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.console.TextColor;
 import interfaces.Commandable;
@@ -11,9 +12,9 @@ public class Exit extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         System.out.println("Завершение работы...");
         Runtime.getRuntime().exit(0);
-        return TextColor.green("Выполнено");
+        return new Response(0).setData(TextColor.green("Выполнено"));
     }
 }

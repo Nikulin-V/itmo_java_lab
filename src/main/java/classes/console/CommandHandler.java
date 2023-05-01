@@ -87,7 +87,6 @@ public class CommandHandler {
                         out.flush();
                         out.writeObject(outputData);
                         setLastRequestData(commandArguments);
-                        out.flush();
                     } else if (commandArguments == null || commandArguments.length == 0) {
                         InputHandler inputHandler = new InputHandler();
                         Object outputData = lastRequestData == null ? inputHandler.readMovie() : lastRequestData;
@@ -95,11 +94,11 @@ public class CommandHandler {
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(outputData);
-                        out.flush();
                     }
-                } else if (Objects.equals(command.getName(), "update") && commandArguments != null) {
+                } else if (Objects.equals(command.getName(), "update")) {
                     InputHandler inputHandler = new InputHandler();
                     try {
+                        if (commandArguments == null) throw new NullPointerException();
                         UUID filmUUID = UUID.fromString(commandArguments[0]);
                         Movie outputData = lastRequestData == null ? inputHandler.readMovie() : (Movie) lastRequestData;
                         outputData.setId(filmUUID);
@@ -107,27 +106,24 @@ public class CommandHandler {
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(outputData);
-                        out.flush();
-                    } catch (IllegalArgumentException e) {
+                    } catch (NullPointerException | IllegalArgumentException e) {
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(null);
-                        out.flush();
                     }
                 }
+
             } else if (command.hasTransferData()) {
                 Object outputData = lastRequestData == null ? commandArguments : lastRequestData;
                 lastRequestData = outputData;
                 out.writeObject(command);
                 out.flush();
                 out.writeObject(outputData);
-                out.flush();
-            } else {
-                out.writeObject(command);
-                out.flush();
-            }
+            } else out.writeObject(command);
+            out.flush();
         }
     }
+
 
     public static void clearLastRequest() {
         lastRequest = null;

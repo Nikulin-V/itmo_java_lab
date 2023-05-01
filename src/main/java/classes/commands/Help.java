@@ -1,9 +1,9 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import interfaces.Commandable;
 import org.reflections.Reflections;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
@@ -14,24 +14,21 @@ public class Help extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Reflections reflections = new Reflections("classes.commands");
         Set<Class<? extends Commandable>> allCommands = reflections.getSubTypesOf(Commandable.class);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for (Class<? extends Commandable> command : allCommands) {
-            try {
-                output += command.getDeclaredConstructor().newInstance().getInfo() + "\n";
-            } catch (IllegalAccessException | InstantiationException | InvocationTargetException |
-                     NoSuchMethodException e) {
-                return new RuntimeException(e).getMessage();
-            }
+                output.append(command.getDeclaredConstructor().newInstance().getInfo()).append("\n");
         }
-        return output;
+        return new Response(0).setData(output.toString());
     }
+
     @Override
     public boolean isNeedInput() {
         return false;
     }
+
     @Override
     public boolean hasTransferData() {
         return false;

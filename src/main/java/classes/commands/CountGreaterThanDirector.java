@@ -1,5 +1,6 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
@@ -17,7 +18,7 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
     }
 
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         String[] arg = (String[]) inputData;
         if (arg != null) {
             String referenceDirector = arg[0];
@@ -33,9 +34,11 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
                     count++;
                 else break;
             }
-            return TextColor.cyan("Число фильмов, удовлетворяющих условию: " + count);
+            return new Response(0).setData(TextColor.cyan("Число фильмов, удовлетворяющих условию: "
+                    + count));
         }
-        return TextColor.yellow("Неверное количество аргументов для этой команды\n" + "Введите имя режиссёра без пробелов");
+        return new Response(1).setData(TextColor.yellow("Неверное количество аргументов для этой команды\n"
+                + "Введите имя режиссёра без пробелов"));
     }
 
     @Override

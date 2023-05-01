@@ -1,5 +1,6 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
@@ -15,26 +16,22 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         String[] arg = (String[]) inputData;
         if (arg != null && String.valueOf(arg[0]).chars().allMatch(Character::isDigit)) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
             int searchMoviesCount = 0;
-            try {
                 int searchOscarsCount = Integer.parseInt(arg[0]);
                 for (Movie movie : movies) {
                     if (movie.getOscarsCount() == searchOscarsCount) {
                         searchMoviesCount += 1;
                     }
                 }
-                return "Количество фильмов с " + searchOscarsCount + " наградами \"Оскар\": " + searchMoviesCount;
-            } catch (NumberFormatException e) {
-                return TextColor.yellow("Неверный формат ввода. \n" +
-                        "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел");
-            }
+                return new Response(0).setData(TextColor.cyan("Количество фильмов с " +
+                        searchOscarsCount + " наградами \"Оскар\": " + searchMoviesCount));
         }
-        return TextColor.yellow("Неверное количество аргументов. \n" +
-                "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел");
+        return new Response(1).setData(TextColor.yellow("Неверный формат ввода. \n" +
+                "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел"));
     }
 
     @Override

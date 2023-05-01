@@ -1,5 +1,6 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
@@ -14,8 +15,9 @@ public class RemoveLower extends NamedCommand implements Commandable {
     public String getInfo() {
         return getName() + "\t\t\t\t\t\t\t\t-\tудалить из коллекции все элементы, меньшие, чем заданный";
     }
+
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         if (inputData instanceof String[] coordinatesArray && coordinatesArray.length == 2) {
             try {
                 long x = Long.parseLong(coordinatesArray[0]);
@@ -23,15 +25,16 @@ public class RemoveLower extends NamedCommand implements Commandable {
                 Coordinates inputCoordinates = new Coordinates(x, y);
                 CollectionManager cm = new CollectionManager();
                 cm.getCollection().removeIf(m -> inputCoordinates.compareTo(m.getCoordinates()) < 0);
-                return TextColor.cyan("Успешно удалено");
+                return new Response(0).setData(TextColor.cyan("Успешно удалено"));
             } catch (NotGreatThanException | GreatThanException e) {
-                return e.getMessage();
+                return new Response(1).setData(e.getMessage());
             } catch (NullValueException e) {
-                return e.getMessage();
+                return new Response(1).setData(e.getMessage());
             } catch (NumberFormatException ignored) {
             }
         }
-        return TextColor.yellow("Некорректный ввод. Введите координаты в формате чисел: x y");
+        return new Response(1).setData(TextColor.yellow("Некорректный ввод. Введите координаты в " +
+                "формате чисел: x y"));
     }
 
     @Override
