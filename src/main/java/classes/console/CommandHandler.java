@@ -19,6 +19,20 @@ import java.util.UUID;
 public class CommandHandler {
     private final Set<Class<? extends NamedCommand>>
             allCommands = new Reflections("classes.commands").getSubTypesOf(NamedCommand.class);
+    private static String lastRequest;
+    private static Object lastRequestData;
+
+    public static String getLastRequest() {
+        return lastRequest;
+    }
+
+    public static void setLastRequest(String lastRequest) {
+        CommandHandler.lastRequest = lastRequest;
+    }
+
+    public static void setLastRequestData(Object lastRequestData) {
+        CommandHandler.lastRequestData = lastRequestData;
+    }
 
     /**
      * @param commandName String with name of command
@@ -39,14 +53,14 @@ public class CommandHandler {
      * @return String in snake case
      */
     public static String camelToSnake(String str) {
-        String result = str.substring(0, 1).toLowerCase();
+        StringBuilder result = new StringBuilder(str.substring(0, 1).toLowerCase());
         for (int i = 1; i < str.length(); i++) {
             char ch = str.charAt(i);
             if (Character.isUpperCase(ch))
-                result += "_" + Character.toLowerCase(ch);
-            else result += ch;
+                result.append("_").append(Character.toLowerCase(ch));
+            else result.append(ch);
         }
-        return result;
+        return result.toString();
     }
 
     public static void handle(String inputString,
@@ -66,41 +80,57 @@ public class CommandHandler {
             }
             if (command.isNeedInput()) {
                 if (Objects.equals(command.getName(), "add")) {
-                    Movie movie;
                     if (commandArguments != null && commandArguments.length == 1 && commandArguments[0].equals("random")) {
+                        Object outputData = lastRequestData == null ? commandArguments : lastRequestData;
+                        lastRequestData = outputData;
                         out.writeObject(command);
                         out.flush();
-                        out.writeObject(commandArguments);
+                        out.writeObject(outputData);
+                        setLastRequestData(commandArguments);
+                        out.flush();
                     } else if (commandArguments == null || commandArguments.length == 0) {
                         InputHandler inputHandler = new InputHandler();
-                        movie = inputHandler.readMovie();
+                        Object outputData = lastRequestData == null ? inputHandler.readMovie() : lastRequestData;
+                        lastRequestData = outputData;
                         out.writeObject(command);
                         out.flush();
-                        out.writeObject(movie);
+                        out.writeObject(outputData);
+                        out.flush();
                     }
                 } else if (Objects.equals(command.getName(), "update") && commandArguments != null) {
-                    Movie movie;
                     InputHandler inputHandler = new InputHandler();
                     try {
                         UUID filmUUID = UUID.fromString(commandArguments[0]);
-                        movie = inputHandler.readMovie();
-                        movie.setId(filmUUID);
+                        Movie outputData = lastRequestData == null ? inputHandler.readMovie() : (Movie) lastRequestData;
+                        outputData.setId(filmUUID);
+                        lastRequestData = outputData;
                         out.writeObject(command);
                         out.flush();
-                        out.writeObject(movie);
+                        out.writeObject(outputData);
+                        out.flush();
                     } catch (IllegalArgumentException e) {
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(null);
+                        out.flush();
                     }
                 }
-            }
-            if (command.hasTransferData()) {
+            } else if (command.hasTransferData()) {
+                Object outputData = lastRequestData == null ? commandArguments : lastRequestData;
+                lastRequestData = outputData;
                 out.writeObject(command);
                 out.flush();
-                out.writeObject(commandArguments);
-            }else out.writeObject(command);
+                out.writeObject(outputData);
+                out.flush();
+            } else {
+                out.writeObject(command);
+                out.flush();
+            }
         }
-        out.flush();
+    }
+
+    public static void clearLastRequest() {
+        lastRequest = null;
+        lastRequestData = null;
     }
 }

@@ -20,7 +20,7 @@ public class Client {
     private static int connectAttemptsCount = 0;
     private static final int maxConnectAttemptsCount = 15;
     private static final int timeoutMilliseconds = 1000;
-    private static String lastRequest;
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws InterruptedException {
         if (args.length != 2) {
@@ -49,19 +49,24 @@ public class Client {
             connectAttemptsCount = 0;
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            Scanner scanner = new Scanner(System.in);
-            if (lastRequest == null)
+            if (CommandHandler.getLastRequest() == null)
                 System.out.print(TextColor.green("> "));
 
-            while (lastRequest != null || scanner.hasNextLine()) {
+            while (CommandHandler.getLastRequest() != null || scanner.hasNextLine()) {
                 try {
-                    String inputString = lastRequest == null ? scanner.nextLine() : lastRequest;
-                    if (!inputString.isBlank()) {
-                        lastRequest = inputString;
-                        Response input = Response.getEmptyResponce();
+                    String inputString;
+                    Response response = Response.getEmptyResponce();
+                    if (hasLastRequest()) {
+                        System.out.println(TextColor.green("Выполняю последний запрос (" + CommandHandler.getLastRequest() + ")"));
+                        inputString = CommandHandler.getLastRequest();
+                    } else inputString = scanner.nextLine();
+                    while (inputString != null && inputString.startsWith(" "))
+                        inputString = inputString.substring(1);
+                    if (!(inputString == null || inputString.isBlank())) {
+                        CommandHandler.setLastRequest(inputString);
                         if (!inputString.startsWith("execute_script")) {
                             CommandHandler.handle(inputString, out);
-                            input = (Response) in.readObject();
+                            response = (Response) in.readUTF();
                         } else {
                             String[] commandArguments = null;
                             if (inputString.split(" ").length > 1) {
@@ -69,19 +74,17 @@ public class Client {
                                 commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
                             }
                             if (commandArguments != null && commandArguments.length == 1)
-                                input = new ExecuteScript().execute(commandArguments[0], in, out);
+                                response = new ExecuteScript().execute(commandArguments[0], in, out);
                         }
-                        System.out.println(input.getData());
-                        lastRequest = null;
+                        System.out.println(response.getData());
+                        CommandHandler.clearLastRequest();
                     }
                 } catch (NoSuchCommandException e) {
                     e.printMessage();
-                    lastRequest = null;
+                    CommandHandler.clearLastRequest();
                 } catch (NoSuchMethodException | InvocationTargetException |
                          InstantiationException | IllegalAccessException e) {
                     new SystemException().printMessage();
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
                 }
                 System.out.print(TextColor.green("> "));
             }
@@ -90,15 +93,36 @@ public class Client {
         } catch (SocketException e) {
             if (connectAttemptsCount == 0)
                 System.out.println(TextColor.yellow("Сервер не отвечает"));
-            System.out.println(TextColor.grey("Пытаюсь установить соединение с сервером..."));
             if (connectAttemptsCount <= maxConnectAttemptsCount) {
                 connectAttemptsCount += 1;
                 Thread.sleep(timeoutMilliseconds);
                 connect(host, port);
             } else System.out.println(TextColor.red("Не удаётся установить соединение"));
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println(TextColor.red("Ошибка соединения"));
         }
+    }
+
+    private static boolean hasLastRequest() {
+        return CommandHandler.getLastRequest() != null && needLastRequest();
+    }
+
+    private static boolean needLastRequest() {
+        System.out.println(TextColor.yellow("Хотите повторить последний запрос?\nПоследний запрос: ") +
+                TextColor.green(CommandHandler.getLastRequest() + "\n") +
+                TextColor.yellow("1 - да (по умолчанию)\n2 - нет"));
+        System.out.print(TextColor.green("> "));
+
+        String inputString = null;
+        while (inputString == null || !(inputString.equals("") || inputString.equals("1") || inputString.equals("2"))) {
+            inputString = scanner.nextLine();
+        }
+        boolean isUserNeedLastRequest = inputString.equals("") || inputString.equals("1");
+
+        if (!isUserNeedLastRequest) {
+            CommandHandler.clearLastRequest();
+            System.out.print(TextColor.green("> "));
+        }
+        return isUserNeedLastRequest;
     }
 }

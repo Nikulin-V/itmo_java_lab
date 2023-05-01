@@ -1,6 +1,5 @@
 package classes.commands;
 
-import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;

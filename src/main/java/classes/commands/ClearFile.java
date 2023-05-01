@@ -17,10 +17,8 @@ public class ClearFile extends NamedCommand implements Commandable {
     @Override
     public Response execute(Object inputData) {
         File file = new File(DataStorage.getCurrentStorageFilePath());
-        try {
-            PrintWriter writer = new PrintWriter(file);
+        try (PrintWriter writer = new PrintWriter(file)) {
             writer.print(readEmptyXMLCollection());
-            writer.close();
         } catch (IOException e) {
             return new Response(1).setData(TextColor.red("Проблема с очисткой файла коллекции"));
         }
