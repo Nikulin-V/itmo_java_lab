@@ -3,12 +3,14 @@ package classes.abs;
 import classes.Response;
 import classes.console.CommandHandler;
 
+import java.lang.reflect.InvocationTargetException;
+
 public abstract class NamedCommand {
     public boolean isNeedInput() {
         return false;
     }
 
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return null;
     }
 
