@@ -1,5 +1,6 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
@@ -12,11 +13,12 @@ public class Sort extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         CollectionManager collectionManager = new CollectionManager();
         if (!collectionManager.getCollection().isEmpty()) {
-           CollectionManager.sort(collectionManager.getCollection());
-            return TextColor.cyan("Коллекция успешно отсортирована в порядке убывания");
-        } return TextColor.cyan("Коллекция пустая, нечего сортировать");
+            CollectionManager.sort(collectionManager.getCollection());
+            return new Response(0).setData(TextColor.cyan("Коллекция успешно отсортирована в порядке убывания"));
+        }
+        return new Response(0).setData(TextColor.cyan("Коллекция пустая, нечего сортировать"));
     }
 }

@@ -1,5 +1,6 @@
 package classes.abs;
 
+import classes.Response;
 import classes.console.CommandHandler;
 
 public abstract class NamedCommand {
@@ -7,7 +8,7 @@ public abstract class NamedCommand {
         return false;
     }
 
-    public Object execute(Object inputData) {
+    public Response execute(Object inputData) {
         return null;
     }
 

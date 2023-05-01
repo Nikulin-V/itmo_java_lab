@@ -1,5 +1,6 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
@@ -16,12 +17,13 @@ public class RemoveById extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(Object inputData) {
-        if (inputData instanceof String stringUTF) {
+    public Response execute(Object inputData) {
+
+        if (inputData instanceof String[] arg) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
             boolean isFound = false;
             try {
-                UUID uuid = UUID.fromString(stringUTF);
+                UUID uuid = UUID.fromString(arg[0]);
                 for (Movie movie : movies) {
                     if (movie.getId().equals(uuid)) {
                         movies.remove(movie);
@@ -30,13 +32,14 @@ public class RemoveById extends NamedCommand implements Commandable {
                     }
                 }
                 if (isFound)
-                    return TextColor.cyan("Элемент успешно удалён");
-                return TextColor.yellow("Элемент с ID=" + stringUTF + " не найден");
+                    return new Response(0).setData(TextColor.cyan("Элемент успешно удалён"));
+                return new Response(0).setData(TextColor.yellow("Элемент с ID=" + arg[0] + " не найден"));
             } catch (IllegalArgumentException e) {
-                return TextColor.yellow("Неверный формат ввода.");
+                return new Response(1).setData(TextColor.yellow("Неверный формат ввода."));
             }
         }
-        return TextColor.yellow("Неверное количество аргументов. Введите id в формате UUID через пробел");
+        return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите id в " +
+                "формате UUID через пробел"));
     }
 
     @Override

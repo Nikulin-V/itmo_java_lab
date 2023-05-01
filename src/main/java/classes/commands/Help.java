@@ -1,6 +1,8 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
+import classes.console.TextColor;
 import interfaces.Commandable;
 import org.reflections.Reflections;
 
@@ -14,7 +16,7 @@ public class Help extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         Reflections reflections = new Reflections("classes.commands");
         Set<Class<? extends Commandable>> allCommands = reflections.getSubTypesOf(Commandable.class);
         String output = "";
@@ -23,15 +25,17 @@ public class Help extends NamedCommand implements Commandable {
                 output += command.getDeclaredConstructor().newInstance().getInfo() + "\n";
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException |
                      NoSuchMethodException e) {
-                return new RuntimeException(e).getMessage();
+                return new Response(1).setData(TextColor.red("Фатальная ошибка исполнения программы"));
             }
         }
-        return output;
+        return new Response(0).setData(output);
     }
+
     @Override
     public boolean isNeedInput() {
         return false;
     }
+
     @Override
     public boolean hasTransferData() {
         return false;

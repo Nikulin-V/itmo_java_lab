@@ -1,3 +1,4 @@
+import classes.Response;
 import classes.commands.ExecuteScript;
 import classes.commands.Exit;
 import classes.console.CommandHandler;
@@ -57,10 +58,10 @@ public class Client {
                     String inputString = lastRequest == null ? scanner.nextLine() : lastRequest;
                     if (!inputString.isBlank()) {
                         lastRequest = inputString;
-                        String input = "";
+                        Response input = Response.getEmptyResponce();
                         if (!inputString.startsWith("execute_script")) {
                             CommandHandler.handle(inputString, out);
-                            input = in.readUTF();
+                            input = (Response) in.readObject();
                         } else {
                             String[] commandArguments = null;
                             if (inputString.split(" ").length > 1) {
@@ -70,7 +71,7 @@ public class Client {
                             if (commandArguments != null && commandArguments.length == 1)
                                 input = new ExecuteScript().execute(commandArguments[0], in, out);
                         }
-                        System.out.println(input);
+                        System.out.println(input.getData());
                         lastRequest = null;
                     }
                 } catch (NoSuchCommandException e) {
@@ -79,6 +80,8 @@ public class Client {
                 } catch (NoSuchMethodException | InvocationTargetException |
                          InstantiationException | IllegalAccessException e) {
                     new SystemException().printMessage();
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
                 System.out.print(TextColor.green("> "));
             }
@@ -94,6 +97,7 @@ public class Client {
                 connect(host, port);
             } else System.out.println(TextColor.red("Не удаётся установить соединение"));
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println(TextColor.red("Ошибка соединения"));
         }
     }

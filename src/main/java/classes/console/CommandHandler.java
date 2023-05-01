@@ -49,7 +49,7 @@ public class CommandHandler {
         return result;
     }
 
-    public static Object handle(String inputString,
+    public static void handle(String inputString,
                                 ObjectOutputStream out) throws IOException, NoSuchCommandException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String commandName = inputString.split(" ")[0];
         String[] commandArguments = null;
@@ -71,14 +71,12 @@ public class CommandHandler {
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(commandArguments);
-                        out.flush();
                     } else if (commandArguments == null || commandArguments.length == 0) {
                         InputHandler inputHandler = new InputHandler();
                         movie = inputHandler.readMovie();
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(movie);
-                        out.flush();
                     }
                 } else if (Objects.equals(command.getName(), "update") && commandArguments != null) {
                     Movie movie;
@@ -90,24 +88,19 @@ public class CommandHandler {
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(movie);
-                        out.flush();
                     } catch (IllegalArgumentException e) {
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(null);
-                        out.flush();
                     }
                 }
-            } else if (command.hasTransferData()) {
+            }
+            if (command.hasTransferData()) {
                 out.writeObject(command);
                 out.flush();
                 out.writeObject(commandArguments);
-                out.flush();
-            } else {
-                out.writeObject(command);
-                out.flush();
-            }
+            }else out.writeObject(command);
         }
-        return commandName;
+        out.flush();
     }
 }

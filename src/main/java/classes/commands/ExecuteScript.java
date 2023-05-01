@@ -1,11 +1,10 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.console.CommandHandler;
 import classes.console.TextColor;
-import exceptions.DangerException;
 import exceptions.NoSuchCommandException;
-import exceptions.WarningException;
 import interfaces.Commandable;
 
 import java.io.*;
@@ -20,7 +19,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
         return getName() + " <file_name>\t\t\t\t\t-\tсчитать и исполнить скрипт из указанного файла";
     }
 
-    public String execute(Object inputData, ObjectInputStream in, ObjectOutputStream out) {
+    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out) {
         if (inputData instanceof String scriptName) {
             try {
                 File file = new File(scriptName);
@@ -31,7 +30,8 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         scriptTransitionCount += 1;
                         if (scriptTransitionCount > MAX_SCRIPT_TRANSITION_COUNT) {
                             scriptTransitionCount = 0;
-                            return new WarningException("Произошло зацикливание выполнения скриптов. Программа остановлена").getMessage();
+                            return new Response(1).setData(TextColor.yellow("Произошло зацикливание " +
+                                    "выполнения скриптов. Программа остановлена"));
                         }
                         String inputString = (String) line;
                         CommandHandler.handle(inputString, out);
@@ -39,16 +39,17 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         System.out.println(input);
                     } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
                              InstantiationException | IllegalAccessException e) {
-                        return e.getMessage();
+                        return new Response(1).setData(TextColor.red("Произошла ошибка считывания " +
+                                "команд из файла"));
                     } catch (IOException e) {
-                        System.out.println(TextColor.red("Ошибка соединения"));
+                        return new Response(1).setData(TextColor.yellow("Ошибка соединения"));
                     }
-                return "Скрипт " + TextColor.green(scriptName) + " успешно выполнен";
+                return new Response(0).setData("Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
             } catch (AssertionError | FileNotFoundException e) {
                 scriptTransitionCount = 0;
-                return new DangerException("Файл не найден").getMessage();
+                return new Response(1).setData(TextColor.red("Файл не найден"));
             }
         }
-        return TextColor.yellow("Неверное количество аргументов. Введите имя файла через пробел");
+        return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите имя файла через пробел"));
     }
 }

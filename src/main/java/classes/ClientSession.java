@@ -27,17 +27,17 @@ public class ClientSession implements Runnable {
                 try {
                     Object inputObject = inputStream.readObject();
                     if (inputObject instanceof NamedCommand command) {
-                        String outputData;
+                        Response outputData;
                         if (command.hasTransferData()) {
                             Object inputData = inputStream.readObject();
-                            outputData = (String) command.execute(inputData);
+                            outputData =  command.execute(inputData);
                         } else
-                            outputData = (String) command.execute(null);
+                            outputData = command.execute(null);
                         if (outputData != null)
-                            outputStream.writeUTF(outputData);
+                            outputStream.writeObject(outputData);
                     } else throw new ClassNotFoundException();
                 } catch (ClassNotFoundException e) {
-                    outputStream.writeUTF(TextColor.yellow("Передана неизвестная команда"));
+                    outputStream.writeObject(new Response(1).setData(TextColor.yellow("Передана неизвестная команда")));
                 } finally {
                     outputStream.flush();
                 }

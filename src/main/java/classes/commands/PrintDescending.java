@@ -1,5 +1,6 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
@@ -15,15 +16,15 @@ public class PrintDescending extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         CollectionManager collectionManager = new CollectionManager();
         ArrayList<Movie> collection = new ArrayList<>(collectionManager.getCollection());
         CollectionManager.sort(collection);
-        String output = TextColor.cyan("Содержимое коллекции в порядке убывания: \n");
+        String output = "Содержимое коллекции в порядке убывания: \n";
         if (collection.size() != 0)
             for (Movie movie : collection)
                 output += "\t" + movie.toString() + "\n";
-        else output = TextColor.cyan("\tПусто");
-        return output;
+        else output = "\tПусто";
+        return new Response(0).setData(TextColor.cyan(output));
     }
 }

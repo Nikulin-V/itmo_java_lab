@@ -1,5 +1,6 @@
 package classes.commands;
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
@@ -15,7 +16,7 @@ public class Show extends NamedCommand implements Commandable {
     }
 
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         CollectionManager collectionManager = new CollectionManager();
         ArrayList<Movie> movies = collectionManager.getCollection();
         String output = TextColor.cyan("Содержимое коллекции:\n");
@@ -23,7 +24,7 @@ public class Show extends NamedCommand implements Commandable {
             for (Movie movie : movies)
                 output += "\t" + movie.toString();
         else output += TextColor.cyan("\tПусто");
-        return output;
+        return new Response(0).setData(output);
     }
     @Override
     public boolean isNeedInput() {
