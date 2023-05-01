@@ -55,7 +55,6 @@ public class Client {
             while (CommandHandler.getLastRequest() != null || scanner.hasNextLine()) {
                 try {
                     String inputString;
-                    Response response = Response.getEmptyResponce();
                     if (hasLastRequest()) {
                         System.out.println(TextColor.green("Выполняю последний запрос (" + CommandHandler.getLastRequest() + ")"));
                         inputString = CommandHandler.getLastRequest();
@@ -64,9 +63,10 @@ public class Client {
                         inputString = inputString.substring(1);
                     if (!(inputString == null || inputString.isBlank())) {
                         CommandHandler.setLastRequest(inputString);
+                        Response response = Response.getEmptyResponce();
                         if (!inputString.startsWith("execute_script")) {
                             CommandHandler.handle(inputString, out);
-                            response = (Response) in.readUTF();
+                            response = (Response) in.readObject();
                         } else {
                             String[] commandArguments = null;
                             if (inputString.split(" ").length > 1) {
@@ -82,8 +82,8 @@ public class Client {
                 } catch (NoSuchCommandException e) {
                     e.printMessage();
                     CommandHandler.clearLastRequest();
-                } catch (NoSuchMethodException | InvocationTargetException |
-                         InstantiationException | IllegalAccessException e) {
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                         IllegalAccessException | ClassNotFoundException e) {
                     new SystemException().printMessage();
                 }
                 System.out.print(TextColor.green("> "));
