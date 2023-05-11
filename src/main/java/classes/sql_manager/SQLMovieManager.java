@@ -23,45 +23,51 @@ public class SQLMovieManager {
     private final Class BASE_CLASS = Movies.class;
 
 
-    private static String createMovieTable = "CREATE TABLE movies (" +
-            "    id integer PRIMARY KEY," +
-            "    name VARCHAR(255) NOT NULL CHECK (name <> '')," +
-            "    coordinates jsonb NOT NULL,\n" +
-            "    creationdate TIMESTAMP WITH TIME ZONE DEFAULT NOW()," +
-            "    oscarscount BIGINT NOT NULL CHECK (oscarscount > 0),\n" +
-            "    goldenpalmcount BIGINT NOT NULL CHECK (goldenpalmcount > 0),\n" +
-            "    budget FLOAT NOT NULL CHECK (budget > 0) DEFAULT NULL,\n" +
-            "    mpaarating VARCHAR(10) DEFAULT NULL,\n" +
-            "    director FLOAT NOT NULL,\n" +
-            "    creator VARCHAR(255) NOT NULL CHECK (creator <> '')\n" +
-            ");";
+    private final static String createMovieTable = """
+            CREATE TABLE movies(
+                id integer PRIMARY KEY,
+                name VARCHAR(255) NOT NULL CHECK (name <> ''),
+                coordinates jsonb NOT NULL,
+                creationdate TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                oscarscount BIGINT NOT NULL CHECK (oscarscount > 0),
+                goldenpalmcount BIGINT NOT NULL CHECK (goldenpalmcount > 0),
+                budget FLOAT NOT NULL CHECK (budget > 0) DEFAULT NULL,
+                mpaarating VARCHAR(10) DEFAULT NULL,
+                director FLOAT NOT NULL,
+                creator VARCHAR(255) NOT NULL CHECK (creator <> '')
+            );""";
 
-    private static String createDirectorsTable = "CREATE TABLE directors (\n" +
-            "    id SERIAL PRIMARY KEY,\n" +
-            "    name VARCHAR(255) NOT NULL CHECK (name <> ''),\n" +
-            "    birthday DATE DEFAULT NULL,\n" +
-            "    height DOUBLE PRECISION DEFAULT NULL CHECK (height > 0),\n" +
-            "    passportid VARCHAR(255) NOT NULL UNIQUE CHECK (length(passportid) >= 7 AND passportid <> ''),\n" +
-            "    eyecolor VARCHAR(255) NOT NULL\n" +
-            ");";
+    private static final String createDirectorsTable = """
+            CREATE TABLE directors (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL CHECK (name <> ''),
+                birthday DATE DEFAULT NULL,
+                height DOUBLE PRECISION DEFAULT NULL CHECK (height > 0),
+                passportid VARCHAR(255) NOT NULL UNIQUE CHECK (length(passportid) >= 7 AND passportid <> ''),
+                eyecolor VARCHAR(255) NOT NULL
+            );""";
 
-    private static String createCreatorTable = "CREATE TABLE directors (\n" +
-            "    id SERIAL PRIMARY KEY,\n" +
-            "    name VARCHAR(255) NOT NULL CHECK (name <> '')\n" +
-            ");";
-    private static String createEyeTypeTable = "CREATE TABLE directors (\n" +
-            "    id SERIAL PRIMARY KEY,\n" +
-            "    color_name VARCHAR(255) NOT NULL CHECK (name <> '')\n" +
-            ");";
-    private static String createMPAARatingTypeTable = "CREATE TABLE MPAARatingType(\n" +
-            "id_mpaa SERIAL  PRIMARY KEY,\n" +
-            "type_name VARCHAR(255) NOT NULL CHECK (name <> ''),\n" +
-            ");";
+    private static final String createCreatorTable = """
+            CREATE TABLE directors(
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL CHECK (name <> '')
+            );""";
+    private static final String createEyeTypeTable = """
+            CREATE TABLE directors(
+                id SERIAL PRIMARY KEY,
+                color_name VARCHAR(255) NOT NULL CHECK (name <> '')
+            );""";
+    private static final String createMPAARatingTypeTable = """
+            CREATE TABLE MPAARatingType(
+                id_mpaa SERIAL  PRIMARY KEY,
+                type_name VARCHAR(255) NOT NULL CHECK (name <> ''),
+            );""";
 
 
-    String select = "select value from test where id=1\n" +
-            "insert into movies ()\n" +
-            "values ();";
+    String select = """
+            SELECT value FROM test WHERE id=1
+            INSERT INTO movies()
+            VALUES();""";
 
     public static void main(String[] args) {
         try {
@@ -81,13 +87,15 @@ public class SQLMovieManager {
     private static Connection getDBConnection() {
         Connection dbConnection = null;
         try {
-            String url = "jdbc:postgresql://127.0.0.1:5432/studs";
+            String url = "jdbc:postgresql:/%s:%d/studs".formatted(System.getenv("DB_HOST"), Integer.parseInt(System.getenv("DB_PORT")));
             Properties props = new Properties();
-            props.setProperty("user", "s368670");
-            props.setProperty("password", "lf6E0op8RuygLo32");
+            props.setProperty("user", System.getenv("DB_USER"));
+            props.setProperty("password", System.getenv("DB_PASS"));
             dbConnection = DriverManager.getConnection(url, props);
         } catch (SQLException e) {
             System.out.println(TextColor.green(e.getMessage()));
+        } catch (NumberFormatException e) {
+            System.out.println(TextColor.red("Переменная окружения DB_PORT должна быть в формате целого числа 0-65535"));
         }
         return dbConnection;
     }
