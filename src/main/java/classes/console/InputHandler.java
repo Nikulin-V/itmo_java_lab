@@ -12,7 +12,7 @@ import static classes.movie.FieldProperty.*;
 public class InputHandler {
     RepeatScanner scanner = new RepeatScanner();
 
-    public Movie readMovie() {
+    public Movie readMovie(int userId) {
         Movie movie = null;
         while (movie == null) {
             try {
@@ -23,7 +23,8 @@ public class InputHandler {
                         readGoldenPalmCount(),
                         readBudget(),
                         readMpaaRating(),
-                        readDirector()
+                        readDirector(),
+                        userId
                 );
             } catch (BlankValueException | NullValueException | NotGreatThanException | BadValueLengthException |
                      GreatThanException | NotUniqueException e) {

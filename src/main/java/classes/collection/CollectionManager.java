@@ -5,6 +5,7 @@ import classes.console.TextColor;
 import classes.movie.Coordinates;
 import classes.movie.Movie;
 import classes.movie.Movies;
+import classes.sql_manager.SQLMovieManager;
 import classes.xml_manager.XMLMovieManager;
 
 import java.util.*;
@@ -80,7 +81,8 @@ public class CollectionManager {
         if (moviesList.size() != 0) {
             Movies movies = new Movies();
             movies.setMovies(moviesList);
-            XMLMovieManager.getInstance().saveCollectionToXML(movies);
+            new SQLMovieManager().saveCollectionToSQl(movies);
+//            XMLMovieManager.getInstance().saveCollectionToXML(movies);
             return TextColor.cyan("\tТекущая коллекция сохранена в файл");
         } return TextColor.cyan("\tКоллекция пуста. Сохранять нечего");
     }

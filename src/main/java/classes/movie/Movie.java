@@ -28,9 +28,7 @@ public class Movie implements Serializable {
     private Float budget; //Значение поля должно быть больше 0, Поле может быть null
     private MpaaRating mpaaRating; //Поле может быть null
     private Person director; //Поле не может быть null
-
-    private Movie() {
-    }
+    private final int userId; // Поле не может быть null
 
     public Movie(String name,
                  Coordinates coordinates,
@@ -38,7 +36,8 @@ public class Movie implements Serializable {
                  Long goldenPalmCount,
                  Float budget,
                  MpaaRating mpaaRating,
-                 Person director) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
+                 Person director,
+                 int userId) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
         id = generateUUID();
         this.name = new FieldHandler(name, FieldProperty.NOT_NULL, FieldProperty.NOT_BLANK).handleString();
         this.coordinates = (Coordinates) new FieldHandler(coordinates, FieldProperty.NOT_NULL).handleObject();
@@ -48,8 +47,8 @@ public class Movie implements Serializable {
         this.budget = new FieldHandler(budget, FieldProperty.GREAT_THAN_ZERO).handleFloat();
         this.mpaaRating = mpaaRating;
         this.director = (Person) new FieldHandler(director, FieldProperty.NOT_NULL).handleObject();
+        this.userId = userId;
     }
-
     private UUID generateUUID() {
         return java.util.UUID.randomUUID();
     }
@@ -62,6 +61,7 @@ public class Movie implements Serializable {
     public UUID getId() {
         return id;
     }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -206,10 +206,14 @@ public class Movie implements Serializable {
         this.director = director;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
     @Override
     public String toString() {
         String[] fieldNames = {"ID", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
-        Object[] fieldValues = {id, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director};
+        Object[] fieldValues = {id, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director, userId};
         String movieString = TextColor.cyan("Movie {\n");
         for (int fieldId = 0; fieldId < fieldNames.length; fieldId++) {
             if (fieldValues[fieldId] != null)

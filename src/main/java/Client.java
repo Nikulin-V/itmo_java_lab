@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Client {
@@ -45,6 +46,8 @@ public class Client {
         System.out.println(TextColor.grey("Пытаюсь установить соединение с сервером..."));
         try (Socket socket = new Socket(host, port)) {
             System.out.println(TextColor.green("Соединение установлено"));
+            // TODO SETUP USER ID AFTER LOG_IN OPERATION - DEFAULT OR ADMIN VALUE IS 9999
+            int userID = new Random().nextInt(5,100);
             connectAttemptsCount = 0;
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -64,7 +67,7 @@ public class Client {
                         CommandHandler.setLastRequest(inputString);
                         String inputData = "";
                         if (!inputString.startsWith("execute_script")) {
-                            CommandHandler.handle(inputString, out);
+                            CommandHandler.handle(inputString, out, userID);
                             inputData = in.readUTF();
                         } else {
                             String[] commandArguments = null;
@@ -73,7 +76,7 @@ public class Client {
                                 commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
                             }
                             if (commandArguments != null && commandArguments.length == 1)
-                                inputData = new ExecuteScript().execute(commandArguments[0], in, out);
+                                inputData = new ExecuteScript().execute(commandArguments[0], in, out, userID);
                         }
                         System.out.println(inputData);
                         CommandHandler.clearLastRequest();

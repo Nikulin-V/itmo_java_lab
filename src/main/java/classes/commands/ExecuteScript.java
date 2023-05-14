@@ -20,7 +20,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
         return getName() + " <file_name>\t\t\t\t\t-\tсчитать и исполнить скрипт из указанного файла";
     }
 
-    public String execute(Object inputData, ObjectInputStream in, ObjectOutputStream out) {
+    public String execute(Object inputData, ObjectInputStream in, ObjectOutputStream out, int userId) {
         if (inputData instanceof String scriptName) {
             try {
                 File file = new File(scriptName);
@@ -36,7 +36,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         String inputString = (String) line;
                         while (inputString.startsWith(" "))
                             inputString = inputString.substring(1);
-                        CommandHandler.handle(inputString, out);
+                        CommandHandler.handle(inputString, out, userId);
                         String input = in.readUTF();
                         System.out.println(input);
                     } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |

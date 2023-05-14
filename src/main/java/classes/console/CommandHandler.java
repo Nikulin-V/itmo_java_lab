@@ -64,7 +64,7 @@ public class CommandHandler {
     }
 
     public static void handle(String inputString,
-                              ObjectOutputStream out) throws IOException, NoSuchCommandException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+                              ObjectOutputStream out, int userId) throws IOException, NoSuchCommandException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String commandName = inputString.split(" ")[0];
         String[] commandArguments = null;
         if (inputString.split(" ").length > 1) {
@@ -90,7 +90,7 @@ public class CommandHandler {
                         out.flush();
                     } else if (commandArguments == null || commandArguments.length == 0) {
                         InputHandler inputHandler = new InputHandler();
-                        Object outputData = lastRequestData == null ? inputHandler.readMovie() : lastRequestData;
+                        Object outputData = lastRequestData == null ? inputHandler.readMovie(userId) : lastRequestData;
                         lastRequestData = outputData;
                         out.writeObject(command);
                         out.flush();
@@ -101,7 +101,7 @@ public class CommandHandler {
                     InputHandler inputHandler = new InputHandler();
                     try {
                         UUID filmUUID = UUID.fromString(commandArguments[0]);
-                        Movie outputData = lastRequestData == null ? inputHandler.readMovie() : (Movie) lastRequestData;
+                        Movie outputData = lastRequestData == null ? inputHandler.readMovie(userId) : (Movie) lastRequestData;
                         outputData.setId(filmUUID);
                         lastRequestData = outputData;
                         out.writeObject(command);
