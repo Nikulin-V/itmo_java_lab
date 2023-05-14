@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 import java.util.Properties;
 
 public class SQLManager {
@@ -58,6 +59,7 @@ public class SQLManager {
     public static void main(String[] args) {
         initDB();
     }
+
     static Connection createDBConnection() {
         Connection dbConnection = null;
         try {
@@ -75,7 +77,7 @@ public class SQLManager {
     }
 
     private static void execute(String command) {
-        try (Statement statement = createDBConnection() != null ? createDBConnection().createStatement() : null) {
+        try (Statement statement = createDBConnection() != null ? Objects.requireNonNull(createDBConnection()).createStatement() : null) {
             statement.execute(command);
             System.out.println(TextColor.cyan("Обращение к базе данных выполнено"));
         } catch (NullPointerException | SQLException e) {
@@ -85,12 +87,11 @@ public class SQLManager {
     }
 
     private static void initDB() {
-
         execute(createDirectorsTable);
         execute(createUserTable);
         execute(createMovieTable);
-//        execute(createSequenceMovie);
-//        execute(createSequenceDirector);
-//        execute(createSequenceUser);
+        execute(createSequenceMovie);
+        execute(createSequenceDirector);
+        execute(createSequenceUser);
     }
 }
