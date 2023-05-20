@@ -1,12 +1,13 @@
 package classes.collection;
 
-import classes.DataStorage;
 import classes.console.TextColor;
 import classes.movie.Coordinates;
 import classes.movie.Movie;
 import classes.movie.Movies;
-import classes.xml_manager.XMLMovieManager;
+import classes.sql_manager.SQLMovieManager;
+import exceptions.*;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class CollectionManager {
@@ -80,26 +81,26 @@ public class CollectionManager {
         if (moviesList.size() != 0) {
             Movies movies = new Movies();
             movies.setMovies(moviesList);
-            XMLMovieManager.getInstance().saveCollectionToXML(movies);
+            new SQLMovieManager().saveCollectionToSQl(movies);
+//            XMLMovieManager.getInstance().saveCollectionToXML(movies);
             return TextColor.cyan("\tТекущая коллекция сохранена в файл");
-        } return TextColor.cyan("\tКоллекция пуста. Сохранять нечего");
+        }
+        return TextColor.cyan("\tКоллекция пуста. Сохранять нечего");
     }
 
-    public static void readFile(String fileName) {
+    public static void readFile() {
 
-        List<Movie> enteredMovies;
-        if (fileName == null) {
-            System.out.println(TextColor.purple("Файл коллекции не был указан. Была выбран файл коллекции по умолчанию"));
-            DataStorage.setCurrentStorageFilePath(DataStorage.DEFAULT_STORAGE_FILE_PATH);
-            enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML().getMovies();
-        } else {
-            System.out.println(TextColor.purple("Пытаюсь прочитать файл коллекции..."));
-            enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML(fileName).getMovies();
+        List<Movie> enteredMovies = null;
+        try {
+            enteredMovies = new SQLMovieManager().readCollectionFromSQl().getMovies();
+        } catch (NotGreatThanException | GreatThanException | NullValueException | BlankValueException |
+                 BadValueLengthException | NotUniqueException | SQLException e) {
+            e.printStackTrace();
         }
         if (enteredMovies != null && !enteredMovies.isEmpty()) {
             for (Movie movie : enteredMovies)
                 addMovie(movie);
-            System.out.println(TextColor.purple("Файл коллекции был прочитан..."));
-        } else System.out.println(TextColor.purple("Файл коллекции оказался пуст"));
+            System.out.println(TextColor.purple("База данных был прочитана..."));
+        } else System.out.println(TextColor.purple("База данных оказалась пуста"));
     }
 }

@@ -4,6 +4,7 @@ import classes.Response;
 import classes.abs.NamedCommand;
 import classes.console.CommandHandler;
 import classes.console.TextColor;
+import exceptions.DangerException;
 import exceptions.NoSuchCommandException;
 import interfaces.Commandable;
 
@@ -19,14 +20,14 @@ public class ExecuteScript extends NamedCommand implements Commandable {
         return getName() + " <file_name>\t\t\t\t\t-\tсчитать и исполнить скрипт из указанного файла";
     }
 
-    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out) throws NoSuchCommandException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out, int userId) throws NoSuchCommandException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         if (inputData instanceof String scriptName) {
-
+            try {
                 File file = new File(scriptName);
                 assert file.exists() && file.isFile();
                 BufferedReader reader = new BufferedReader(new FileReader(file));
-
-                for (Object line : reader.lines().toArray()){
+                for (Object line : reader.lines().toArray())
+                    try {
                         scriptTransitionCount += 1;
                         if (scriptTransitionCount > MAX_SCRIPT_TRANSITION_COUNT) {
                             scriptTransitionCount = 0;
@@ -36,9 +37,19 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         String inputString = (String) line;
                         while (inputString.startsWith(" "))
                             inputString = inputString.substring(1);
-                        CommandHandler.handle(inputString, out);
-                        Response response = (Response) in.readObject();
-                        System.out.println(response.getData());
+                        CommandHandler.handle(inputString, out, userId);
+                        String input = in.readUTF();
+                        System.out.println(input);
+                    } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
+                             InstantiationException | IllegalAccessException e) {
+                        return new Response(1).setData(e.getMessage());
+                    } catch (IOException e) {
+                        return new Response(1).setData(TextColor.red("Ошибка соединения"));
+                    }
+                return new Response(0).setData("Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
+            } catch (AssertionError | FileNotFoundException e) {
+                scriptTransitionCount = 0;
+                return new Response(1).setData(TextColor.red("Файл не найден"));
             }
                 return new Response(0).setData("Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
         }

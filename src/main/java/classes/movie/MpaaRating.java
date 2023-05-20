@@ -1,6 +1,7 @@
 package classes.movie;
 
 import java.io.Serializable;
+import java.util.Random;
 
 public enum MpaaRating implements Serializable {
 
@@ -20,4 +21,11 @@ public enum MpaaRating implements Serializable {
     public String toString() {
         return description;
     }
+    public static MpaaRating getRandom() {
+        return MpaaRating.values()[new Random().nextInt(5)];
+    }
+    public static MpaaRating getById(int id) {
+        return MpaaRating.values()[id-1];
+    }
+
 }
