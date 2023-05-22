@@ -13,7 +13,7 @@ public class SQLManager {
 
     private final static String createMovieTable = """
             CREATE TABLE IF NOT EXISTS movies(
-                ID SERIAL PRIMARY KEY,
+                uuid_id uuid PRIMARY KEY,
                 name VARCHAR(255) NOT NULL CHECK (name <> ''),
                 coordinateX BIGINT NOT NULL CHECK (coordinateX <= 279 ),
                 coordinateY BIGINT NOT NULL CHECK (coordinateY > -230),
@@ -22,13 +22,13 @@ public class SQLManager {
                 golden_palm_count BIGINT NOT NULL CHECK (golden_palm_count > 0),
                 budget FLOAT NOT NULL CHECK (budget > 0) DEFAULT NULL,
                 id_mpaarating INTEGER DEFAULT NULL,
-                id_director INTEGER NOT NULL REFERENCES directors(id_director) ON DELETE SET NULL,
-                id_user INTEGER NOT NULL REFERENCES users(id_user) ON DELETE CASCADE  
+                uuid_director uuid NOT NULL REFERENCES directors(uuid_director) ON DELETE SET NULL,
+                uuid_user uuid NOT NULL REFERENCES users(uuid_user) ON DELETE CASCADE  
             );""";
 
     private static final String createDirectorsTable = """
             CREATE TABLE IF NOT EXISTS directors (
-                id_director SERIAL PRIMARY KEY,
+                uuid_director uuid PRIMARY KEY,
                 name VARCHAR(255) NOT NULL CHECK (name <> ''),
                 birthday DATE DEFAULT NULL,
                 height DOUBLE PRECISION DEFAULT NULL CHECK (height > 0),
@@ -38,7 +38,7 @@ public class SQLManager {
 
     private static final String createUserTable = """
             CREATE TABLE IF NOT EXISTS users(
-                id_user SERIAL PRIMARY KEY,
+                uuid_user uuid PRIMARY KEY,
                 login VARCHAR(255) NOT NULL CHECK (login <> '') UNIQUE,
                 pass_hash TEXT NOT NULL,
                 pass_salt TEXT NOT NULL
