@@ -19,12 +19,9 @@ public class ClientSession implements Runnable {
         this.socket = socket;
     }
 
-
     private UserCredentials authorize(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-        String userChoice = "";
+        String userChoice = in.readUTF();
         while (!(userChoice.equals("1") || userChoice.equals("2"))) {
-            out.writeUTF("1 - Войти (по умолчанию)\n2 - Зарегистрироваться");
-            out.flush();
             userChoice = in.readUTF();
         }
         if (userChoice.equals("2"))
@@ -36,18 +33,16 @@ public class ClientSession implements Runnable {
         while (true) {
             out.writeUTF("Логин: ");
             out.flush();
-            String login = in.readUTF();
+            String username = in.readUTF();
             out.writeUTF("Пароль: ");
             out.flush();
             String password = in.readUTF();
 
-            if (checkLogin(login)) {
-                UserCredentials userCredentials = new UserCredentials(login, password);
-                if (checkPassword(userCredentials)){
-                 return userCredentials;
-                }
-
-                else System.out.println(TextColor.red("Неверный пароль\n"));
+            if (isLoginInDB(username)) {
+                UserCredentials userCredentials = new UserCredentials(username, password);
+                if (checkPassword(userCredentials)) {
+                    return userCredentials;
+                } else System.out.println(TextColor.red("Неверный пароль\n"));
             } else System.out.println(TextColor.yellow("Пользователь с таким логином не существует\n"));
         }
     }
@@ -55,46 +50,34 @@ public class ClientSession implements Runnable {
     private boolean checkPassword(UserCredentials userCredentials) {
         ResultSet loginResultSet = SQLManager.executeQuery("SELECT * FROM users where login=" + userCredentials.getUsername());
         try {
-            if (loginResultSet.next()){
+            if (loginResultSet != null) {
                 String hashedPassword = loginResultSet.getString("pass_hash");
-                if (hashedPassword.equals(userCredentials.getHashedPassword())) return true;
+                return hashedPassword.equals(userCredentials.getHashedPassword());
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
-
         return false;
     }
 
-    private boolean checkLogin(String login) {
-        try {
-            ResultSet loginResultSet = SQLManager.executeQuery("SELECT * FROM users where login=" + login);
-            if(loginResultSet.next()) return true;
-        } catch (SQLException e) {
-            System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
-        }
-        return false;
+    private boolean isLoginInDB(String login) {
+        ResultSet loginResultSet = SQLManager.executeQuery("SELECT * FROM users WHERE login=" + login);
+        return loginResultSet != null;
     }
 
     private UserCredentials register(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-        // null - if it doesn't success ; usercredits if success
-        UserCredentials userCredentials = null;
-
+        String username = null, password;
+        while (isLoginInDB(username)) {
+            if (username != null)
+                System.out.println(TextColor.yellow("Пользователь с таким логином уже существует\n"));
             out.writeUTF("Логин: ");
             out.flush();
-            String login = in.readUTF();
-            out.writeUTF("Пароль: ");
-            out.flush();
-            String password = in.readUTF();
-
-            if (!checkLogin(login)) {
-                userCredentials = new UserCredentials(login, password);
-            } else System.out.println(TextColor.yellow("Пользователь с таким логином уже существует\n"));
-
-
-        return userCredentials;
+            username = in.readUTF();
+        }
+        out.writeUTF("Пароль: ");
+        out.flush();
+        password = in.readUTF();
+        return new UserCredentials(username, password);
     }
 
     @Override
@@ -104,22 +87,28 @@ public class ClientSession implements Runnable {
                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())
         ) {
             System.out.println(TextColor.grey("Соединение установлено: " + socket.getInetAddress()));
-            UserCredentials currentUserID = authorize(inputStream, outputStream);
+            UserCredentials currentUserCredentials = authorize(inputStream, outputStream);
 
             while (!socket.isClosed()) {
                 Object inputObject = inputStream.readObject();
-                if (inputObject instanceof NamedCommand command) {
-                    Response outputData;
-                    if (command.hasTransferData()) {
-                        Object inputData = inputStream.readObject();
-                        outputData = command.execute(inputData);
+                if (inputObject instanceof UserCredentials credentials) {
+                    if (currentUserCredentials.equals(credentials)) {
+                        inputObject = inputStream.readObject();
+                        if (inputObject instanceof NamedCommand command) {
+                            Response outputData;
+                            if (command.hasTransferData()) {
+                                Object inputData = inputStream.readObject();
+                                outputData = command.execute(inputData, currentUserCredentials.getUsername());
+                            } else
+                                outputData = command.execute(null, currentUserCredentials.getUsername());
+                            if (outputData != null)
+                                outputStream.writeObject(outputData);
+                        } else
+                            outputStream.writeObject(new Response(1).setData(TextColor.yellow("Передана неизвестная команда")));
                     } else
-                        outputData = command.execute(null);
-                    if (outputData != null)
-                        outputStream.writeObject(outputData);
-                } else
-                    outputStream.writeObject(new Response(1).setData(TextColor.yellow("Передана неизвестная команда")));
-                outputStream.flush();
+                        outputStream.writeObject(new Response(1).setData(TextColor.red("Попытка подмены данных пользователя")));
+                    outputStream.flush();
+                }
             }
         } catch (IOException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                  InstantiationException | IllegalAccessException e) {

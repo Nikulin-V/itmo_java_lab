@@ -1,6 +1,5 @@
 import classes.ClientSession;
 import classes.collection.CollectionManager;
-import classes.commands.Exit;
 import classes.console.TextColor;
 
 import java.io.IOException;
@@ -9,10 +8,11 @@ import java.net.Socket;
 
 public class Server {
     public static void main(String[] args) {
-        if (args == null || args.length == 0 || args.length >= 3) {
+        if (args == null || args.length != 1) {
             System.out.println(TextColor.red("Неверное число аргументов"));
-            System.out.println(TextColor.red("При запуске программы введите в аргументах номер порта (0-65535) и имя файла коллекции"));
-            new Exit().execute(null);
+            System.out.println(TextColor.red("При запуске программы введите в аргументах номер порта (0-65535)"));
+            System.out.println("Завершение работы...");
+            Runtime.getRuntime().exit(0);
         } else {
             int port = 14600;
             try {
@@ -21,7 +21,8 @@ public class Server {
                     throw new NumberFormatException();
             } catch (NumberFormatException e) {
                 System.out.println(TextColor.red("Неправильный формат ввода порта\nномер порта должен быть в диапазоне от 0 до 65535"));
-                new Exit().execute(null);
+                System.out.println("Завершение работы...");
+                Runtime.getRuntime().exit(0);
             }
             CollectionManager.readDB();
             System.out.println(TextColor.green("Сервер запущен на " + port + " порту"));

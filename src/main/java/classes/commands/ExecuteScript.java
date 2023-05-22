@@ -1,16 +1,15 @@
 package classes.commands;
 
 import classes.Response;
+import classes.UserCredentials;
 import classes.abs.NamedCommand;
 import classes.console.CommandHandler;
 import classes.console.TextColor;
-import exceptions.DangerException;
 import exceptions.NoSuchCommandException;
 import interfaces.Commandable;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.UUID;
 
 public class ExecuteScript extends NamedCommand implements Commandable {
     public final static int MAX_SCRIPT_TRANSITION_COUNT = 100;
@@ -21,7 +20,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
         return getName() + " <file_name>\t\t\t\t\t-\tсчитать и исполнить скрипт из указанного файла";
     }
 
-    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out, UUID userID) throws NoSuchCommandException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out, UserCredentials credentials) throws NoSuchCommandException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         if (inputData instanceof String scriptName) {
             try {
                 File file = new File(scriptName);
@@ -38,7 +37,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         String inputString = (String) line;
                         while (inputString.startsWith(" "))
                             inputString = inputString.substring(1);
-                        CommandHandler.handle(inputString, out, userID);
+                        CommandHandler.handle(inputString, out, credentials);
                         String input = in.readUTF();
                         System.out.println(input);
                     } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |

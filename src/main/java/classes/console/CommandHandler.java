@@ -1,5 +1,6 @@
 package classes.console;
 
+import classes.UserCredentials;
 import classes.abs.NamedCommand;
 import classes.movie.Movie;
 import exceptions.NoSuchCommandException;
@@ -65,7 +66,7 @@ public class CommandHandler {
 
     public static void handle(String inputString,
                               ObjectOutputStream out,
-                              UUID userID) throws IOException, NoSuchCommandException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+                              UserCredentials credentials) throws IOException, NoSuchCommandException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String commandName = inputString.split(" ")[0];
         String[] commandArguments = null;
         if (inputString.split(" ").length > 1) {
@@ -75,9 +76,9 @@ public class CommandHandler {
         if (!commandName.isBlank()) {
             NamedCommand command = new CommandHandler().getCommand(commandName);
             if (Objects.equals(command.getName(), "exit"))
-                command.execute(null);
+                command.execute(null, credentials.getUsername());
             if (Objects.equals(command.getName(), "execute_script") && commandArguments != null && commandArguments.length == 1) {
-                command.execute(commandArguments[0]);
+                command.execute(commandArguments[0], credentials.getUsername());
             }
             if (command.isNeedInput()) {
                 if (Objects.equals(command.getName(), "add")) {
@@ -90,7 +91,7 @@ public class CommandHandler {
                         setLastRequestData(commandArguments);
                     } else if (commandArguments == null || commandArguments.length == 0) {
                         InputHandler inputHandler = new InputHandler();
-                        Object outputData = lastRequestData == null ? inputHandler.readMovie(userID) : lastRequestData;
+                        Object outputData = lastRequestData == null ? inputHandler.readMovie(credentials.getUsername()) : lastRequestData;
                         lastRequestData = outputData;
                         out.writeObject(command);
                         out.flush();
@@ -101,7 +102,7 @@ public class CommandHandler {
                     try {
                         if (commandArguments == null) throw new NullPointerException();
                         UUID filmUUID = UUID.fromString(commandArguments[0]);
-                        Movie outputData = lastRequestData == null ? inputHandler.readMovie(userID) : (Movie) lastRequestData;
+                        Movie outputData = lastRequestData == null ? inputHandler.readMovie(credentials.getUsername()) : (Movie) lastRequestData;
                         outputData.setId(filmUUID);
                         lastRequestData = outputData;
                         out.writeObject(command);

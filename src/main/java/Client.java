@@ -1,8 +1,9 @@
-import classes.Response;
 import classes.ExceptionCommandHandler;
+import classes.Response;
+import classes.UserCredentials;
 import classes.commands.ExecuteScript;
-import classes.commands.Exit;
 import classes.console.CommandHandler;
+import classes.console.InputHandler;
 import classes.console.TextColor;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
@@ -15,9 +16,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class Client {
     private static int connectAttemptsCount = 0;
@@ -29,7 +28,8 @@ public class Client {
         if (args.length != 2) {
             System.out.println(TextColor.red("Неверное число аргументов"));
             System.out.println(TextColor.red("При запуске программы введите в аргументах имя хоста и номер порта (0-65535)"));
-            new Exit().execute(null);
+            System.out.println("Завершение работы...");
+            Runtime.getRuntime().exit(0);
         }
 
         String host = args[0];
@@ -40,7 +40,8 @@ public class Client {
                 throw new NumberFormatException();
         } catch (NumberFormatException e) {
             System.out.println(TextColor.red("Номер порта должен быть в диапазоне от 0 до 65535"));
-            new Exit().execute(null);
+            System.out.println("Завершение работы...");
+            Runtime.getRuntime().exit(0);
         }
         connect(host, port);
     }
@@ -50,7 +51,8 @@ public class Client {
         try (Socket socket = new Socket(host, port)) {
             System.out.println(TextColor.green("Соединение установлено"));
             // TODO SETUP USER ID AFTER LOG_IN OPERATION - DEFAULT OR ADMIN VALUE IS 9999
-            UUID userID = UUID.randomUUID();
+            UserCredentials credentials = new InputHandler().readCredentials();
+
             connectAttemptsCount = 0;
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -70,7 +72,7 @@ public class Client {
                         CommandHandler.setLastRequest(inputString);
                         Response response = Response.getEmptyResponce();
                         if (!inputString.startsWith("execute_script")) {
-                            response = ExceptionCommandHandler.handleExceptions(inputString, out, userID);
+                            response = ExceptionCommandHandler.handleExceptions(inputString, out, credentials);
                             if (response == null)
                                 response = (Response) in.readObject();
                         } else {
@@ -80,7 +82,7 @@ public class Client {
                                 commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
                             }
                             if (commandArguments != null && commandArguments.length == 1)
-                                response = new ExecuteScript().execute(commandArguments[0], in, out, userID);
+                                response = new ExecuteScript().execute(commandArguments[0], in, out, credentials);
                         }
                         System.out.println(response.getData());
                         CommandHandler.clearLastRequest();

@@ -1,19 +1,19 @@
 package classes.console;
 
+import classes.UserCredentials;
 import classes.movie.*;
 import exceptions.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 import static classes.movie.FieldProperty.*;
 
 public class InputHandler {
     RepeatScanner scanner = new RepeatScanner();
 
-    public Movie readMovie(UUID userID) {
+    public Movie readMovie(String userID) {
         Movie movie = null;
         while (movie == null) {
             try {
@@ -290,5 +290,24 @@ public class InputHandler {
                 }
         }
         return directorEyeColor;
+    }
+
+    public String readLoginRegisterChoice() {
+        String userChoice = "";
+        while (!(userChoice.equals("1") || userChoice.equals("2"))) {
+            System.out.println(TextColor.yellow("1 - Войти (по умолчанию)\n2 - Зарегистрироваться"));
+            userChoice = scanner.nextLine(TextColor.green("Выберите опцию: "));
+        }
+        return userChoice;
+    }
+
+    public UserCredentials readCredentials() {
+        String username = null;
+        String password = null;
+        while (username == null || password == null || username.equals("") || password.equals("")) {
+            username = scanner.nextLine("Логин:");
+            password = scanner.nextLine("Пароль:");
+        }
+        return new UserCredentials(username, password);
     }
 }
