@@ -1,12 +1,17 @@
 package classes.sql_managers;
 
 import classes.console.TextColor;
+import classes.movie.Movie;
+import classes.movie.Person;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.util.Properties;
+import java.util.UUID;
 
 public class SQLManager {
+
     private final static String createMovieTable = """
             CREATE TABLE IF NOT EXISTS movies(
                 uuid_id uuid PRIMARY KEY,
@@ -35,7 +40,7 @@ public class SQLManager {
     private static final String createUserTable = """
             CREATE TABLE IF NOT EXISTS users(
                 login VARCHAR(255) PRIMARY KEY,
-                pass_hash TEXT NOT NULL,
+                pass_hash TEXT NOT NULL
             );""";
 
     public static void main(String[] args) {
@@ -70,7 +75,9 @@ public class SQLManager {
     }
 
     public static ResultSet executeQuery(String command) {
-        try (Connection dbConnection = getDBConnection(); Statement statement = dbConnection.createStatement()) {
+        Connection dbConnection = getDBConnection();
+        try  {
+            Statement statement = dbConnection.createStatement();
             return statement.executeQuery(command);
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
@@ -87,6 +94,79 @@ public class SQLManager {
         }
         return Integer.MAX_VALUE;
     }
+
+    public static boolean insertMovie(Movie movie) throws SQLException{
+            Connection connection = getDBConnection();
+            insertDirector(movie.getDirector(), movie.getDirector().getDirectorID(), connection);
+
+            String r = "INSERT INTO movies"
+                    + "(uuid_id, name, coordinatex, coordinatey, creation_date, oscars_count, golden_palm_count, budget, id_mpaarating, uuid_director, uuid_user)" + "values"
+                    + "(?, ?, ?, ?, ?, ?, ?, ?,?,?,?) ON CONFLICT DO NOTHING";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(r)) {
+                int index = 1;
+                preparedStatement.setObject(index++, movie.getId());
+                preparedStatement.setString(index++, movie.getName());
+                preparedStatement.setInt(index++, (int) movie.getCoordinates().getX());
+                preparedStatement.setInt(index++, (int) movie.getCoordinates().getY());
+                preparedStatement.setDate(index++, new java.sql.Date(movie.getCreationDate().getTime()));
+                preparedStatement.setFloat(index++, movie.getOscarsCount());
+                preparedStatement.setFloat(index++, movie.getGoldenPalmCount());
+                preparedStatement.setFloat(index++, movie.getBudget());
+                if (movie.getMpaaRating() == null) preparedStatement.setNull(index++, Types.INTEGER);
+                else preparedStatement.setInt(index++, movie.getMpaaRating().ordinal() + 1);
+                preparedStatement.setObject(index++, movie.getDirector().getDirectorID());
+                preparedStatement.setObject(index++, movie.getUserID());
+                return  preparedStatement.execute();
+            } catch (NullPointerException | PSQLException e) {
+                e.printStackTrace();
+                System.out.println(TextColor.cyan("Ошибка при обращении к базе данных"));
+            }
+        return false;
+    }
+
+
+    private static boolean insertDirector(Person person, UUID id, Connection connection) {
+        String r = "INSERT INTO directors"
+                + "(uuid_director, name, birthday, height, passport_id, eye_color)" + "values"
+                + "(?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(r)) {
+            int index = 1;
+            preparedStatement.setObject(index++, id);
+            preparedStatement.setString(index++, person.getName());
+            if (person.getBirthday() == null) preparedStatement.setNull(index++, Types.DATE);
+            else preparedStatement.setDate(index++, new java.sql.Date(person.getBirthday().getTime()));
+            if (person.getHeight() == null) preparedStatement.setNull(index++, Types.FLOAT);
+            else preparedStatement.setDouble(index++, person.getHeight());
+            preparedStatement.setString(index++, person.getPassportID());
+            preparedStatement.setInt(index++, person.getEyeColor().ordinal() + 1);
+            return  preparedStatement.execute();
+
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+            System.out.println(TextColor.cyan("Ошибка при обращении к базе данных"));
+        }
+        return false;
+    }
+
+
+//    private static boolean updateMovie(){
+//        String query = """
+//                UPDATE movies
+//                SET name = ?,
+//                SET coordinatex = ?,
+//                SET coordinatey = ?,
+//                SET creation_date = ?,
+//                SET oscars_count = ?,
+//                SET golden_palm_count= ?,
+//                SET budget = ?,
+//                SET id_mpaarating= ?
+//
+//                WHERE uuid_id = ?
+//                """;
+//        return true;
+//    }
 
     private static void initDB() {
         execute(createDirectorsTable);

@@ -72,6 +72,9 @@ public class Person implements Serializable {
     public void setEyeColor(Color eyeColor) {
         this.eyeColor = eyeColor;
     }
+    public UUID getDirectorID() {
+        return directorID;
+    }
 
     @Override
     public String toString() {
