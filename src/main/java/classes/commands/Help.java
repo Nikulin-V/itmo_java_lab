@@ -14,7 +14,7 @@ public class Help extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public Response execute(Object inputData, String userID) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Reflections reflections = new Reflections("classes.commands");
         Set<Class<? extends Commandable>> allCommands = reflections.getSubTypesOf(Commandable.class);
         StringBuilder output = new StringBuilder();

@@ -13,7 +13,7 @@ public class Sort extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         CollectionManager collectionManager = new CollectionManager();
         if (!collectionManager.getCollection().isEmpty()) {
             CollectionManager.sort(collectionManager.getCollection());

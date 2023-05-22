@@ -2,15 +2,15 @@ package classes.commands;
 
 import classes.Response;
 import classes.abs.NamedCommand;
-import classes.collection.CollectionManager;
 import classes.console.TextColor;
+import classes.sql_managers.SQLManager;
 import interfaces.Commandable;
 
 public class Clear extends NamedCommand implements Commandable {
     @Override
-    public Response execute(Object inputData) {
-        new CollectionManager().clear();
-        return new Response(0).setData(TextColor.cyan("Коллекция был очищена"));
+    public Response execute(Object inputData, String userID) {
+        int countDeleted = SQLManager.executeUpdate("DELETE FROM movies WHERE user_id="+userID);
+        return new Response(0).setData(TextColor.cyan("Удалено ваших элементов коллекции: "+countDeleted));
     }
 
     @Override

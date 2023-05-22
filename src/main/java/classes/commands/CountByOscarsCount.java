@@ -16,7 +16,7 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         String[] arg = (String[]) inputData;
         if (arg != null && String.valueOf(arg[0]).chars().allMatch(Character::isDigit)) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();

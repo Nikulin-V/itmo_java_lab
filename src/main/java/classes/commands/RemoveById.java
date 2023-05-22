@@ -17,7 +17,7 @@ public class RemoveById extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
 
         if (inputData instanceof String[] arg) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
@@ -26,7 +26,8 @@ public class RemoveById extends NamedCommand implements Commandable {
                 UUID uuid = UUID.fromString(arg[0]);
                 for (Movie movie : movies) {
                     if (movie.getId().equals(uuid)) {
-                        movies.remove(movie);
+                        if (movie.getUserID().equals(userID)) movies.remove(movie);
+                        else return new Response(0).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
                         isFound = true;
                         break;
                     }

@@ -14,9 +14,10 @@ public class Update extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
             boolean founded = false;
             if (inputData instanceof Movie newMovie) {
+                if(!newMovie.getUserID().equals(userID)) return new Response(1).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
                 CollectionManager cm = new CollectionManager();
                 for (int i = 0; i < cm.getCollection().size(); i++) {
                     if (cm.getCollection().get(i).getId().equals(newMovie.getId())) {

@@ -17,15 +17,16 @@ public class RemoveLower extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         if (inputData instanceof String[] coordinatesArray && coordinatesArray.length == 2) {
             try {
                 long x = Long.parseLong(coordinatesArray[0]);
                 long y = Long.parseLong(coordinatesArray[1]);
                 Coordinates inputCoordinates = new Coordinates(x, y);
                 CollectionManager cm = new CollectionManager();
-                cm.getCollection().removeIf(m -> inputCoordinates.compareTo(m.getCoordinates()) < 0);
-                return new Response(0).setData(TextColor.cyan("Успешно удалено"));
+                cm.getCollection().removeIf(m -> inputCoordinates.compareTo(m.getCoordinates()) < 0 &&
+                        m.getUserID().equals(userID));
+                return new Response(0).setData(TextColor.cyan("Выполнено"));
             } catch (NotGreatThanException | GreatThanException e) {
                 return new Response(1).setData(e.getMessage());
             } catch (NullValueException e) {

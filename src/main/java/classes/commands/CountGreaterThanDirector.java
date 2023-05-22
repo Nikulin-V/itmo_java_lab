@@ -18,7 +18,7 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         String[] arg = (String[]) inputData;
         if (arg != null) {
             String referenceDirector = arg[0];

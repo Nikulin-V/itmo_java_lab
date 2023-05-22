@@ -14,15 +14,17 @@ public class RemoveAt extends NamedCommand implements Commandable {
         return getName() + " <index>\t\t\t\t\t\t\t-\tудалить элемент, находящийся в заданной позиции коллекции";
     }
 
+
+
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         String[] arg = (String[]) inputData;
         if (arg != null && String.valueOf(arg[0]).chars().allMatch(Character::isDigit)) {
-
                 int index = Integer.parseInt(arg[0]);
                 CollectionManager cm = new CollectionManager();
                 if (cm.getCollection().size() >= index + 1) {
-                    cm.getCollection().remove(index);
+                    if (cm.getCollection().get(index).getUserID().equals(userID)) cm.getCollection().remove(index);
+                    else return new Response(0).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
                     return new Response(0).setData(TextColor.cyan("Элемент успешно удалён"));
                 }
                 return new Response(0).setData(TextColor.yellow("Элемент с индексом ") +

@@ -13,7 +13,7 @@ public class Info extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         CollectionManager collectionManager = new CollectionManager();
         return new Response(0).setData(TextColor.cyan(
                 "Информация о коллекции:\n" +
