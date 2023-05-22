@@ -19,7 +19,7 @@ public class SQLManager {
                 budget FLOAT NOT NULL CHECK (budget > 0) DEFAULT NULL,
                 id_mpaarating INTEGER DEFAULT NULL,
                 uuid_director uuid NOT NULL REFERENCES directors(uuid_director) ON DELETE CASCADE,
-                uuid_user uuid NOT NULL REFERENCES users(uuid_user) ON DELETE CASCADE  
+                user_id VARCHAR(255) NOT NULL REFERENCES users(login) ON DELETE CASCADE  
             );""";
 
     private static final String createDirectorsTable = """
@@ -36,7 +36,6 @@ public class SQLManager {
             CREATE TABLE IF NOT EXISTS users(
                 login VARCHAR(255) PRIMARY KEY,
                 pass_hash TEXT NOT NULL,
-                pass_salt TEXT NOT NULL
             );""";
 
     public static void main(String[] args) {
@@ -77,6 +76,15 @@ public class SQLManager {
             System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
         }
         return null;
+    }
+    public static int executeUpdate(String command) {
+        try (Connection dbConnection = getDBConnection(); Statement statement = dbConnection.createStatement()) {
+            return statement.executeUpdate(command);
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+            System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
+        }
+        return Integer.MAX_VALUE;
     }
 
     private static void initDB() {

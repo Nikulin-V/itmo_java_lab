@@ -111,7 +111,7 @@ public class CollectionManager {
                             moviesResultSet.getFloat("budget"),
                             MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
                             director,
-                            (UUID) moviesResultSet.getObject("uuid_user")
+                            moviesResultSet.getString("login")
                     );
                     enteredMovies.add(movie);
                 }

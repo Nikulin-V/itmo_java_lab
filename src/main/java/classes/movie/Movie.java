@@ -28,7 +28,7 @@ public class Movie implements Serializable {
     private Float budget; //Значение поля должно быть больше 0, Поле может быть null
     private MpaaRating mpaaRating; //Поле может быть null
     private Person director; //Поле не может быть null
-    private final UUID userID; // Поле не может быть null
+    private final String userID; // Поле не может быть null
 
     public Movie(String name,
                  Coordinates coordinates,
@@ -37,7 +37,7 @@ public class Movie implements Serializable {
                  Float budget,
                  MpaaRating mpaaRating,
                  Person director,
-                 UUID userID) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
+                 String userID) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
         id = UUID.randomUUID();
         this.name = new FieldHandler(name, FieldProperty.NOT_NULL, FieldProperty.NOT_BLANK).handleString();
         this.coordinates = (Coordinates) new FieldHandler(coordinates, FieldProperty.NOT_NULL).handleObject();
@@ -59,7 +59,7 @@ public class Movie implements Serializable {
                  Float budget,
                  MpaaRating mpaaRating,
                  Person director,
-                 UUID userID) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
+                 String userID) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
         this.id = id;
         this.name = new FieldHandler(name, FieldProperty.NOT_NULL, FieldProperty.NOT_BLANK).handleString();
         this.coordinates = (Coordinates) new FieldHandler(coordinates, FieldProperty.NOT_NULL).handleObject();
@@ -225,7 +225,7 @@ public class Movie implements Serializable {
         this.director = director;
     }
 
-    public UUID getUserID() {
+    public String getUserID() {
         return userID;
     }
 
