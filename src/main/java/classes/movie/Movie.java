@@ -50,6 +50,28 @@ public class Movie implements Serializable {
         this.userID = userID;
     }
 
+    public Movie(UUID id,
+                 String name,
+                 Coordinates coordinates,
+                 Date creationDate,
+                 Long oscarsCount,
+                 Long goldenPalmCount,
+                 Float budget,
+                 MpaaRating mpaaRating,
+                 Person director,
+                 UUID userID) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
+        this.id = id;
+        this.name = new FieldHandler(name, FieldProperty.NOT_NULL, FieldProperty.NOT_BLANK).handleString();
+        this.coordinates = (Coordinates) new FieldHandler(coordinates, FieldProperty.NOT_NULL).handleObject();
+        this.creationDate = creationDate;
+        this.oscarsCount = new FieldHandler(oscarsCount, FieldProperty.GREAT_THAN_ZERO).handleLong();
+        this.goldenPalmCount = new FieldHandler(goldenPalmCount, FieldProperty.GREAT_THAN_ZERO).handleLong();
+        this.budget = new FieldHandler(budget, FieldProperty.GREAT_THAN_ZERO).handleFloat();
+        this.mpaaRating = mpaaRating;
+        this.director = (Person) new FieldHandler(director, FieldProperty.NOT_NULL).handleObject();
+        this.userID = userID;
+    }
+
     /**
      * Restrictions:  Value must be more than zero
      *
