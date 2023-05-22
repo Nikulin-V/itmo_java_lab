@@ -1,12 +1,13 @@
 package classes.sql_managers;
 
 import classes.console.TextColor;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.sql.*;
 import java.util.Properties;
 
 public class SQLManager {
-
+    private static final String envFileName = ".env";
     private final static String createMovieTable = """
             CREATE TABLE IF NOT EXISTS movies(
                 uuid_id uuid PRIMARY KEY,
@@ -44,11 +45,12 @@ public class SQLManager {
 
     static Connection getDBConnection() {
         Connection dbConnection = null;
+        Dotenv env = Dotenv.configure().filename(envFileName).load();
         try {
-            String url = "jdbc:postgresql://%s:%d/studs".formatted(System.getenv("DB_HOST"), Integer.parseInt(System.getenv("DB_PORT")));
+            String url = "jdbc:postgresql://%s:%d/studs".formatted(env.get("DB_HOST"), Integer.parseInt(env.get("DB_PORT")));
             Properties props = new Properties();
-            props.setProperty("user", System.getenv("DB_USER"));
-            props.setProperty("password", System.getenv("DB_PASS"));
+            props.setProperty("user", env.get("DB_USER"));
+            props.setProperty("password", env.get("DB_PASS"));
             dbConnection = DriverManager.getConnection(url, props);
         } catch (SQLException e) {
             System.out.println(TextColor.green(e.getMessage()));

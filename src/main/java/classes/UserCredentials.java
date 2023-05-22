@@ -1,5 +1,7 @@
 package classes;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -24,7 +26,8 @@ public class UserCredentials {
 
     //TODO Connect with salt from server's
     private String hashPassword(String password) {
-        String salt = System.getenv("SALT");
+        Dotenv env = Dotenv.configure().filename(".env").load();
+        String salt = env.get("SALT");
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("MD2");
