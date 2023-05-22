@@ -1,13 +1,13 @@
 package classes.collection;
 
 import classes.console.TextColor;
-import classes.movie.Coordinates;
-import classes.movie.Movie;
+import classes.movie.*;
 import classes.sql_managers.SQLManager;
 import exceptions.*;
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class CollectionManager {
     private static final ArrayList<Movie> collection = new ArrayList<>();
@@ -77,7 +77,44 @@ public class CollectionManager {
     public static void readDB() {
         List<Movie> enteredMovies = null;
         try {
-            movies = SQLManager.executeQuery("SELECT * FROM movies"); // TODO: (WHERE userID == currentUserID)
+            // TODO: (WHERE userID == currentUserID)
+
+            ResultSet moviesResultSet = SQLManager.executeQuery("SELECT * FROM movies");
+            while (moviesResultSet.next()) {
+                Person director = null;
+                UUID id_director = (UUID) moviesResultSet.getObject("uuid_director");
+                ResultSet directorResultSet = SQLManager.executeQuery("SELECT * FROM directors WHERE uuid_director="+id_director);
+                if (directorResultSet.next()) {
+                    director = new Person(
+                            (UUID) directorResultSet.getObject("uuid_director"),
+                            directorResultSet.getString("name"),
+                            directorResultSet.getDate("birthday"),
+                            directorResultSet.getDouble("height"),
+                            directorResultSet.getString("passport_id"),
+                            Color.getById(directorResultSet.getInt("eye_color"))
+                    );
+                }
+                Coordinates coordinates = new Coordinates(moviesResultSet.getInt("coordinatex"),
+                        moviesResultSet.getInt("coordinatey"));
+                Movie movie = new Movie(
+                        (UUID) moviesResultSet.getObject("uuid_id"),
+                        moviesResultSet.getString("name"),
+                        coordinates,
+                        moviesResultSet.getDate("creation_date"),
+                        moviesResultSet.getLong("oscars_count"),
+                        moviesResultSet.getLong("golden_palm_count"),
+                        moviesResultSet.getFloat("budget"),
+                        MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
+                        director,
+                        (UUID) moviesResultSet.getObject("uuid_user")
+                );
+                enteredMovies.add(movie);
+                directorResultSet.close();
+            }
+            moviesResultSet.close();
+
+
+
         } catch (NotGreatThanException | GreatThanException | NullValueException | BlankValueException |
                  BadValueLengthException | NotUniqueException | SQLException e) {
             e.printStackTrace();
