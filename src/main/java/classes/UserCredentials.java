@@ -1,12 +1,17 @@
 package classes;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
 public class UserCredentials {
     private final String username;
     private final String hashedPassword;
 
-    public UserCredentials(String username, String hashedPassword) {
+
+    public UserCredentials(String username, String password) {
         this.username = username;
-        this.hashedPassword = hashedPassword;
+        this.hashedPassword = hashPassword(password);
     }
 
     public String getUsername() {
@@ -15,5 +20,19 @@ public class UserCredentials {
 
     public String getHashedPassword() {
         return hashedPassword;
+    }
+
+    //TODO Connect with salt from server's
+    private String hashPassword(String password) {
+        String salt = System.getenv("SALT");
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD2");
+        } catch (NoSuchAlgorithmException ignored) {
+        }
+        byte[] hash = md.digest((password + salt).getBytes());
+        String encodedHash = Base64.getEncoder().encodeToString(hash);
+
+        return encodedHash;
     }
 }

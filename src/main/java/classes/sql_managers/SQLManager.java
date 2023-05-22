@@ -18,7 +18,7 @@ public class SQLManager {
                 golden_palm_count BIGINT NOT NULL CHECK (golden_palm_count > 0),
                 budget FLOAT NOT NULL CHECK (budget > 0) DEFAULT NULL,
                 id_mpaarating INTEGER DEFAULT NULL,
-                uuid_director uuid NOT NULL REFERENCES directors(uuid_director) ON DELETE SET NULL,
+                uuid_director uuid NOT NULL REFERENCES directors(uuid_director) ON DELETE CASCADE,
                 uuid_user uuid NOT NULL REFERENCES users(uuid_user) ON DELETE CASCADE  
             );""";
 
@@ -34,8 +34,7 @@ public class SQLManager {
 
     private static final String createUserTable = """
             CREATE TABLE IF NOT EXISTS users(
-                uuid_user uuid PRIMARY KEY,
-                login VARCHAR(255) NOT NULL CHECK (login <> '') UNIQUE,
+                login VARCHAR(255) PRIMARY KEY,
                 pass_hash TEXT NOT NULL,
                 pass_salt TEXT NOT NULL
             );""";
