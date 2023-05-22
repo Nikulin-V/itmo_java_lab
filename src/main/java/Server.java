@@ -23,10 +23,10 @@ public class Server {
                 System.out.println(TextColor.red("Неправильный формат ввода порта\nномер порта должен быть в диапазоне от 0 до 65535"));
                 new Exit().execute(null);
             }
-            String fileName = args.length == 2 ? args[1]: null;
             CollectionManager.readDB();
             System.out.println(TextColor.green("Сервер запущен на " + port + " порту"));
             System.out.println(TextColor.grey("Ожидание соединения..."));
+            //noinspection InfiniteLoopStatement
             while (true) {
                 try (ServerSocket server = new ServerSocket(port)) {
                     server.setReuseAddress(true);
@@ -36,8 +36,6 @@ public class Server {
                     clientSessionThread.start();
                 } catch (IOException e) {
                     System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
-                    CollectionManager.saveCollection();
-                    System.out.println(TextColor.green("Хранилище сохранено в файл"));
                 }
             }
         }

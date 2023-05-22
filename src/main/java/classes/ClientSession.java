@@ -1,7 +1,6 @@
 package classes;
 
 import classes.abs.NamedCommand;
-import classes.collection.CollectionManager;
 import classes.console.TextColor;
 
 import java.io.IOException;
@@ -44,8 +43,6 @@ public class ClientSession implements Runnable {
         } catch (IOException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                  InstantiationException | IllegalAccessException e) {
             System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
-            CollectionManager.saveCollection();
-            System.out.println(TextColor.green("Хранилище сохранено в файл"));
         }
     }
 }
