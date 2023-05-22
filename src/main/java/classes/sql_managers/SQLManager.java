@@ -40,18 +40,6 @@ public class SQLManager {
                 pass_salt TEXT NOT NULL
             );""";
 
-    private static final String createSequenceMovie = """
-            CREATE SEQUENCE IF NOT EXISTS movie_Seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999 START 1  CACHE 20;        
-            """;
-
-    private static final String createSequenceDirector = """
-            CREATE SEQUENCE IF NOT EXISTS director_Seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999 START 100  CACHE 20;
-            """;
-    private static final String createSequenceUser = """
-            CREATE SEQUENCE IF NOT EXISTS user_Seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999 START 1000 CACHE 20;
-            """;
-
-
     public static void main(String[] args) {
         initDB();
     }

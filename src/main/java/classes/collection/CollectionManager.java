@@ -4,7 +4,6 @@ import classes.console.TextColor;
 import classes.movie.Coordinates;
 import classes.movie.Movie;
 import classes.sql_managers.SQLManager;
-import classes.sql_managers.SQLMovieManager;
 import exceptions.*;
 
 import java.sql.SQLException;
@@ -78,7 +77,7 @@ public class CollectionManager {
     public static void readDB() {
         List<Movie> enteredMovies = null;
         try {
-            movies = SQLManager.executeQuery("SELECT * FROM movies"); // WHERE userID == currentUserID
+            movies = SQLManager.executeQuery("SELECT * FROM movies"); // TODO: (WHERE userID == currentUserID)
         } catch (NotGreatThanException | GreatThanException | NullValueException | BlankValueException |
                  BadValueLengthException | NotUniqueException | SQLException e) {
             e.printStackTrace();
