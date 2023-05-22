@@ -8,4 +8,5 @@ target/
 *.iws
 *.iml
 *.ipr
+.env
 /.env

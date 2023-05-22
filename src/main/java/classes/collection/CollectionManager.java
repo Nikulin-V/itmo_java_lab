@@ -3,8 +3,8 @@ package classes.collection;
 import classes.console.TextColor;
 import classes.movie.Coordinates;
 import classes.movie.Movie;
-import classes.movie.Movies;
-import classes.sql_manager.SQLMovieManager;
+import classes.sql_managers.SQLManager;
+import classes.sql_managers.SQLMovieManager;
 import exceptions.*;
 
 import java.sql.SQLException;
@@ -75,24 +75,10 @@ public class CollectionManager {
         }
     }
 
-    public static String saveCollection() {
-        CollectionManager collectionManager = new CollectionManager();
-        ArrayList<Movie> moviesList = collectionManager.getCollection();
-        if (moviesList.size() != 0) {
-            Movies movies = new Movies();
-            movies.setMovies(moviesList);
-            new SQLMovieManager().saveCollectionToSQl(movies);
-//            XMLMovieManager.getInstance().saveCollectionToXML(movies);
-            return TextColor.cyan("\tТекущая коллекция сохранена в файл");
-        }
-        return TextColor.cyan("\tКоллекция пуста. Сохранять нечего");
-    }
-
-    public static void readFile() {
-
+    public static void readDB() {
         List<Movie> enteredMovies = null;
         try {
-            enteredMovies = new SQLMovieManager().readCollectionFromSQl().getMovies();
+            movies = SQLManager.executeQuery("SELECT * FROM movies"); // WHERE userID == currentUserID
         } catch (NotGreatThanException | GreatThanException | NullValueException | BlankValueException |
                  BadValueLengthException | NotUniqueException | SQLException e) {
             e.printStackTrace();

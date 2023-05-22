@@ -24,7 +24,7 @@ public class Server {
                 new Exit().execute(null);
             }
             String fileName = args.length == 2 ? args[1]: null;
-            CollectionManager.readFile();
+            CollectionManager.readDB();
             System.out.println(TextColor.green("Сервер запущен на " + port + " порту"));
             System.out.println(TextColor.grey("Ожидание соединения..."));
             while (true) {

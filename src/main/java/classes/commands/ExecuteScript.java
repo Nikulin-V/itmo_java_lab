@@ -10,6 +10,7 @@ import interfaces.Commandable;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 public class ExecuteScript extends NamedCommand implements Commandable {
     public final static int MAX_SCRIPT_TRANSITION_COUNT = 100;
@@ -20,7 +21,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
         return getName() + " <file_name>\t\t\t\t\t-\tсчитать и исполнить скрипт из указанного файла";
     }
 
-    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out, int userId) throws NoSuchCommandException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public Response execute(Object inputData, ObjectInputStream in, ObjectOutputStream out, UUID userID) throws NoSuchCommandException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         if (inputData instanceof String scriptName) {
             try {
                 File file = new File(scriptName);
@@ -37,7 +38,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         String inputString = (String) line;
                         while (inputString.startsWith(" "))
                             inputString = inputString.substring(1);
-                        CommandHandler.handle(inputString, out, userId);
+                        CommandHandler.handle(inputString, out, userID);
                         String input = in.readUTF();
                         System.out.println(input);
                     } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
@@ -51,7 +52,6 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                 scriptTransitionCount = 0;
                 return new Response(1).setData(TextColor.red("Файл не найден"));
             }
-                return new Response(0).setData("Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
         }
         return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите имя файла через пробел"));
     }

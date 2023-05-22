@@ -1,12 +1,8 @@
-package classes.sql_manager;
+package classes.sql_managers;
 
 import classes.console.TextColor;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Objects;
+import java.sql.*;
 import java.util.Properties;
 
 public class SQLManager {
@@ -60,7 +56,7 @@ public class SQLManager {
         initDB();
     }
 
-    static Connection createDBConnection() {
+    static Connection getDBConnection() {
         Connection dbConnection = null;
         try {
             String url = "jdbc:postgresql://%s:%d/studs".formatted(System.getenv("DB_HOST"), Integer.parseInt(System.getenv("DB_PORT")));
@@ -76,22 +72,29 @@ public class SQLManager {
         return dbConnection;
     }
 
-    private static void execute(String command) {
-        try (Statement statement = createDBConnection() != null ? Objects.requireNonNull(createDBConnection()).createStatement() : null) {
+    public static void execute(String command) {
+        try (Connection dbConnection = getDBConnection(); Statement statement = dbConnection.createStatement()) {
             statement.execute(command);
             System.out.println(TextColor.cyan("Обращение к базе данных выполнено"));
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
-            System.out.println(TextColor.grey("Возникла проблема при обращении к SQL_MANAGER"));
+            System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
         }
+    }
+
+    public static ResultSet executeQuery(String command) {
+        try (Connection dbConnection = getDBConnection(); Statement statement = dbConnection.createStatement()) {
+            return statement.executeQuery(command);
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+            System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
+        }
+        return null;
     }
 
     private static void initDB() {
         execute(createDirectorsTable);
         execute(createUserTable);
         execute(createMovieTable);
-        execute(createSequenceMovie);
-        execute(createSequenceDirector);
-        execute(createSequenceUser);
     }
 }

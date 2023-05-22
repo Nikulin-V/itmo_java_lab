@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Client {
     private static int connectAttemptsCount = 0;
@@ -49,7 +50,7 @@ public class Client {
         try (Socket socket = new Socket(host, port)) {
             System.out.println(TextColor.green("Соединение установлено"));
             // TODO SETUP USER ID AFTER LOG_IN OPERATION - DEFAULT OR ADMIN VALUE IS 9999
-            int userID = new Random().nextInt(5,100);
+            UUID userID = UUID.randomUUID();
             connectAttemptsCount = 0;
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -69,7 +70,6 @@ public class Client {
                         CommandHandler.setLastRequest(inputString);
                         Response response = Response.getEmptyResponce();
                         if (!inputString.startsWith("execute_script")) {
-
                             response = ExceptionCommandHandler.handleExceptions(inputString, out, userID);
                             if (response == null)
                                 response = (Response) in.readObject();

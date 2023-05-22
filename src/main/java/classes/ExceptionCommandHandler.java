@@ -7,12 +7,13 @@ import exceptions.NoSuchCommandException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 public class ExceptionCommandHandler {
 
-    public static Response handleExceptions(String inputString, ObjectOutputStream out) {
+    public static Response handleExceptions(String inputString, ObjectOutputStream out, UUID UserID) {
         try {
-            CommandHandler.handle(inputString, out);
+            CommandHandler.handle(inputString, out, UserID);
         } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
                  InstantiationException | IllegalAccessException e) {
             return new Response(1).setData(TextColor.red("Произошла фатальная ошибка считывания " +

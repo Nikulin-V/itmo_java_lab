@@ -1,4 +1,4 @@
-package classes.sql_manager;
+package classes.sql_managers;
 
 import interfaces.Commandable;
 

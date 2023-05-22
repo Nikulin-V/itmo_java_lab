@@ -1,12 +1,13 @@
 package classes.commands;
 
 
+import classes.Response;
 import classes.abs.NamedCommand;
 import interfaces.Commandable;
 
 public class ClearDataBase extends NamedCommand implements Commandable {
     @Override
-    public String execute(Object inputData) {
+    public Response execute(Object inputData) {
         return null;
     }
 
