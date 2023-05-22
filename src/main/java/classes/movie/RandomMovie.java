@@ -4,9 +4,10 @@ import exceptions.*;
 
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 public class RandomMovie {
-    public static Movie generate() {
+    public static Movie generate(UUID id) {
         Random r = new Random();
         try {
             Person director = new Person(
@@ -23,8 +24,7 @@ public class RandomMovie {
                     r.nextFloat(10000),
                     MpaaRating.getRandom(),
                     director,
-                    //TODO fix that value to whom ran that command
-                    8800);
+                    id);
         } catch (BlankValueException | NullValueException | NotGreatThanException | BadValueLengthException |
                  GreatThanException | NotUniqueException e) {
             System.out.println(e);

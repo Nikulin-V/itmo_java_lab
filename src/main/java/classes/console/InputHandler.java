@@ -6,13 +6,14 @@ import exceptions.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import static classes.movie.FieldProperty.*;
 
 public class InputHandler {
     RepeatScanner scanner = new RepeatScanner();
 
-    public Movie readMovie(int userId) {
+    public Movie readMovie(UUID userId) {
         Movie movie = null;
         while (movie == null) {
             try {

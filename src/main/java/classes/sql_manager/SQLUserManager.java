@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 import static classes.sql_manager.SQLManager.createDBConnection;
 
@@ -37,7 +38,6 @@ public class SQLUserManager {
                     rs.close();
                     statement.close();
                 }
-//                return userData;
             }else{
                 rs.close();
                 statement.close();
@@ -51,13 +51,14 @@ public class SQLUserManager {
 
     public void insertUser(String name, String hash, String salt) {
         String r = "INSERT INTO users"
-                + "(id_user, login, pass_hash,pass_salt)" + "values"
-                + "(?, ?, ?, ?)";
+                + "(uuid_user, login, pass_hash,pass_salt)" + "values"
+                + "(?, ?, ?, ?) ON CONFLICT DO NOTHING";
         try (PreparedStatement preparedStatement = connection.prepareStatement(r)) {
-            preparedStatement.setInt(1, getUserSequenceNextValue());
-            preparedStatement.setString(2, name); // TODO VALIDATORS here?
-            preparedStatement.setString(3, hash); // TODO VALIDATORS here?
-            preparedStatement.setString(4, salt); // TODO VALIDATORS here?
+            int index = 1;
+            preparedStatement.setObject(index++, UUID.randomUUID());
+            preparedStatement.setString(index++, name); // TODO VALIDATORS here?
+            preparedStatement.setString(index++, hash); // TODO VALIDATORS here?
+            preparedStatement.setString(index++, salt); // TODO VALIDATORS here?
             preparedStatement.execute();
         } catch (NullPointerException | PSQLException e) {
             e.printStackTrace();
@@ -65,6 +66,10 @@ public class SQLUserManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public  void deleteUser(String login) {
+
     }
 
     public  int getUserSequenceNextValue() {
