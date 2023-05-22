@@ -50,12 +50,19 @@ public class Client {
         System.out.println(TextColor.grey("Пытаюсь установить соединение с сервером..."));
         try (Socket socket = new Socket(host, port)) {
             System.out.println(TextColor.green("Соединение установлено"));
-            // TODO SETUP USER ID AFTER LOG_IN OPERATION - DEFAULT OR ADMIN VALUE IS 9999
-            UserCredentials credentials = new InputHandler().readCredentials();
-
             connectAttemptsCount = 0;
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+
+            // TODO SETUP USER ID AFTER LOG_IN OPERATION - DEFAULT OR ADMIN VALUE IS 9999
+            String choice = InputHandler.readLoginRegisterChoice();
+            UserCredentials credentials = InputHandler.readCredentials();
+//            if (choice.equals("1"))
+//                  login()
+//            else
+//                  register()
+
+
             if (CommandHandler.getLastRequest() == null)
                 System.out.print(TextColor.green("> "));
 

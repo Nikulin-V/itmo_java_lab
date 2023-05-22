@@ -7,7 +7,6 @@ import java.sql.*;
 import java.util.Properties;
 
 public class SQLManager {
-    private static final String envFileName = ".env";
     private final static String createMovieTable = """
             CREATE TABLE IF NOT EXISTS movies(
                 uuid_id uuid PRIMARY KEY,
@@ -45,7 +44,7 @@ public class SQLManager {
 
     static Connection getDBConnection() {
         Connection dbConnection = null;
-        Dotenv env = Dotenv.configure().filename(envFileName).load();
+        Dotenv env = Dotenv.load();
         try {
             String url = "jdbc:postgresql://%s:%d/studs".formatted(env.get("DB_HOST"), Integer.parseInt(env.get("DB_PORT")));
             Properties props = new Properties();

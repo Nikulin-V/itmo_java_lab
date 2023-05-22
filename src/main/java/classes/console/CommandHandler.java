@@ -90,19 +90,17 @@ public class CommandHandler {
                         out.writeObject(outputData);
                         setLastRequestData(commandArguments);
                     } else if (commandArguments == null || commandArguments.length == 0) {
-                        InputHandler inputHandler = new InputHandler();
-                        Object outputData = lastRequestData == null ? inputHandler.readMovie(credentials.getUsername()) : lastRequestData;
+                        Object outputData = lastRequestData == null ? InputHandler.readMovie(credentials.getUsername()) : lastRequestData;
                         lastRequestData = outputData;
                         out.writeObject(command);
                         out.flush();
                         out.writeObject(outputData);
                     }
                 } else if (Objects.equals(command.getName(), "update")) {
-                    InputHandler inputHandler = new InputHandler();
                     try {
                         if (commandArguments == null) throw new NullPointerException();
                         UUID filmUUID = UUID.fromString(commandArguments[0]);
-                        Movie outputData = lastRequestData == null ? inputHandler.readMovie(credentials.getUsername()) : (Movie) lastRequestData;
+                        Movie outputData = lastRequestData == null ? InputHandler.readMovie(credentials.getUsername()) : (Movie) lastRequestData;
                         outputData.setId(filmUUID);
                         lastRequestData = outputData;
                         out.writeObject(command);

@@ -26,7 +26,7 @@ public class UserCredentials {
 
     //TODO Connect with salt from server's
     private String hashPassword(String password) {
-        Dotenv env = Dotenv.configure().filename(".env").load();
+        Dotenv env = Dotenv.load();
         String salt = env.get("SALT");
         MessageDigest md = null;
         try {
