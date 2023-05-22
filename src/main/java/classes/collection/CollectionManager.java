@@ -1,5 +1,6 @@
 package classes.collection;
 
+import classes.commands.Clear;
 import classes.console.TextColor;
 import classes.movie.*;
 import classes.sql_managers.SQLManager;
@@ -47,7 +48,7 @@ public class CollectionManager {
         collection.remove(movieIndex);
     }
 
-    public void clear() {
+    public static void clear() {
         collection.clear();
     }
 
@@ -75,43 +76,47 @@ public class CollectionManager {
     }
 
     public static void readDB() {
-        List<Movie> enteredMovies = null;
+        List<Movie> enteredMovies = new ArrayList<>();
         try {
             // TODO: (WHERE userID == currentUserID)
 
             ResultSet moviesResultSet = SQLManager.executeQuery("SELECT * FROM movies");
-            while (moviesResultSet.next()) {
-                Person director = null;
-                UUID id_director = (UUID) moviesResultSet.getObject("uuid_director");
-                ResultSet directorResultSet = SQLManager.executeQuery("SELECT * FROM directors WHERE uuid_director="+id_director);
-                if (directorResultSet.next()) {
-                    director = new Person(
-                            (UUID) directorResultSet.getObject("uuid_director"),
-                            directorResultSet.getString("name"),
-                            directorResultSet.getDate("birthday"),
-                            directorResultSet.getDouble("height"),
-                            directorResultSet.getString("passport_id"),
-                            Color.getById(directorResultSet.getInt("eye_color"))
+            if (moviesResultSet == null) {
+                CollectionManager.clear();
+            } else {
+                while (moviesResultSet.next()) {
+                    Person director = null;
+                    UUID id_director = (UUID) moviesResultSet.getObject("uuid_director");
+                    ResultSet directorResultSet = SQLManager.executeQuery("SELECT * FROM directors WHERE uuid_director=" + id_director);
+                    if (directorResultSet != null && directorResultSet.next()) {
+                        director = new Person(
+                                (UUID) directorResultSet.getObject("uuid_director"),
+                                directorResultSet.getString("name"),
+                                directorResultSet.getDate("birthday"),
+                                directorResultSet.getDouble("height"),
+                                directorResultSet.getString("passport_id"),
+                                Color.getById(directorResultSet.getInt("eye_color"))
+                        );
+                        directorResultSet.close();
+                    }
+                    Coordinates coordinates = new Coordinates(moviesResultSet.getInt("coordinatex"),
+                            moviesResultSet.getInt("coordinatey"));
+                    Movie movie = new Movie(
+                            (UUID) moviesResultSet.getObject("uuid_id"),
+                            moviesResultSet.getString("name"),
+                            coordinates,
+                            moviesResultSet.getDate("creation_date"),
+                            moviesResultSet.getLong("oscars_count"),
+                            moviesResultSet.getLong("golden_palm_count"),
+                            moviesResultSet.getFloat("budget"),
+                            MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
+                            director,
+                            (UUID) moviesResultSet.getObject("uuid_user")
                     );
+                    enteredMovies.add(movie);
                 }
-                Coordinates coordinates = new Coordinates(moviesResultSet.getInt("coordinatex"),
-                        moviesResultSet.getInt("coordinatey"));
-                Movie movie = new Movie(
-                        (UUID) moviesResultSet.getObject("uuid_id"),
-                        moviesResultSet.getString("name"),
-                        coordinates,
-                        moviesResultSet.getDate("creation_date"),
-                        moviesResultSet.getLong("oscars_count"),
-                        moviesResultSet.getLong("golden_palm_count"),
-                        moviesResultSet.getFloat("budget"),
-                        MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
-                        director,
-                        (UUID) moviesResultSet.getObject("uuid_user")
-                );
-                enteredMovies.add(movie);
-                directorResultSet.close();
+                moviesResultSet.close();
             }
-            moviesResultSet.close();
 
 
 
