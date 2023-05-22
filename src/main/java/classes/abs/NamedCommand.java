@@ -10,7 +10,7 @@ public abstract class NamedCommand {
         return false;
     }
 
-    public Response execute(Object inputData) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public Response execute(Object inputData, String userID) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return null;
     }
 

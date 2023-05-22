@@ -8,5 +8,5 @@ public interface Commandable extends Serializable {
 
     String getInfo();
 
-    Object execute(Object inputData) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException;
+    Object execute(Object inputData, String userID) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException;
 }
