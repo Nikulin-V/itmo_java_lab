@@ -4,26 +4,26 @@ import java.io.Serializable;
 
 public class Response implements Serializable {
     private final int code;
-    private String data;
+    private Object data;
 
-    private static Response INSTANCE;
-
-    public static Response getEmptyResponce(){
-        if (INSTANCE==null){
-            INSTANCE = new Response(1)
-                    .setData("responce is empty");
-        }
-        return INSTANCE;
+    public Response(int code) {
+        this.code = code;
     }
 
-    public Response(int responseCode) {
-        code = responseCode;
+    public Response(int code, Object data) {
+        this.code = code;
+        this.data = data;
     }
-    public String getData() {
+
+    public int getCode() {
+        return code;
+    }
+
+    public Object getData() {
         return data;
     }
 
-    public Response setData(String data) {
+    public Object setData(String data) {
         this.data = data;
         return this;
     }

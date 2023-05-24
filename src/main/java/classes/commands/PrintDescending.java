@@ -26,6 +26,6 @@ public class PrintDescending extends NamedCommand implements Commandable {
             for (Movie movie : collection)
                 output.append("\t").append(movie.toString()).append("\n");
         else output = new StringBuilder("\tПусто");
-        return new Response(0).setData(TextColor.cyan(output.toString()));
+        return new Response(0, TextColor.cyan(output.toString()));
     }
 }

@@ -1,14 +1,13 @@
 package classes.collection;
 
-import classes.commands.Clear;
 import classes.console.TextColor;
 import classes.movie.*;
 import classes.sql_managers.SQLManager;
 import exceptions.*;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
-import java.util.Date;
 
 public class CollectionManager {
     private static final ArrayList<Movie> collection = new ArrayList<>();
@@ -30,30 +29,11 @@ public class CollectionManager {
     public static void addMovie(Movie movie) {
         CollectionManager.collection.add(movie);
     }
-
-    public void removeMovie(UUID MovieId) {
-        for (Movie movie : CollectionManager.collection) {
-            if (movie.getId() == MovieId) {
-                CollectionManager.collection.remove(movie);
-                break;
-            }
-        }
-    }
-
-    public void removeMovie(Movie movie) {
-        collection.remove(movie);
-    }
-
-    public void removeMovie(int movieIndex) {
-        collection.remove(movieIndex);
-    }
-
     public static void clear() {
         collection.clear();
     }
 
     public static void sort(ArrayList<Movie> collection) {
-
         List<Coordinates> moviesCoordinatesList = new ArrayList<>();
         for (Movie movies : collection)
             moviesCoordinatesList.add(movies.getCoordinates());
@@ -124,7 +104,7 @@ public class CollectionManager {
                  BadValueLengthException | NotUniqueException | SQLException e) {
             e.printStackTrace();
         }
-        if (enteredMovies != null && !enteredMovies.isEmpty()) {
+        if (!enteredMovies.isEmpty()) {
             for (Movie movie : enteredMovies)
                 addMovie(movie);
             System.out.println(TextColor.purple("База данных был прочитана..."));

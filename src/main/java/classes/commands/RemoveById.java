@@ -23,20 +23,20 @@ public class RemoveById extends NamedCommand implements Commandable {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
             boolean isFound = false;
 
-                UUID uuid = UUID.fromString(arg[0]);
-                for (Movie movie : movies) {
-                    if (movie.getId().equals(uuid)) {
-                        if (movie.getUserID().equals(userID)) movies.remove(movie);
-                        else return new Response(0).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
-                        isFound = true;
-                        break;
-                    }
+            UUID uuid = UUID.fromString(arg[0]);
+            for (Movie movie : movies) {
+                if (movie.getId().equals(uuid)) {
+                    if (movie.getUserID().equals(userID)) movies.remove(movie);
+                    else return new Response(0, TextColor.yellow("Нет прав доступа для выполнения команды"));
+                    isFound = true;
+                    break;
                 }
-                if (isFound)
-                    return new Response(0).setData(TextColor.cyan("Элемент успешно удалён"));
-                return new Response(0).setData(TextColor.yellow("Элемент с ID=" + arg[0] + " не найден"));
+            }
+            if (isFound)
+                return new Response(0, TextColor.cyan("Элемент успешно удалён"));
+            return new Response(0, TextColor.yellow("Элемент с ID=" + arg[0] + " не найден"));
         }
-        return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите id в " +
+        return new Response(1, TextColor.yellow("Неверное количество аргументов. Введите id в " +
                 "формате UUID через пробел"));
     }
 

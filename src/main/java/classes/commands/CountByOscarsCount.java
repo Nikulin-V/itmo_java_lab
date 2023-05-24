@@ -27,10 +27,10 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
                         searchMoviesCount += 1;
                     }
                 }
-                return new Response(0).setData(TextColor.cyan("Количество фильмов с " +
+                return new Response(0, TextColor.cyan("Количество фильмов с " +
                         searchOscarsCount + " наградами \"Оскар\": " + searchMoviesCount));
         }
-        return new Response(1).setData(TextColor.yellow("Неверный формат ввода. \n" +
+        return new Response(1, TextColor.yellow("Неверный формат ввода. \n" +
                 "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел"));
     }
 

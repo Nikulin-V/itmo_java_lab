@@ -4,6 +4,7 @@ import classes.Response;
 import classes.abs.NamedCommand;
 import interfaces.Commandable;
 import org.reflections.Reflections;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class Help extends NamedCommand implements Commandable {
         for (Class<? extends Commandable> command : allCommands) {
                 output.append(command.getDeclaredConstructor().newInstance().getInfo()).append("\n");
         }
-        return new Response(0).setData(output.toString());
+        return new Response(0, output.toString());
     }
 
     @Override

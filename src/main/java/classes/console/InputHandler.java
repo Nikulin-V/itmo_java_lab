@@ -294,11 +294,13 @@ public class InputHandler {
     }
 
     public static String readLoginRegisterChoice() {
-        String userChoice = "";
-        while (!(userChoice.equals("1") || userChoice.equals("2"))) {
+        String userChoice = null;
+        while (!(userChoice != null && (userChoice.equals("") || userChoice.equals("1") || userChoice.equals("2")))) {
             System.out.println(TextColor.yellow("1 - Войти (по умолчанию)\n2 - Зарегистрироваться"));
             userChoice = scanner.nextLine(TextColor.green("Выберите опцию: "));
         }
+        if (userChoice.equals(""))
+            userChoice = "1";
         return userChoice;
     }
 

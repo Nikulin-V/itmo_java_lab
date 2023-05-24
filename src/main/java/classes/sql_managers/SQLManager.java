@@ -11,7 +11,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 public class SQLManager {
-
     private final static String createMovieTable = """
             CREATE TABLE IF NOT EXISTS movies(
                 uuid_id uuid PRIMARY KEY,

@@ -17,7 +17,8 @@ public class Update extends NamedCommand implements Commandable {
     public Response execute(Object inputData, String userID) {
             boolean founded = false;
             if (inputData instanceof Movie newMovie) {
-                if(!newMovie.getUserID().equals(userID)) return new Response(1).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
+                if (!newMovie.getUserID().equals(userID))
+                    return new Response(1, TextColor.yellow("Нет прав доступа для выполнения команды"));
                 CollectionManager cm = new CollectionManager();
                 for (int i = 0; i < cm.getCollection().size(); i++) {
                     if (cm.getCollection().get(i).getId().equals(newMovie.getId())) {
@@ -27,10 +28,10 @@ public class Update extends NamedCommand implements Commandable {
                         break;
                     }
                 }
-                if (!founded) return new Response(0).setData(TextColor.yellow("Movie с UUID=") +
+                if (!founded) return new Response(0, TextColor.yellow("Movie с UUID=") +
                         TextColor.red(newMovie.getId().toString()) + TextColor.yellow(" не существует"));
-            } else return new Response(1).setData(TextColor.yellow("Некорректно введён UUID фильма, повторите попытку"));
-        return new Response(0).setData(TextColor.green("Выполнено"));
+            } else return new Response(1, TextColor.yellow("Некорректно введён UUID фильма, повторите попытку"));
+        return new Response(0, TextColor.green("Выполнено"));
     }
 
     @Override
