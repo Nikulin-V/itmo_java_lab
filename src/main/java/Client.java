@@ -56,7 +56,8 @@ public class Client {
             out.flush();
             try {
                 Response response = (Response) in.readObject();
-                if (response.getCode() == 1)
+
+                if (response.getCode() == 0)
                     return credentials;
                 else System.out.println(response.getData());
             } catch (ClassNotFoundException e) {
