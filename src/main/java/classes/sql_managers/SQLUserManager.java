@@ -13,14 +13,14 @@ public class SQLUserManager extends SQLManager {
 
     private static final String createUserTableQuery = """
             CREATE TABLE IF NOT EXISTS users(
-                username VARCHAR(255) NOT NULL CHECK (login <> '') UNIQUE PRIMARY KEY,
+                username VARCHAR(255) NOT NULL CHECK (username <> '') UNIQUE PRIMARY KEY,
                 hashed_password TEXT NOT NULL
             );""";
 
     public SQLUserManager() {
     }
 
-    public void init() {
+    public static void init() {
         execute(createUserTableQuery);
     }
 

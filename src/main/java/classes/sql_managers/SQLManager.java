@@ -36,11 +36,7 @@ public class SQLManager {
                 eye_color INTEGER NOT NULL
             );""";
 
-    private static final String createUserTable = """
-            CREATE TABLE IF NOT EXISTS users(
-                login VARCHAR(255) PRIMARY KEY,
-                pass_hash TEXT NOT NULL
-            );""";
+
 
     public static void main(String[] args) {
         initDB();
@@ -73,14 +69,29 @@ public class SQLManager {
         }
     }
 
+    public static ResultSet executePreparedQuery(String command, String arg) {
+        Connection dbConnection = getDBConnection();
+        try  {
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(command);
+            preparedStatement.setString(1,arg);
+            return preparedStatement.executeQuery(command);
+        } catch ( NullPointerException | SQLException e) {
+            e.printStackTrace();
+            System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
+
+        }
+        return null;
+    }
+
     public static ResultSet executeQuery(String command) {
         Connection dbConnection = getDBConnection();
         try  {
             Statement statement = dbConnection.createStatement();
             return statement.executeQuery(command);
-        } catch (NullPointerException | SQLException e) {
+        } catch ( NullPointerException | SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
+
         }
         return null;
     }
@@ -187,7 +198,7 @@ public class SQLManager {
     }
     private static void initDB() {
         execute(createDirectorsTable);
-        execute(createUserTable);
+        SQLUserManager.init();
         execute(createMovieTable);
     }
 }

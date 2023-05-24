@@ -2,11 +2,12 @@ package classes;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-public class UserCredentials {
+public class UserCredentials implements Serializable {
     private final String username;
     private final String password;
     private boolean isRegistration = false;

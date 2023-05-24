@@ -23,8 +23,16 @@ public class Response implements Serializable {
         return data;
     }
 
-    public Object setData(String data) {
+    public Response setData(String data) {
         this.data = data;
         return this;
     }
+
+//    @Override
+//    public String toString() {
+//        return "Response{" +
+//                "code=" + code +
+//                ", data=" + data +
+//                '}';
+//    }
 }

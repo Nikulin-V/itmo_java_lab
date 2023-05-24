@@ -50,7 +50,7 @@ public class Client {
         while (true) {
             String choice = InputHandler.readLoginRegisterChoice();
             UserCredentials credentials = InputHandler.readCredentials();
-            if (choice.equals("1"))
+            if (choice.equals("2"))
                 credentials.setRegistration(true);
             out.writeObject(credentials);
             out.flush();
@@ -58,6 +58,7 @@ public class Client {
                 Response response = (Response) in.readObject();
                 if (response.getCode() == 0)
                     return credentials;
+                else System.out.println(response.getData());
             } catch (ClassNotFoundException e) {
                 System.out.println(TextColor.yellow("Ошибка авторизации"));
             }
@@ -91,6 +92,7 @@ public class Client {
                 connect(host, port);
             } else System.out.println(TextColor.red("Не удаётся установить соединение"));
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println(TextColor.red("Ошибка соединения"));
         }
     }

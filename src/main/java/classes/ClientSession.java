@@ -21,10 +21,10 @@ public class ClientSession implements Runnable {
     }
 
     private boolean checkPassword(UserCredentials userCredentials) {
-        ResultSet loginResultSet = SQLManager.executeQuery("SELECT * FROM users where login=" + userCredentials.getUsername());
+        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=",userCredentials.getUsername());
         try {
-            if (loginResultSet != null) {
-                String hashedPassword = loginResultSet.getString("pass_hash");
+            if (!loginResultSet.wasNull()) {
+                String hashedPassword = loginResultSet.getString("hashed_password");
                 return hashedPassword.equals(userCredentials.getHashedPassword());
             }
         } catch (SQLException e) {
@@ -33,8 +33,8 @@ public class ClientSession implements Runnable {
         return false;
     }
 
-    private boolean isLoginInDB(String login) {
-        ResultSet loginResultSet = SQLManager.executeQuery("SELECT * FROM users WHERE login=" + login);
+    private boolean isLoginInDB(String username) {
+        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=",username);
         return loginResultSet != null;
     }
 
@@ -94,7 +94,7 @@ public class ClientSession implements Runnable {
             if (checkPassword(userCredentials))
                 return new Response(0, TextColor.green("Авторизация прошла успешно"));
             else return new Response(1, TextColor.red("Неверный пароль\n"));
-        return new Response(1, TextColor.yellow("Пользователь с таким логином не существует\n"));
+        return new Response(1, TextColor.yellow("Пользователя с таким логином не существует\n"));
     }
 
     private Response register(UserCredentials userCredentials) {

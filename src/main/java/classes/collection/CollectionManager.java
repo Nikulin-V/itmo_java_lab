@@ -67,7 +67,8 @@ public class CollectionManager {
                 while (moviesResultSet.next()) {
                     Person director = null;
                     UUID id_director = (UUID) moviesResultSet.getObject("uuid_director");
-                    ResultSet directorResultSet = SQLManager.executeQuery("SELECT * FROM directors WHERE uuid_director=" + id_director);
+                    //TODO возможно отправлять uuid->string в БД не лучшая идея, тогда надо preparedstatement не только для одной строки писать
+                    ResultSet directorResultSet = SQLManager.executePreparedQuery("SELECT * FROM directors WHERE uuid_director=",id_director.toString());
                     if (directorResultSet != null && directorResultSet.next()) {
                         director = new Person(
                                 (UUID) directorResultSet.getObject("uuid_director"),
