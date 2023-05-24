@@ -4,7 +4,10 @@ import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
+import classes.sql_managers.SQLManager;
 import interfaces.Commandable;
+
+import java.util.UUID;
 
 public class RemoveAt extends NamedCommand implements Commandable {
     public final boolean hasTransferData = true;
@@ -23,7 +26,11 @@ public class RemoveAt extends NamedCommand implements Commandable {
                 int index = Integer.parseInt(arg[0]);
                 CollectionManager cm = new CollectionManager();
                 if (cm.getCollection().size() >= index + 1) {
-                    if (cm.getCollection().get(index).getUserID().equals(userID)) cm.getCollection().remove(index);
+                    if (cm.getCollection().get(index).getUserID().equals(userID)){
+                        UUID uuid = cm.getCollection().get(index).getId();
+                        SQLManager.executeMovieDelete(uuid,userID);
+                        cm.getCollection().remove(index);
+                    }
                     else return new Response(0).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
                     return new Response(0).setData(TextColor.cyan("Элемент успешно удалён"));
                 }

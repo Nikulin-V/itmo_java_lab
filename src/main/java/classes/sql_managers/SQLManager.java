@@ -95,12 +95,50 @@ public class SQLManager {
         return Integer.MAX_VALUE;
     }
 
+    public static int executeMovieDelete(UUID uuid, String userID) {
+
+        String r = """
+                DELETE FROM movies WHERE uuid_id=? AND user_id=?
+                """;
+
+        try (Connection dbConnection = getDBConnection(); PreparedStatement ps = dbConnection.prepareStatement(r)) {
+            int index = 1;
+            ps.setObject(index++, uuid);
+            ps.setString(index++, userID);
+            return ps.executeUpdate();
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+            System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    public static int executeMovieUpdate(UUID uuid, String userID) {
+
+        String r = """
+                UPDATE movies
+                SET name = ?, coordinatex = ?, coordinatey = ?, oscars_count=? ,golden_palm_count = ?, budget=?, id_mpaarating=?, uuid_director=?
+                WHERE uuid_id = ?;
+                """;
+        try (Connection dbConnection = getDBConnection(); PreparedStatement ps = dbConnection.prepareStatement(r)) {
+            int index = 1;
+
+            ps.setString(index++, userID);
+            ps.setObject(index++, uuid);
+            return ps.executeUpdate();
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+            System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
+        }
+        return Integer.MAX_VALUE;
+    }
+
     public static boolean insertMovie(Movie movie) throws SQLException{
             Connection connection = getDBConnection();
             insertDirector(movie.getDirector(), movie.getDirector().getDirectorID(), connection);
 
             String r = "INSERT INTO movies"
-                    + "(uuid_id, name, coordinatex, coordinatey, creation_date, oscars_count, golden_palm_count, budget, id_mpaarating, uuid_director, uuid_user)" + "values"
+                    + "(uuid_id, name, coordinatex, coordinatey, creation_date, oscars_count, golden_palm_count, budget, id_mpaarating, uuid_director, user_id)" + "values"
                     + "(?, ?, ?, ?, ?, ?, ?, ?,?,?,?) ON CONFLICT DO NOTHING";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(r)) {
@@ -116,7 +154,7 @@ public class SQLManager {
                 if (movie.getMpaaRating() == null) preparedStatement.setNull(index++, Types.INTEGER);
                 else preparedStatement.setInt(index++, movie.getMpaaRating().ordinal() + 1);
                 preparedStatement.setObject(index++, movie.getDirector().getDirectorID());
-                preparedStatement.setObject(index++, movie.getUserID());
+                preparedStatement.setString(index++, movie.getUserID());
                 return  preparedStatement.execute();
             } catch (NullPointerException | PSQLException e) {
                 e.printStackTrace();
@@ -124,7 +162,6 @@ public class SQLManager {
             }
         return false;
     }
-
 
     private static boolean insertDirector(Person person, UUID id, Connection connection) {
         String r = "INSERT INTO directors"
@@ -149,25 +186,6 @@ public class SQLManager {
         }
         return false;
     }
-
-
-//    private static boolean updateMovie(){
-//        String query = """
-//                UPDATE movies
-//                SET name = ?,
-//                SET coordinatex = ?,
-//                SET coordinatey = ?,
-//                SET creation_date = ?,
-//                SET oscars_count = ?,
-//                SET golden_palm_count= ?,
-//                SET budget = ?,
-//                SET id_mpaarating= ?
-//
-//                WHERE uuid_id = ?
-//                """;
-//        return true;
-//    }
-
     private static void initDB() {
         execute(createDirectorsTable);
         execute(createUserTable);

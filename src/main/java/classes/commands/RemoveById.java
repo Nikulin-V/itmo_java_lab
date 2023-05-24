@@ -5,6 +5,7 @@ import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
 import classes.movie.Movie;
+import classes.sql_managers.SQLManager;
 import interfaces.Commandable;
 
 import java.util.ArrayList;
@@ -26,7 +27,10 @@ public class RemoveById extends NamedCommand implements Commandable {
                 UUID uuid = UUID.fromString(arg[0]);
                 for (Movie movie : movies) {
                     if (movie.getId().equals(uuid)) {
-                        if (movie.getUserID().equals(userID)) movies.remove(movie);
+                        if (movie.getUserID().equals(userID)){
+                            SQLManager.executeMovieDelete(uuid,userID);
+                            movies.remove(movie);
+                        }
                         else return new Response(0).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
                         isFound = true;
                         break;

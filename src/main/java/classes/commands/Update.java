@@ -5,6 +5,7 @@ import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
 import classes.console.TextColor;
 import classes.movie.Movie;
+import classes.sql_managers.SQLManager;
 import interfaces.Commandable;
 
 public class Update extends NamedCommand implements Commandable {
@@ -18,6 +19,7 @@ public class Update extends NamedCommand implements Commandable {
             boolean founded = false;
             if (inputData instanceof Movie newMovie) {
                 if(!newMovie.getUserID().equals(userID)) return new Response(1).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
+                SQLManager.executeMovieUpdate(newMovie.getId(), userID);
                 CollectionManager cm = new CollectionManager();
                 for (int i = 0; i < cm.getCollection().size(); i++) {
                     if (cm.getCollection().get(i).getId().equals(newMovie.getId())) {
