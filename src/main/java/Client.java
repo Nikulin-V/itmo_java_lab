@@ -56,7 +56,6 @@ public class Client {
             out.flush();
             try {
                 Response response = (Response) in.readObject();
-
                 if (response.getCode() == 0)
                     return credentials;
                 else System.out.println(response.getData());
@@ -79,6 +78,8 @@ public class Client {
                 System.out.print(TextColor.green("> "));
 
             while (CommandHandler.getLastRequest() != null || scanner.hasNextLine()) {
+                out.writeObject(credentials);
+                out.flush();
                 sendCommand(in, out, credentials);
                 System.out.print(TextColor.green("> "));
             }
