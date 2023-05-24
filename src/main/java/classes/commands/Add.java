@@ -21,25 +21,24 @@ public class Add extends NamedCommand implements Commandable {
     public Response execute(Object inputData, String userID) {
         if (inputData instanceof Movie movie) {
             try {
-                if (SQLManager.insertMovie(movie)) {
+                if (SQLManager.insertMovie(movie))
                     CollectionManager.addMovie(movie);
-                }
             } catch (SQLException e) {
-                return new Response(1).setData(TextColor.grey("Проблема при обращении к базе данных"));
+                return new Response(1, TextColor.grey("Проблема при обращении к базе данных"));
             }
         } else if (inputData instanceof String[] arg && arg[0].equals("random")) {
             Movie randomMovie = RandomMovie.generate(userID);
             try {
-                if (SQLManager.insertMovie(randomMovie)) {
+                if (randomMovie == null)
+                    return new Response(1, TextColor.grey("Ошибка при генерации объекта"));
+                if (SQLManager.insertMovie(randomMovie))
                     CollectionManager.addMovie(randomMovie);
-                }
             } catch (SQLException e) {
-                return new Response(1).setData(TextColor.grey("Проблема при обращении к базе данных"));
+                return new Response(1, TextColor.grey("Проблема при обращении к базе данных"));
             }
-
-        } else return new Response(1).setData(TextColor.purple("У команды не должно быть аргументов или " +
+        } else return new Response(1, TextColor.purple("У команды не должно быть аргументов или " +
                 "аргумент \"random\""));
-        return new Response(0).setData(TextColor.green("Выполнено"));
+        return new Response(0, TextColor.green("Выполнено"));
     }
 
     @Override

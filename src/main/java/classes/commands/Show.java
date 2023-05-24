@@ -24,7 +24,7 @@ public class Show extends NamedCommand implements Commandable {
             for (Movie movie : movies)
                 output.append("\t").append(movie.toString());
         else output.append(TextColor.cyan("\tПусто"));
-        return new Response(0).setData(output.toString());
+        return new Response(0, output.toString());
     }
     @Override
     public boolean isNeedInput() {

@@ -40,7 +40,7 @@ public class RemoveById extends NamedCommand implements Commandable {
                     return new Response(0).setData(TextColor.cyan("Элемент успешно удалён"));
                 return new Response(0).setData(TextColor.yellow("Элемент с ID=" + arg[0] + " не найден"));
         }
-        return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите id в " +
+        return new Response(1, TextColor.yellow("Неверное количество аргументов. Введите id в " +
                 "формате UUID через пробел"));
     }
 

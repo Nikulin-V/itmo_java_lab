@@ -46,6 +46,24 @@ public class Client {
         connect(host, port);
     }
 
+    private static UserCredentials authorize(ObjectInputStream in, ObjectOutputStream out) throws IOException {
+        while (true) {
+            String choice = InputHandler.readLoginRegisterChoice();
+            UserCredentials credentials = InputHandler.readCredentials();
+            if (choice.equals("1"))
+                credentials.setRegistration(true);
+            out.writeObject(credentials);
+            out.flush();
+            try {
+                Response response = (Response) in.readObject();
+                if (response.getCode() == 0)
+                    return credentials;
+            } catch (ClassNotFoundException e) {
+                System.out.println(TextColor.yellow("Ошибка авторизации"));
+            }
+        }
+    }
+
     private static void connect(String host, int port) throws InterruptedException {
         System.out.println(TextColor.grey("Пытаюсь установить соединение с сервером..."));
         try (Socket socket = new Socket(host, port)) {
@@ -53,54 +71,13 @@ public class Client {
             connectAttemptsCount = 0;
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-            // TODO SETUP USER ID AFTER LOG_IN OPERATION - DEFAULT OR ADMIN VALUE IS 9999
-            String choice = InputHandler.readLoginRegisterChoice();
-            UserCredentials credentials = InputHandler.readCredentials();
-//            if (choice.equals("1"))
-//                  login()
-//            else
-//                  register()
-
+            UserCredentials credentials = authorize(in, out);
 
             if (CommandHandler.getLastRequest() == null)
                 System.out.print(TextColor.green("> "));
 
             while (CommandHandler.getLastRequest() != null || scanner.hasNextLine()) {
-                try {
-                    String inputString;
-                    if (hasLastRequest()) {
-                        System.out.println(TextColor.green("Выполняю последний запрос (" + CommandHandler.getLastRequest() + ")"));
-                        inputString = CommandHandler.getLastRequest();
-                    } else inputString = scanner.nextLine();
-                    while (inputString != null && inputString.startsWith(" "))
-                        inputString = inputString.substring(1);
-                    if (!(inputString == null || inputString.isBlank())) {
-                        CommandHandler.setLastRequest(inputString);
-                        Response response = Response.getEmptyResponce();
-                        if (!inputString.startsWith("execute_script")) {
-                            response = ExceptionCommandHandler.handleExceptions(inputString, out, credentials);
-                            if (response == null)
-                                response = (Response) in.readObject();
-                        } else {
-                            String[] commandArguments = null;
-                            if (inputString.split(" ").length > 1) {
-                                String[] arr = inputString.split(" ");
-                                commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
-                            }
-                            if (commandArguments != null && commandArguments.length == 1)
-                                response = new ExecuteScript().execute(commandArguments[0], in, out, credentials);
-                        }
-                        System.out.println(response.getData());
-                        CommandHandler.clearLastRequest();
-                    }
-                } catch (NoSuchCommandException e) {
-                    e.printMessage();
-                    CommandHandler.clearLastRequest();
-                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                         IllegalAccessException | ClassNotFoundException e) {
-                    new SystemException().printMessage();
-                }
+                sendCommand(in, out, credentials);
                 System.out.print(TextColor.green("> "));
             }
         } catch (UnknownHostException e) {
@@ -115,6 +92,44 @@ public class Client {
             } else System.out.println(TextColor.red("Не удаётся установить соединение"));
         } catch (IOException e) {
             System.out.println(TextColor.red("Ошибка соединения"));
+        }
+    }
+
+    private static void sendCommand(ObjectInputStream in, ObjectOutputStream out, UserCredentials credentials) throws IOException {
+        try {
+            String inputString;
+            if (hasLastRequest()) {
+                System.out.println(TextColor.green("Выполняю последний запрос (" + CommandHandler.getLastRequest() + ")"));
+                inputString = CommandHandler.getLastRequest();
+            } else inputString = scanner.nextLine();
+
+            while (inputString != null && inputString.startsWith(" "))
+                inputString = inputString.substring(1);
+            if (!(inputString == null || inputString.isBlank())) {
+                CommandHandler.setLastRequest(inputString);
+                Response response = new Response(0);
+                if (!inputString.startsWith("execute_script")) {
+                    response = ExceptionCommandHandler.handleExceptions(inputString, out, credentials);
+                    if (response == null)
+                        response = (Response) in.readObject();
+                } else {
+                    String[] commandArguments = null;
+                    if (inputString.split(" ").length > 1) {
+                        String[] arr = inputString.split(" ");
+                        commandArguments = Arrays.copyOfRange(arr, 1, arr.length);
+                    }
+                    if (commandArguments != null && commandArguments.length == 1)
+                        response = new ExecuteScript().execute(commandArguments[0], in, out, credentials);
+                }
+                System.out.println(response.getData());
+                CommandHandler.clearLastRequest();
+            }
+        } catch (NoSuchCommandException e) {
+            e.printMessage();
+            CommandHandler.clearLastRequest();
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException | ClassNotFoundException e) {
+            new SystemException().printMessage();
         }
     }
 

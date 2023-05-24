@@ -8,12 +8,13 @@ import java.util.Base64;
 
 public class UserCredentials {
     private final String username;
-    private final String hashedPassword;
+    private final String password;
+    private boolean isRegistration = false;
 
 
     public UserCredentials(String username, String password) {
         this.username = username;
-        this.hashedPassword = hashPassword(password);
+        this.password = password;
     }
 
     public String getUsername() {
@@ -21,21 +22,38 @@ public class UserCredentials {
     }
 
     public String getHashedPassword() {
-        return hashedPassword;
+        return hashPassword(password);
     }
 
-    //TODO Connect with salt from server's
-    private String hashPassword(String password) {
+    public void setRegistration(boolean registration) {
+        isRegistration = registration;
+    }
+
+    public boolean isRegistration() {
+        return isRegistration;
+    }
+
+    private static String hashPassword(String password) {
         Dotenv env = Dotenv.load();
         String salt = env.get("SALT");
-        MessageDigest md = null;
+        byte[] hash = new byte[0];
         try {
-            md = MessageDigest.getInstance("MD2");
+            MessageDigest md = MessageDigest.getInstance("MD2");
+            hash = md.digest((password + salt).getBytes());
         } catch (NoSuchAlgorithmException ignored) {
         }
-        byte[] hash = md.digest((password + salt).getBytes());
-        String encodedHash = Base64.getEncoder().encodeToString(hash);
+        return Base64.getEncoder().encodeToString(hash);
+    }
 
-        return encodedHash;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserCredentials that = (UserCredentials) o;
+
+        if (!username.equals(that.username)) return false;
+        if (!password.equals(that.password)) return false;
+        return hashPassword(password).equals(hashPassword(that.password));
     }
 }

@@ -8,7 +8,7 @@ import interfaces.Commandable;
 public class Login extends NamedCommand implements Commandable {
     @Override
     public Response execute(Object inputData, String userID) {
-        return new Response(0).setData(TextColor.cyan("Коллекция был очищена"));
+        return new Response(0, TextColor.cyan("Коллекция был очищена"));
     }
 
     @Override

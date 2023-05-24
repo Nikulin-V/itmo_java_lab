@@ -3,6 +3,7 @@ package classes;
 import classes.abs.NamedCommand;
 import classes.console.TextColor;
 import classes.sql_managers.SQLManager;
+import classes.sql_managers.SQLUserManager;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,34 +18,6 @@ public class ClientSession implements Runnable {
 
     public ClientSession(Socket socket) {
         this.socket = socket;
-    }
-
-    private UserCredentials authorize(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-        String userChoice = in.readUTF();
-        while (!(userChoice.equals("1") || userChoice.equals("2"))) {
-            userChoice = in.readUTF();
-        }
-        if (userChoice.equals("2"))
-            return register(in, out);
-        else return login(in, out);
-    }
-
-    private UserCredentials login(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-        while (true) {
-            out.writeUTF("Логин: ");
-            out.flush();
-            String username = in.readUTF();
-            out.writeUTF("Пароль: ");
-            out.flush();
-            String password = in.readUTF();
-
-            if (isLoginInDB(username)) {
-                UserCredentials userCredentials = new UserCredentials(username, password);
-                if (checkPassword(userCredentials)) {
-                    return userCredentials;
-                } else System.out.println(TextColor.red("Неверный пароль\n"));
-            } else System.out.println(TextColor.yellow("Пользователь с таким логином не существует\n"));
-        }
     }
 
     private boolean checkPassword(UserCredentials userCredentials) {
@@ -65,19 +38,16 @@ public class ClientSession implements Runnable {
         return loginResultSet != null;
     }
 
-    private UserCredentials register(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-        String username = null, password;
-        while (isLoginInDB(username)) {
-            if (username != null)
-                System.out.println(TextColor.yellow("Пользователь с таким логином уже существует\n"));
-            out.writeUTF("Логин: ");
-            out.flush();
-            username = in.readUTF();
+    private Response executeCommand(ObjectInputStream inputStream,
+                                    UserCredentials userCredentials) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Object inputObject = inputStream.readObject();
+        if (inputObject instanceof NamedCommand command) {
+            if (command.hasTransferData()) {
+                Object inputData = inputStream.readObject();
+                return command.execute(inputData, userCredentials.getUsername());
+            } else return command.execute(null, userCredentials.getUsername());
         }
-        out.writeUTF("Пароль: ");
-        out.flush();
-        password = in.readUTF();
-        return new UserCredentials(username, password);
+        return new Response(1, TextColor.yellow("Передана неизвестная команда"));
     }
 
     @Override
@@ -93,20 +63,9 @@ public class ClientSession implements Runnable {
                 Object inputObject = inputStream.readObject();
                 if (inputObject instanceof UserCredentials credentials) {
                     if (currentUserCredentials.equals(credentials)) {
-                        inputObject = inputStream.readObject();
-                        if (inputObject instanceof NamedCommand command) {
-                            Response outputData;
-                            if (command.hasTransferData()) {
-                                Object inputData = inputStream.readObject();
-                                outputData = command.execute(inputData, currentUserCredentials.getUsername());
-                            } else
-                                outputData = command.execute(null, currentUserCredentials.getUsername());
-                            if (outputData != null)
-                                outputStream.writeObject(outputData);
-                        } else
-                            outputStream.writeObject(new Response(1).setData(TextColor.yellow("Передана неизвестная команда")));
+                        outputStream.writeObject(executeCommand(inputStream, currentUserCredentials));
                     } else
-                        outputStream.writeObject(new Response(1).setData(TextColor.red("Попытка подмены данных пользователя")));
+                        outputStream.writeObject(new Response(1, TextColor.red("Попытка подмены данных пользователя")));
                     outputStream.flush();
                 }
             }
@@ -114,5 +73,35 @@ public class ClientSession implements Runnable {
                  InstantiationException | IllegalAccessException e) {
             System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
         }
+    }
+
+    private UserCredentials authorize(ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
+        while (true) {
+            UserCredentials userCredentials = (UserCredentials) in.readObject();
+            Response outputData;
+            if (userCredentials.isRegistration())
+                outputData = register(userCredentials);
+            else outputData = login(userCredentials);
+            out.writeObject(outputData);
+            out.flush();
+            if (outputData.getCode() == 0)
+                return userCredentials;
+        }
+    }
+
+    private Response login(UserCredentials userCredentials) {
+        if (isLoginInDB(userCredentials.getUsername()))
+            if (checkPassword(userCredentials))
+                return new Response(0, TextColor.green("Авторизация прошла успешно"));
+            else return new Response(1, TextColor.red("Неверный пароль\n"));
+        return new Response(1, TextColor.yellow("Пользователь с таким логином не существует\n"));
+    }
+
+    private Response register(UserCredentials userCredentials) {
+        if (!isLoginInDB(userCredentials.getUsername()))
+            if (new SQLUserManager().addUser(userCredentials))
+                return new Response(0, TextColor.green("Аккаунт зарегистрирован\n"));
+            else return new Response(1, TextColor.red("Ошибка регистрации\n"));
+        return new Response(1, TextColor.yellow("Пользователь с таким логином уже существует\n"));
     }
 }

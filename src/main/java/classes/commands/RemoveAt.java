@@ -31,13 +31,13 @@ public class RemoveAt extends NamedCommand implements Commandable {
                         SQLManager.executeMovieDelete(uuid,userID);
                         cm.getCollection().remove(index);
                     }
-                    else return new Response(0).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
-                    return new Response(0).setData(TextColor.cyan("Элемент успешно удалён"));
+                    else return new Response(0, TextColor.yellow("Нет прав доступа для выполнения команды"));
+                    return new Response(0, TextColor.cyan("Элемент успешно удалён"));
                 }
-                return new Response(0).setData(TextColor.yellow("Элемент с индексом ") +
-                        TextColor.red(String.valueOf(index)) + TextColor.yellow(" не существует"));
+            return new Response(0, TextColor.yellow("Элемент с индексом ") +
+                    TextColor.red(String.valueOf(index)) + TextColor.yellow(" не существует"));
         }
-        return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите индекс в " +
+        return new Response(1, TextColor.yellow("Неверное количество аргументов. Введите индекс в " +
                 "формате целого неотрицательного числа через пробел"));
     }
 

@@ -43,13 +43,13 @@ public class RemoveLower extends NamedCommand implements Commandable {
 
                 return new Response(0).setData(TextColor.cyan("Выполнено"));
             } catch (NotGreatThanException | GreatThanException e) {
-                return new Response(1).setData(e.getMessage());
+                return new Response(1, e.getMessage());
             } catch (NullValueException e) {
-                return new Response(1).setData(e.getMessage());
+                return new Response(1, e.getMessage());
             } catch (NumberFormatException ignored) {
             }
         }
-        return new Response(1).setData(TextColor.yellow("Некорректный ввод. Введите координаты в " +
+        return new Response(1, TextColor.yellow("Некорректный ввод. Введите координаты в " +
                 "формате чисел: x y"));
     }
 

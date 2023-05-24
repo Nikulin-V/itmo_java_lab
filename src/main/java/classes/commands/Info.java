@@ -15,7 +15,7 @@ public class Info extends NamedCommand implements Commandable {
     @Override
     public Response execute(Object inputData, String userID) {
         CollectionManager collectionManager = new CollectionManager();
-        return new Response(0).setData(TextColor.cyan(
+        return new Response(0, TextColor.cyan(
                 "Информация о коллекции:\n" +
                         "\tТип коллекции: " + CollectionManager.getType() + "\n" +
                         "\tДата инициализации: " + CollectionManager.getInitDate() + "\n" +

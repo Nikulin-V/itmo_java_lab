@@ -31,7 +31,7 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         scriptTransitionCount += 1;
                         if (scriptTransitionCount > MAX_SCRIPT_TRANSITION_COUNT) {
                             scriptTransitionCount = 0;
-                            return new Response(1).setData(TextColor.yellow("Произошло зацикливание " +
+                            return new Response(1, TextColor.yellow("Произошло зацикливание " +
                                     "выполнения скриптов. Программа остановлена"));
                         }
                         String inputString = (String) line;
@@ -42,16 +42,16 @@ public class ExecuteScript extends NamedCommand implements Commandable {
                         System.out.println(input);
                     } catch (NoSuchCommandException | InvocationTargetException | NoSuchMethodException |
                              InstantiationException | IllegalAccessException e) {
-                        return new Response(1).setData(e.getMessage());
+                        return new Response(1, e.getMessage());
                     } catch (IOException e) {
-                        return new Response(1).setData(TextColor.red("Ошибка соединения"));
+                        return new Response(1, TextColor.red("Ошибка соединения"));
                     }
-                return new Response(0).setData("Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
+                return new Response(0, "Скрипт " + TextColor.green(scriptName) + " успешно выполнен");
             } catch (AssertionError | FileNotFoundException e) {
                 scriptTransitionCount = 0;
-                return new Response(1).setData(TextColor.red("Файл не найден"));
+                return new Response(1, TextColor.red("Файл не найден"));
             }
         }
-        return new Response(1).setData(TextColor.yellow("Неверное количество аргументов. Введите имя файла через пробел"));
+        return new Response(1, TextColor.yellow("Неверное количество аргументов. Введите имя файла через пробел"));
     }
 }
