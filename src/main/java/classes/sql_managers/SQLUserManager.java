@@ -30,7 +30,8 @@ public class SQLUserManager extends SQLManager {
             int index = 1;
             preparedStatement.setString(index++, credentials.getUsername());
             preparedStatement.setString(index++, credentials.getHashedPassword());
-            return preparedStatement.execute();
+            preparedStatement.execute();
+            return true;
         } catch (NullPointerException | PSQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.cyan("Ошибка при обращении к базе данных!"));
