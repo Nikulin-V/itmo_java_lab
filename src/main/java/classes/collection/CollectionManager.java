@@ -1,12 +1,12 @@
 package classes.collection;
 
-import classes.DataStorage;
 import classes.console.TextColor;
-import classes.movie.Coordinates;
-import classes.movie.Movie;
-import classes.movie.Movies;
-import classes.xml_manager.XMLMovieManager;
+import classes.movie.*;
+import classes.sql_managers.SQLManager;
+import exceptions.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class CollectionManager {
@@ -29,30 +29,11 @@ public class CollectionManager {
     public static void addMovie(Movie movie) {
         CollectionManager.collection.add(movie);
     }
-
-    public void removeMovie(UUID MovieId) {
-        for (Movie movie : CollectionManager.collection) {
-            if (movie.getId() == MovieId) {
-                CollectionManager.collection.remove(movie);
-                break;
-            }
-        }
-    }
-
-    public void removeMovie(Movie movie) {
-        collection.remove(movie);
-    }
-
-    public void removeMovie(int movieIndex) {
-        collection.remove(movieIndex);
-    }
-
-    public void clear() {
+    public static void clear() {
         collection.clear();
     }
 
     public static void sort(ArrayList<Movie> collection) {
-
         List<Coordinates> moviesCoordinatesList = new ArrayList<>();
         for (Movie movies : collection)
             moviesCoordinatesList.add(movies.getCoordinates());
@@ -74,32 +55,60 @@ public class CollectionManager {
         }
     }
 
-    public static String saveCollection() {
-        CollectionManager collectionManager = new CollectionManager();
-        ArrayList<Movie> moviesList = collectionManager.getCollection();
-        if (moviesList.size() != 0) {
-            Movies movies = new Movies();
-            movies.setMovies(moviesList);
-            XMLMovieManager.getInstance().saveCollectionToXML(movies);
-            return TextColor.cyan("\tТекущая коллекция сохранена в файл");
-        } return TextColor.cyan("\tКоллекция пуста. Сохранять нечего");
-    }
+    public static void readDB() {
+        List<Movie> enteredMovies = new ArrayList<>();
+        try {
+            // TODO: (WHERE userID == currentUserID)
 
-    public static void readFile(String fileName) {
+            ResultSet moviesResultSet = SQLManager.executeQuery("SELECT * FROM movies");
+            if (moviesResultSet == null) {
+                CollectionManager.clear();
+            } else {
+                while (moviesResultSet.next()) {
+                    Person director = null;
+                    UUID id_director = (UUID) moviesResultSet.getObject("uuid_director");
+                    //TODO лучше бы обобщить этот метод, чтобы можно было бы различные prepared statements вызывать, например второй аргумент - массив Object?
+                    ResultSet directorResultSet = SQLManager.executePreparedQueryUUID("SELECT * FROM directors WHERE uuid_director=?",id_director);
+                    if (directorResultSet != null && directorResultSet.next()) {
+                        director = new Person(
+                                (UUID) directorResultSet.getObject("uuid_director"),
+                                directorResultSet.getString("name"),
+                                directorResultSet.getDate("birthday"),
+                                directorResultSet.getDouble("height"),
+                                directorResultSet.getString("passport_id"),
+                                Color.getById(directorResultSet.getInt("eye_color"))
+                        );
+                        directorResultSet.close();
+                    }
+                    Coordinates coordinates = new Coordinates(moviesResultSet.getInt("coordinatex"),
+                            moviesResultSet.getInt("coordinatey"));
+                    Movie movie = new Movie(
+                            (UUID) moviesResultSet.getObject("uuid_id"),
+                            moviesResultSet.getString("name"),
+                            coordinates,
+                            moviesResultSet.getDate("creation_date"),
+                            moviesResultSet.getLong("oscars_count"),
+                            moviesResultSet.getLong("golden_palm_count"),
+                            moviesResultSet.getFloat("budget"),
+                            MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
+                            director,
+                            moviesResultSet.getString("user_id")
+                    );
+                    enteredMovies.add(movie);
+                }
+                moviesResultSet.close();
+            }
 
-        List<Movie> enteredMovies;
-        if (fileName == null) {
-            System.out.println(TextColor.purple("Файл коллекции не был указан. Была выбран файл коллекции по умолчанию"));
-            DataStorage.setCurrentStorageFilePath(DataStorage.DEFAULT_STORAGE_FILE_PATH);
-            enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML().getMovies();
-        } else {
-            System.out.println(TextColor.purple("Пытаюсь прочитать файл коллекции..."));
-            enteredMovies = XMLMovieManager.getInstance().readCollectionFromXML(fileName).getMovies();
+
+
+        } catch (NotGreatThanException | GreatThanException | NullValueException | BlankValueException |
+                 BadValueLengthException | NotUniqueException | SQLException e) {
+            e.printStackTrace();
         }
-        if (enteredMovies != null && !enteredMovies.isEmpty()) {
+        if (!enteredMovies.isEmpty()) {
             for (Movie movie : enteredMovies)
                 addMovie(movie);
-            System.out.println(TextColor.purple("Файл коллекции был прочитан..."));
-        } else System.out.println(TextColor.purple("Файл коллекции оказался пуст"));
+            System.out.println(TextColor.purple("База данных был прочитана..."));
+        } else System.out.println(TextColor.purple("База данных оказалась пуста"));
     }
 }

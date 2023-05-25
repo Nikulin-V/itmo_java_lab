@@ -1,5 +1,6 @@
 package classes.console;
 
+import classes.UserCredentials;
 import classes.movie.*;
 import exceptions.*;
 
@@ -10,9 +11,9 @@ import java.util.Date;
 import static classes.movie.FieldProperty.*;
 
 public class InputHandler {
-    RepeatScanner scanner = new RepeatScanner();
+    static final RepeatScanner scanner = new RepeatScanner();
 
-    public Movie readMovie() {
+    public static Movie readMovie(String userID) {
         Movie movie = null;
         while (movie == null) {
             try {
@@ -23,7 +24,8 @@ public class InputHandler {
                         readGoldenPalmCount(),
                         readBudget(),
                         readMpaaRating(),
-                        readDirector()
+                        readDirector(),
+                        userID
                 );
             } catch (BlankValueException | NullValueException | NotGreatThanException | BadValueLengthException |
                      GreatThanException | NotUniqueException e) {
@@ -33,17 +35,18 @@ public class InputHandler {
         return movie;
     }
 
-    public Movie updateMovie(Movie movie) {
-            movie.setName(readMovieName());
-            movie.setCoordinates(readCoordinates());
-            movie.setOscarsCount(readOscarsCount());
-            movie.setGoldenPalmCount(readGoldenPalmCount());
-            movie.setBudget(readBudget());
-            movie.setMpaaRating(readMpaaRating());
-            movie.setDirector(readDirector());
+    public static Movie updateMovie(Movie movie) {
+        movie.setName(readMovieName());
+        movie.setCoordinates(readCoordinates());
+        movie.setOscarsCount(readOscarsCount());
+        movie.setGoldenPalmCount(readGoldenPalmCount());
+        movie.setBudget(readBudget());
+        movie.setMpaaRating(readMpaaRating());
+        movie.setDirector(readDirector());
         return movie;
     }
-    private Person readDirector() {
+
+    private static Person readDirector() {
         System.out.println(TextColor.green("Director: "));
         Person director = null;
         while (director == null)
@@ -62,7 +65,7 @@ public class InputHandler {
         return director;
     }
 
-    private String readMovieName() {
+    private static String readMovieName() {
         String name = null;
         while (name == null) {
             try {
@@ -77,7 +80,7 @@ public class InputHandler {
         return name;
     }
 
-    private Coordinates readCoordinates() {
+    private static Coordinates readCoordinates() {
         System.out.println(TextColor.green("Coordinates: "));
         Coordinates coordinates = null;
         while (coordinates == null) {
@@ -90,7 +93,7 @@ public class InputHandler {
         return coordinates;
     }
 
-    private Long readCoordinatesX() {
+    private static Long readCoordinatesX() {
         Long coordinatesX = null;
         while (coordinatesX == null) {
             try {
@@ -105,7 +108,7 @@ public class InputHandler {
         return coordinatesX;
     }
 
-    private Integer readCoordinatesY() {
+    private static Integer readCoordinatesY() {
         Integer coordinatesY = null;
         while (coordinatesY == null) {
             try {
@@ -120,7 +123,7 @@ public class InputHandler {
         return coordinatesY;
     }
 
-    private Long readOscarsCount() {
+    private static Long readOscarsCount() {
         boolean wasInput = false;
         Long oscarsCount = null;
         while (!wasInput) {
@@ -134,7 +137,7 @@ public class InputHandler {
         return oscarsCount;
     }
 
-    private Long readGoldenPalmCount() {
+    private static Long readGoldenPalmCount() {
         boolean wasInput = false;
         Long goldenPalmCount = null;
         while (!wasInput) {
@@ -151,7 +154,7 @@ public class InputHandler {
         return goldenPalmCount;
     }
 
-    private Float readBudget() {
+    private static Float readBudget() {
         boolean wasInput = false;
         Float budget = null;
         while (!wasInput) {
@@ -168,7 +171,7 @@ public class InputHandler {
         return budget;
     }
 
-    private MpaaRating readMpaaRating() {
+    private static MpaaRating readMpaaRating() {
         boolean wasInput = false;
         Integer mpaaRatingId;
         MpaaRating mpaaRating = null;
@@ -194,7 +197,7 @@ public class InputHandler {
         return mpaaRating;
     }
 
-    private String readDirectorName() {
+    private static String readDirectorName() {
         String directorName = null;
         while (directorName == null) {
             try {
@@ -210,7 +213,7 @@ public class InputHandler {
         return directorName;
     }
 
-    private Date readDirectorBirthday() {
+    private static Date readDirectorBirthday() {
         boolean wasInput = false;
         Date directorBirthday = null;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -233,7 +236,7 @@ public class InputHandler {
         return directorBirthday;
     }
 
-    private Double readDirectorHeight() {
+    private static Double readDirectorHeight() {
         boolean wasInput = false;
         Double directorHeight = null;
         while (!wasInput) {
@@ -247,7 +250,7 @@ public class InputHandler {
         return directorHeight;
     }
 
-    private String readDirectorPassportID() {
+    private static String readDirectorPassportID() {
         String directorPassportID = null;
         while (directorPassportID == null) {
             try {
@@ -263,7 +266,7 @@ public class InputHandler {
         return directorPassportID;
     }
 
-    private Color readDirectorEyeColor() {
+    private static Color readDirectorEyeColor() {
         Integer eyeColorId;
         Color directorEyeColor = null;
         while (directorEyeColor == null) {
@@ -288,5 +291,26 @@ public class InputHandler {
                 }
         }
         return directorEyeColor;
+    }
+
+    public static String readLoginRegisterChoice() {
+        String userChoice = null;
+        while (!(userChoice != null && (userChoice.equals("") || userChoice.equals("1") || userChoice.equals("2")))) {
+            System.out.println(TextColor.yellow("1 - Войти (по умолчанию)\n2 - Зарегистрироваться"));
+            userChoice = scanner.nextLine(TextColor.green("Выберите опцию: "));
+        }
+        if (userChoice.equals(""))
+            userChoice = "1";
+        return userChoice;
+    }
+
+    public static UserCredentials readCredentials() {
+        String username = null;
+        String password = null;
+        while (username == null || password == null || username.equals("") || password.equals("")) {
+            username = scanner.nextLine("Логин: ");
+            password = scanner.nextLine("Пароль: ");
+        }
+        return new UserCredentials(username, password);
     }
 }

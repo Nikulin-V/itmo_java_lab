@@ -12,9 +12,9 @@ public class Exit extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         System.out.println("Завершение работы...");
         Runtime.getRuntime().exit(0);
-        return new Response(0).setData(TextColor.green("Выполнено"));
+        return new Response(0, TextColor.green("Выполнено"));
     }
 }

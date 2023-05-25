@@ -16,7 +16,7 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         String[] arg = (String[]) inputData;
         if (arg != null && String.valueOf(arg[0]).chars().allMatch(Character::isDigit)) {
             ArrayList<Movie> movies = new CollectionManager().getCollection();
@@ -27,10 +27,10 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
                         searchMoviesCount += 1;
                     }
                 }
-                return new Response(0).setData(TextColor.cyan("Количество фильмов с " +
+                return new Response(0, TextColor.cyan("Количество фильмов с " +
                         searchOscarsCount + " наградами \"Оскар\": " + searchMoviesCount));
         }
-        return new Response(1).setData(TextColor.yellow("Неверный формат ввода. \n" +
+        return new Response(1, TextColor.yellow("Неверный формат ввода. \n" +
                 "Введите количество наград \"Оскар\" в формате целочисленного числа через пробел"));
     }
 

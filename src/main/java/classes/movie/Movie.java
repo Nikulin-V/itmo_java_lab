@@ -28,9 +28,7 @@ public class Movie implements Serializable {
     private Float budget; //Значение поля должно быть больше 0, Поле может быть null
     private MpaaRating mpaaRating; //Поле может быть null
     private Person director; //Поле не может быть null
-
-    private Movie() {
-    }
+    private final String userID; // Поле не может быть null
 
     public Movie(String name,
                  Coordinates coordinates,
@@ -38,8 +36,9 @@ public class Movie implements Serializable {
                  Long goldenPalmCount,
                  Float budget,
                  MpaaRating mpaaRating,
-                 Person director) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
-        id = generateUUID();
+                 Person director,
+                 String userID) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
+        id = UUID.randomUUID();
         this.name = new FieldHandler(name, FieldProperty.NOT_NULL, FieldProperty.NOT_BLANK).handleString();
         this.coordinates = (Coordinates) new FieldHandler(coordinates, FieldProperty.NOT_NULL).handleObject();
         creationDate = new Date();
@@ -48,10 +47,29 @@ public class Movie implements Serializable {
         this.budget = new FieldHandler(budget, FieldProperty.GREAT_THAN_ZERO).handleFloat();
         this.mpaaRating = mpaaRating;
         this.director = (Person) new FieldHandler(director, FieldProperty.NOT_NULL).handleObject();
+        this.userID = userID;
     }
 
-    private UUID generateUUID() {
-        return java.util.UUID.randomUUID();
+    public Movie(UUID id,
+                 String name,
+                 Coordinates coordinates,
+                 Date creationDate,
+                 Long oscarsCount,
+                 Long goldenPalmCount,
+                 Float budget,
+                 MpaaRating mpaaRating,
+                 Person director,
+                 String userID) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
+        this.id = id;
+        this.name = new FieldHandler(name, FieldProperty.NOT_NULL, FieldProperty.NOT_BLANK).handleString();
+        this.coordinates = (Coordinates) new FieldHandler(coordinates, FieldProperty.NOT_NULL).handleObject();
+        this.creationDate = creationDate;
+        this.oscarsCount = new FieldHandler(oscarsCount, FieldProperty.GREAT_THAN_ZERO).handleLong();
+        this.goldenPalmCount = new FieldHandler(goldenPalmCount, FieldProperty.GREAT_THAN_ZERO).handleLong();
+        this.budget = new FieldHandler(budget, FieldProperty.GREAT_THAN_ZERO).handleFloat();
+        this.mpaaRating = mpaaRating;
+        this.director = (Person) new FieldHandler(director, FieldProperty.NOT_NULL).handleObject();
+        this.userID = userID;
     }
 
     /**
@@ -62,6 +80,7 @@ public class Movie implements Serializable {
     public UUID getId() {
         return id;
     }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -206,17 +225,21 @@ public class Movie implements Serializable {
         this.director = director;
     }
 
+    public String getUserID() {
+        return userID;
+    }
+
     @Override
     public String toString() {
-        String[] fieldNames = {"ID", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
-        Object[] fieldValues = {id, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director};
-        String movieString = TextColor.cyan("Movie {\n");
+        String[] fieldNames = {"ID", "Creator", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
+        Object[] fieldValues = {id, userID, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director};
+        StringBuilder movieString = new StringBuilder(TextColor.cyan("Movie {\n"));
         for (int fieldId = 0; fieldId < fieldNames.length; fieldId++) {
             if (fieldValues[fieldId] != null)
-                movieString += "\t\t" + TextColor.grey(fieldNames[fieldId] + "=") + TextColor.cyan(fieldValues[fieldId].toString()) + "\n";
+                movieString.append("\t\t").append(TextColor.grey(fieldNames[fieldId] + "=")).append(TextColor.cyan(fieldValues[fieldId].toString())).append("\n");
         }
-        movieString += TextColor.cyan("\t}");
-        return movieString;
+        movieString.append(TextColor.cyan("\t}"));
+        return movieString.toString();
     }
 }
 

@@ -5,6 +5,7 @@ import exceptions.*;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 import static classes.movie.FieldProperty.*;
 
@@ -15,8 +16,7 @@ public class Person implements Serializable {
     private Double height; //Поле может быть null, Значение поля должно быть больше 0
     private String passportID; //Значение этого поля должно быть уникальным, Длина строки должна быть не меньше 7, Строка не может быть пустой, Поле не может быть null
     private Color eyeColor; //Поле не может быть null
-
-    private Person(){}
+    private UUID directorID; //Поле не может быть null
 
     public Person(String name, Date birthday, Double height, String passportID, Color eyeColor) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
         this.name = new FieldHandler(name, NOT_NULL, NOT_BLANK).handleString();
@@ -25,7 +25,14 @@ public class Person implements Serializable {
         this.passportID = new FieldHandler(passportID, UNIQUE, LENGTH, NOT_BLANK, NOT_NULL).handleString();
         this.eyeColor = (Color) new FieldHandler(eyeColor, NOT_NULL).handleObject();
     }
-
+    public Person(UUID uuidDirector, String name, Date birthday, Double height, String passportID, Color eyeColor) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
+        this.directorID = uuidDirector;
+        this.name = new FieldHandler(name, NOT_NULL, NOT_BLANK).handleString();
+        this.birthday = birthday;
+        this.height = new FieldHandler(height, GREAT_THAN_ZERO).handleDouble();
+        this.passportID = new FieldHandler(passportID, UNIQUE, LENGTH, NOT_BLANK, NOT_NULL).handleString();
+        this.eyeColor = (Color) new FieldHandler(eyeColor, NOT_NULL).handleObject();
+    }
     public String getName() {
         return name;
     }
@@ -64,6 +71,9 @@ public class Person implements Serializable {
 
     public void setEyeColor(Color eyeColor) {
         this.eyeColor = eyeColor;
+    }
+    public UUID getDirectorID() {
+        return directorID;
     }
 
     @Override

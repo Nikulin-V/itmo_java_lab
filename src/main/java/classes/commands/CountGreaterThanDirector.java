@@ -18,7 +18,7 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         String[] arg = (String[]) inputData;
         if (arg != null) {
             String referenceDirector = arg[0];
@@ -34,10 +34,10 @@ public class CountGreaterThanDirector extends NamedCommand implements Commandabl
                     count++;
                 else break;
             }
-            return new Response(0).setData(TextColor.cyan("Число фильмов, удовлетворяющих условию: "
+            return new Response(0, TextColor.cyan("Число фильмов, удовлетворяющих условию: "
                     + count));
         }
-        return new Response(1).setData(TextColor.yellow("Неверное количество аргументов для этой команды\n"
+        return new Response(1, TextColor.yellow("Неверное количество аргументов для этой команды\n"
                 + "Введите имя режиссёра без пробелов"));
     }
 

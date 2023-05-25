@@ -16,15 +16,15 @@ public class Show extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         CollectionManager collectionManager = new CollectionManager();
         ArrayList<Movie> movies = collectionManager.getCollection();
-        String output = TextColor.cyan("Содержимое коллекции:\n");
+        StringBuilder output = new StringBuilder(TextColor.cyan("Содержимое коллекции:\n"));
         if (movies.size() != 0)
             for (Movie movie : movies)
-                output += "\t" + movie.toString();
-        else output += TextColor.cyan("\tПусто");
-        return new Response(0).setData(output);
+                output.append("\t").append(movie.toString());
+        else output.append(TextColor.cyan("\tПусто"));
+        return new Response(0, output.toString());
     }
     @Override
     public boolean isNeedInput() {

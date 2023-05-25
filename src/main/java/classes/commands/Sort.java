@@ -13,12 +13,12 @@ public class Sort extends NamedCommand implements Commandable {
     }
 
     @Override
-    public Response execute(Object inputData) {
+    public Response execute(Object inputData, String userID) {
         CollectionManager collectionManager = new CollectionManager();
         if (!collectionManager.getCollection().isEmpty()) {
             CollectionManager.sort(collectionManager.getCollection());
-            return new Response(0).setData(TextColor.cyan("Коллекция успешно отсортирована в порядке убывания"));
+            return new Response(0, TextColor.cyan("Коллекция успешно отсортирована в порядке убывания"));
         }
-        return new Response(0).setData(TextColor.cyan("Коллекция пустая, нечего сортировать"));
+        return new Response(0, TextColor.cyan("Коллекция пустая, нечего сортировать"));
     }
 }
