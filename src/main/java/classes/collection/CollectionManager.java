@@ -10,11 +10,12 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class CollectionManager {
-    private static final ArrayList<Movie> collection = new ArrayList<>();
+    private static final List<Movie> collection = Collections.synchronizedList(new ArrayList<>());
+
     private static final String type = "ArrayList";
     private static final Date initDate = new Date();
 
-    public ArrayList<Movie> getCollection() {
+    public List<Movie> getCollection() {
         return CollectionManager.collection;
     }
 
@@ -30,10 +31,10 @@ public class CollectionManager {
         CollectionManager.collection.add(movie);
     }
     public static void clear() {
-        collection.clear();
+        CollectionManager.collection.clear();
     }
 
-    public static void sort(ArrayList<Movie> collection) {
+    public static void sort(List<Movie> collection) {
         List<Coordinates> moviesCoordinatesList = new ArrayList<>();
         for (Movie movies : collection)
             moviesCoordinatesList.add(movies.getCoordinates());
