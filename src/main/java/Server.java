@@ -5,12 +5,8 @@ import classes.console.TextColor;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Server {
-
-    protected static final ExecutorService executor = Executors.newFixedThreadPool(10);
     public static void main(String[] args) {
         if (args == null || args.length != 1) {
             System.out.println(TextColor.red("Неверное число аргументов"));
@@ -30,14 +26,6 @@ public class Server {
             }
             CollectionManager.readDB();
 
-
-            for (int i = 1; i <= 5; i++) {
-                Runnable worker = new MyRunnable("Task" + i);
-                executor.execute(worker);
-            }
-
-
-
             System.out.println(TextColor.green("Сервер запущен на " + port + " порту"));
             System.out.println(TextColor.grey("Ожидание соединения..."));
             //noinspection InfiniteLoopStatement
@@ -45,11 +33,10 @@ public class Server {
                 try (ServerSocket server = new ServerSocket(port)) {
                     server.setReuseAddress(true);
                     Socket clientSocket = server.accept();
-                    ClientSession clientSession = new ClientSession(clientSocket, executor);
+                    ClientSession clientSession = new ClientSession(clientSocket);
                     Thread clientSessionThread = new Thread(clientSession);
                     clientSessionThread.start();
                 } catch (IOException e) {
-                    executor.shutdown();
                     System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
                 }
             }

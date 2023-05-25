@@ -13,18 +13,19 @@ import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientSession implements Runnable {
     private final Socket socket;
-    private final ExecutorService executorService;
+    private final static ExecutorService outputFixedThreadPool = Executors.newFixedThreadPool(10);
+    private final static ExecutorService inputCachedThreadPool = Executors.newCachedThreadPool();
 
-    public ClientSession(Socket socket, ExecutorService executorService) {
+    public ClientSession(Socket socket) {
         this.socket = socket;
-        this.executorService = executorService;
     }
 
     private boolean checkPassword(UserCredentials userCredentials) {
-        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=?",userCredentials.getUsername());
+        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=?", userCredentials.getUsername());
         try {
             if (loginResultSet != null && loginResultSet.next()) {
                 String hashedPassword = loginResultSet.getString("hashed_password");
@@ -63,24 +64,29 @@ public class ClientSession implements Runnable {
             UserCredentials currentUserCredentials = authorize(inputStream, outputStream);
 
             while (!socket.isClosed()) {
-                Object inputObject = inputStream.readObject();
-                if (inputObject instanceof UserCredentials credentials) {
-                    if (currentUserCredentials.equals(credentials)) {
-                        executorService.execute(() -> {
-                            try {
-                                outputStream.writeObject(executeCommand(inputStream, currentUserCredentials));
-                            } catch (IOException | ClassNotFoundException | InvocationTargetException |
-                                     NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-                                throw new RuntimeException(e);
-                            }catch (IOException | ClassNotFoundException e) {
-                                System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
-                            }
-                        });
-
-                    } else
-                        outputStream.writeObject(new Response(1, TextColor.red("Попытка подмены данных пользователя")));
-                    outputStream.flush();
-                }
+                inputCachedThreadPool.execute(() -> {
+                    try {
+                        Object inputObject = inputStream.readObject();
+                        if (inputObject instanceof UserCredentials credentials) {
+                            outputFixedThreadPool.execute(() -> {
+                                try {
+                                    if (currentUserCredentials.equals(credentials)) {
+                                        outputStream.writeObject(executeCommand(inputStream, currentUserCredentials));
+                                    } else
+                                        outputStream.writeObject(new Response(1, TextColor.red("Попытка подмены данных пользователя")));
+                                    outputStream.flush();
+                                } catch (IOException | ClassNotFoundException | InvocationTargetException |
+                                         NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                        }
+                    } catch (IOException e) {
+                        System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
+                    } catch (ClassNotFoundException e) {
+                        System.out.println(TextColor.red("Получены неизвестные данные"));
+                    }
+                });
             }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
