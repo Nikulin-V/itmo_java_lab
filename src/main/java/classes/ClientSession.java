@@ -21,9 +21,9 @@ public class ClientSession implements Runnable {
     }
 
     private boolean checkPassword(UserCredentials userCredentials) {
-        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=",userCredentials.getUsername());
+        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=?",userCredentials.getUsername());
         try {
-            if (!loginResultSet.wasNull()) {
+            if (loginResultSet != null && loginResultSet.next()) {
                 String hashedPassword = loginResultSet.getString("hashed_password");
                 return hashedPassword.equals(userCredentials.getHashedPassword());
             }
@@ -34,7 +34,7 @@ public class ClientSession implements Runnable {
     }
 
     private boolean isLoginInDB(String username) {
-        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=",username);
+        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=?",username);
         return loginResultSet != null;
     }
 

@@ -231,8 +231,8 @@ public class Movie implements Serializable {
 
     @Override
     public String toString() {
-        String[] fieldNames = {"ID", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
-        Object[] fieldValues = {id, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director, userID};
+        String[] fieldNames = {"ID", "Creator", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
+        Object[] fieldValues = {id, userID, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director};
         StringBuilder movieString = new StringBuilder(TextColor.cyan("Movie {\n"));
         for (int fieldId = 0; fieldId < fieldNames.length; fieldId++) {
             if (fieldValues[fieldId] != null)

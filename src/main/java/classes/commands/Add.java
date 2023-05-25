@@ -33,6 +33,9 @@ public class Add extends NamedCommand implements Commandable {
                     return new Response(1, TextColor.grey("Ошибка при генерации объекта"));
                 if (SQLManager.insertMovie(randomMovie))
                     CollectionManager.addMovie(randomMovie);
+                else{
+                    System.out.println(TextColor.purple("Атомарная операция не завершена: не удалось занести объект в базу данных"));
+                }
             } catch (SQLException e) {
                 return new Response(1, TextColor.grey("Проблема при обращении к базе данных"));
             }

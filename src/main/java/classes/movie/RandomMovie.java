@@ -4,12 +4,15 @@ import exceptions.*;
 
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 public class RandomMovie {
     public static Movie generate(String userID) {
         Random r = new Random();
+        UUID uuid_director = UUID.randomUUID();
         try {
             Person director = new Person(
+                    uuid_director,
                     "Director" + r.nextInt(1000),
                     generateDate(),
                     r.nextDouble(1000),
@@ -32,7 +35,6 @@ public class RandomMovie {
     }
 
     public static Date generateDate() {
-
         // Get an Epoch value roughly between 1940 and 2010
         // -946771200000L = January 1, 1940
         // Add up to 70 years to it (using modulus on the next long)

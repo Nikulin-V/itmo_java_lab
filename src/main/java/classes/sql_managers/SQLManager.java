@@ -69,12 +69,24 @@ public class SQLManager {
         }
     }
 
+    public static ResultSet executePreparedQueryUUID(String command, UUID arg) {
+        Connection dbConnection = getDBConnection();
+        try  {
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(command);
+            preparedStatement.setObject(1,arg);
+            return preparedStatement.executeQuery();
+        } catch ( NullPointerException | SQLException e) {
+            e.printStackTrace();
+            System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
+        }
+        return null;
+    }
     public static ResultSet executePreparedQuery(String command, String arg) {
         Connection dbConnection = getDBConnection();
         try  {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(command);
             preparedStatement.setString(1,arg);
-            return preparedStatement.executeQuery(command);
+            return preparedStatement.executeQuery();
         } catch ( NullPointerException | SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
@@ -105,7 +117,7 @@ public class SQLManager {
         return Integer.MAX_VALUE;
     }
 
-    public static int executeMovieDelete(UUID uuid, String userID) {
+    public static void executeMovieDelete(UUID uuid, String userID) {
 
         String r = """
                 DELETE FROM movies WHERE uuid_id=? AND user_id=?
@@ -115,12 +127,12 @@ public class SQLManager {
             int index = 1;
             ps.setObject(index++, uuid);
             ps.setString(index++, userID);
-            return ps.executeUpdate();
+            ps.executeUpdate();
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
         }
-        return Integer.MAX_VALUE;
+
     }
 
     public static int executeMovieUpdate(UUID uuid, String userID) {
@@ -145,11 +157,13 @@ public class SQLManager {
 
     public static boolean insertMovie(Movie movie) throws SQLException{
             Connection connection = getDBConnection();
-            insertDirector(movie.getDirector(), movie.getDirector().getDirectorID(), connection);
+            insertDirector(movie.getDirector(), connection);
 
-            String r = "INSERT INTO movies"
-                    + "(uuid_id, name, coordinatex, coordinatey, creation_date, oscars_count, golden_palm_count, budget, id_mpaarating, uuid_director, user_id)" + "values"
-                    + "(?, ?, ?, ?, ?, ?, ?, ?,?,?,?) ON CONFLICT DO NOTHING";
+            String r = """
+                    INSERT INTO movies
+                    (uuid_id, name, coordinatex, coordinatey, creation_date, oscars_count, golden_palm_count, budget, id_mpaarating, uuid_director, user_id) values
+                    (?, ?, ?, ?, ?, ?, ?, ?,?,?,?) ON CONFLICT DO NOTHING;
+                    """;
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(r)) {
                 int index = 1;
@@ -165,7 +179,8 @@ public class SQLManager {
                 else preparedStatement.setInt(index++, movie.getMpaaRating().ordinal() + 1);
                 preparedStatement.setObject(index++, movie.getDirector().getDirectorID());
                 preparedStatement.setString(index++, movie.getUserID());
-                return  preparedStatement.execute();
+                preparedStatement.execute();
+                return true;
             } catch (NullPointerException | PSQLException e) {
                 e.printStackTrace();
                 System.out.println(TextColor.cyan("Ошибка при обращении к базе данных"));
@@ -173,14 +188,16 @@ public class SQLManager {
         return false;
     }
 
-    private static boolean insertDirector(Person person, UUID id, Connection connection) {
-        String r = "INSERT INTO directors"
-                + "(uuid_director, name, birthday, height, passport_id, eye_color)" + "values"
-                + "(?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING";
+    private static boolean insertDirector(Person person, Connection connection) {
+        String r = """
+                INSERT INTO directors
+                (uuid_director, name, birthday, height, passport_id, eye_color) values
+                (?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING;
+                """;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(r)) {
             int index = 1;
-            preparedStatement.setObject(index++, id);
+            preparedStatement.setObject(index++, person.getDirectorID());
             preparedStatement.setString(index++, person.getName());
             if (person.getBirthday() == null) preparedStatement.setNull(index++, Types.DATE);
             else preparedStatement.setDate(index++, new java.sql.Date(person.getBirthday().getTime()));

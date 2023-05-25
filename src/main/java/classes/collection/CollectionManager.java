@@ -67,8 +67,8 @@ public class CollectionManager {
                 while (moviesResultSet.next()) {
                     Person director = null;
                     UUID id_director = (UUID) moviesResultSet.getObject("uuid_director");
-                    //TODO возможно отправлять uuid->string в БД не лучшая идея, тогда надо preparedstatement не только для одной строки писать
-                    ResultSet directorResultSet = SQLManager.executePreparedQuery("SELECT * FROM directors WHERE uuid_director=",id_director.toString());
+                    //TODO лучше бы обобщить этот метод, чтобы можно было бы различные prepared statements вызывать, например второй аргумент - массив Object?
+                    ResultSet directorResultSet = SQLManager.executePreparedQueryUUID("SELECT * FROM directors WHERE uuid_director=?",id_director);
                     if (directorResultSet != null && directorResultSet.next()) {
                         director = new Person(
                                 (UUID) directorResultSet.getObject("uuid_director"),
@@ -92,7 +92,7 @@ public class CollectionManager {
                             moviesResultSet.getFloat("budget"),
                             MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
                             director,
-                            moviesResultSet.getString("login")
+                            moviesResultSet.getString("user_id")
                     );
                     enteredMovies.add(movie);
                 }
