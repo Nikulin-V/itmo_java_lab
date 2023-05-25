@@ -12,12 +12,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
 
 public class ClientSession implements Runnable {
     private final Socket socket;
+    private final ExecutorService executorService;
 
-    public ClientSession(Socket socket) {
+    public ClientSession(Socket socket, ExecutorService executorService) {
         this.socket = socket;
+        this.executorService = executorService;
     }
 
     private boolean checkPassword(UserCredentials userCredentials) {
@@ -63,14 +66,23 @@ public class ClientSession implements Runnable {
                 Object inputObject = inputStream.readObject();
                 if (inputObject instanceof UserCredentials credentials) {
                     if (currentUserCredentials.equals(credentials)) {
-                        outputStream.writeObject(executeCommand(inputStream, currentUserCredentials));
+                        executorService.execute(() -> {
+                            try {
+                                outputStream.writeObject(executeCommand(inputStream, currentUserCredentials));
+                            } catch (IOException | ClassNotFoundException | InvocationTargetException |
+                                     NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }catch (IOException | ClassNotFoundException e) {
+                                System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
+                            }
+                        });
+
                     } else
                         outputStream.writeObject(new Response(1, TextColor.red("Попытка подмены данных пользователя")));
                     outputStream.flush();
                 }
             }
-        } catch (IOException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
-                 InstantiationException | IllegalAccessException e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
         }
     }
