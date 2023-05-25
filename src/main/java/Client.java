@@ -5,6 +5,7 @@ import classes.commands.ExecuteScript;
 import classes.console.CommandHandler;
 import classes.console.InputHandler;
 import classes.console.TextColor;
+import classes.sql_managers.SQLManager;
 import exceptions.NoSuchCommandException;
 import exceptions.SystemException;
 
@@ -70,6 +71,7 @@ public class Client {
         try (Socket socket = new Socket(host, port)) {
             System.out.println(TextColor.green("Соединение установлено"));
             connectAttemptsCount = 0;
+            SQLManager.initDB();
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             UserCredentials credentials = authorize(in, out);
