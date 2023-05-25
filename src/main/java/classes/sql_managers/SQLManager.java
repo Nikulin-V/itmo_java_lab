@@ -126,7 +126,7 @@ public class SQLManager {
         try (Connection dbConnection = getDBConnection(); PreparedStatement ps = dbConnection.prepareStatement(r)) {
             int index = 1;
             ps.setObject(index++, uuid);
-            ps.setString(index++, userID);
+            ps.setString(index, userID);
             ps.executeUpdate();
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
@@ -135,19 +135,45 @@ public class SQLManager {
 
     }
 
-    public static int executeMovieUpdate(UUID uuid, String userID) {
+    public static int executeMovieUpdate(Movie movie, String userID) {
 
-        String r = """
+        String movieQuery = """
                 UPDATE movies
-                SET name = ?, coordinatex = ?, coordinatey = ?, oscars_count=? ,golden_palm_count = ?, budget=?, id_mpaarating=?, uuid_director=?
+                SET name=?, coordinatex=?, coordinatey=?, oscars_count=?, golden_palm_count=?, budget=?, id_mpaarating=?, uuid_director=?
                 WHERE uuid_id = ?;
                 """;
-        try (Connection dbConnection = getDBConnection(); PreparedStatement ps = dbConnection.prepareStatement(r)) {
-            int index = 1;
 
-            ps.setString(index++, userID);
-            ps.setObject(index++, uuid);
-            return ps.executeUpdate();
+        String directorQuery = """
+                INSERT INTO directors
+                (uuid_director, name, birthday, height, passport_id, eye_color) VALUES 
+                (?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING;
+                """;
+        try (Connection dbConnection = getDBConnection();
+             PreparedStatement psMovie = dbConnection.prepareStatement(movieQuery);
+             PreparedStatement psDirector = dbConnection.prepareStatement(directorQuery)) {
+
+            int directorIndex = 1;
+            Person director = movie.getDirector();
+            movie.getDirector().setID(UUID.randomUUID());
+            psDirector.setObject(directorIndex++, director.getID());
+            psDirector.setString(directorIndex++, director.getName());
+            psDirector.setDate(directorIndex++, new java.sql.Date(director.getBirthday().getTime()));
+            psDirector.setDouble(directorIndex++, director.getHeight());
+            psDirector.setString(directorIndex++, director.getPassportID());
+            psDirector.setInt(directorIndex, director.getEyeColor().ordinal() + 1);
+            psDirector.executeUpdate();
+
+            int movieIndex = 1;
+            psMovie.setString(movieIndex++, movie.getName());
+            psMovie.setLong(movieIndex++, movie.getCoordinates().getX());
+            psMovie.setLong(movieIndex++, movie.getCoordinates().getY());
+            psMovie.setLong(movieIndex++, movie.getOscarsCount());
+            psMovie.setLong(movieIndex++, movie.getGoldenPalmCount());
+            psMovie.setFloat(movieIndex++, movie.getBudget());
+            psMovie.setInt(movieIndex++, movie.getMpaaRating().ordinal() + 1);
+            psMovie.setObject(movieIndex++, director.getID());
+            psMovie.setString(movieIndex, userID);
+            return psMovie.executeUpdate();
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
@@ -177,8 +203,8 @@ public class SQLManager {
                 preparedStatement.setFloat(index++, movie.getBudget());
                 if (movie.getMpaaRating() == null) preparedStatement.setNull(index++, Types.INTEGER);
                 else preparedStatement.setInt(index++, movie.getMpaaRating().ordinal() + 1);
-                preparedStatement.setObject(index++, movie.getDirector().getDirectorID());
-                preparedStatement.setString(index++, movie.getUserID());
+                preparedStatement.setObject(index++, movie.getDirector().getID());
+                preparedStatement.setString(index, movie.getUserID());
                 preparedStatement.execute();
                 return true;
             } catch (NullPointerException | PSQLException e) {
@@ -197,7 +223,7 @@ public class SQLManager {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(r)) {
             int index = 1;
-            preparedStatement.setObject(index++, person.getDirectorID());
+            preparedStatement.setObject(index++, person.getID());
             preparedStatement.setString(index++, person.getName());
             if (person.getBirthday() == null) preparedStatement.setNull(index++, Types.DATE);
             else preparedStatement.setDate(index++, new java.sql.Date(person.getBirthday().getTime()));
