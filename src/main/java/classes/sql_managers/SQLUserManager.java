@@ -7,6 +7,7 @@ import org.postgresql.util.PSQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLUserManager extends SQLManager {
     private final Connection connection = getDBConnection();
@@ -25,14 +26,14 @@ public class SQLUserManager extends SQLManager {
     }
 
     public boolean addUser(UserCredentials credentials) {
-        String addUserQuery = "INSERT INTO users (username, hashed_password) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        String addUserQuery = "INSERT INTO users (username, hashed_password) VALUES (?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(addUserQuery)) {
-            int index = 1;
-            preparedStatement.setString(index++, credentials.getUsername());
-            preparedStatement.setString(index++, credentials.getHashedPassword());
+            AtomicInteger index = new AtomicInteger(0);
+            preparedStatement.setString(index.incrementAndGet(), credentials.getUsername());
+            preparedStatement.setString(index.get(), credentials.getHashedPassword());
             preparedStatement.execute();
             return true;
-        } catch (NullPointerException | PSQLException e) {
+        } catch (PSQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.cyan("Ошибка при обращении к базе данных!"));
         } catch (SQLException e) {

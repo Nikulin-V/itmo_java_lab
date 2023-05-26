@@ -16,7 +16,7 @@ public class Person implements Serializable {
     private Double height; //Поле может быть null, Значение поля должно быть больше 0
     private String passportID; //Значение этого поля должно быть уникальным, Длина строки должна быть не меньше 7, Строка не может быть пустой, Поле не может быть null
     private Color eyeColor; //Поле не может быть null
-    private UUID directorID; //Поле не может быть null
+    private UUID id; //Поле не может быть null
 
     public Person(String name, Date birthday, Double height, String passportID, Color eyeColor) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
         this.name = new FieldHandler(name, NOT_NULL, NOT_BLANK).handleString();
@@ -25,16 +25,22 @@ public class Person implements Serializable {
         this.passportID = new FieldHandler(passportID, UNIQUE, LENGTH, NOT_BLANK, NOT_NULL).handleString();
         this.eyeColor = (Color) new FieldHandler(eyeColor, NOT_NULL).handleObject();
     }
+
     public Person(UUID uuidDirector, String name, Date birthday, Double height, String passportID, Color eyeColor) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
-        this.directorID = uuidDirector;
+        this.id = uuidDirector;
         this.name = new FieldHandler(name, NOT_NULL, NOT_BLANK).handleString();
         this.birthday = birthday;
         this.height = new FieldHandler(height, GREAT_THAN_ZERO).handleDouble();
         this.passportID = new FieldHandler(passportID, UNIQUE, LENGTH, NOT_BLANK, NOT_NULL).handleString();
         this.eyeColor = (Color) new FieldHandler(eyeColor, NOT_NULL).handleObject();
     }
+
     public String getName() {
         return name;
+    }
+
+    public void setID(UUID id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -72,20 +78,21 @@ public class Person implements Serializable {
     public void setEyeColor(Color eyeColor) {
         this.eyeColor = eyeColor;
     }
-    public UUID getDirectorID() {
-        return directorID;
+
+    public UUID getID() {
+        return id;
     }
 
     @Override
     public String toString() {
         String[] fieldNames = {"Name", "Birthday", "Height", "PassportID", "EyeColor"};
         Object[] fieldValues = {name, birthday, height, passportID, eyeColor};
-        String personString = TextColor.green("Person {\n");
+        StringBuilder personString = new StringBuilder(TextColor.green("Person {\n"));
         for (int fieldId = 0; fieldId < fieldNames.length; fieldId++) {
             if (fieldValues[fieldId] != null)
-                personString += "\t\t\t" + TextColor.grey(fieldNames[fieldId] + "=") + TextColor.green(fieldValues[fieldId].toString()) + "\n";
+                personString.append("\t\t\t").append(TextColor.grey(fieldNames[fieldId] + "=")).append(TextColor.green(fieldValues[fieldId].toString())).append("\n");
         }
-        personString += TextColor.green("\t\t}");
-        return personString;
+        personString.append(TextColor.green("\t\t}"));
+        return personString.toString();
     }
 }

@@ -11,7 +11,7 @@ import interfaces.Commandable;
 public class Update extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + "\t\t\t\t\t\t\t\t\t\t-\tобновить значение элемента коллекции, id которого равен заданному";
+        return getName() + " <UUID>\t\t\t\t\t\t\t\t\t-\tобновить значение элемента коллекции, id которого равен заданному";
     }
 
     @Override
@@ -19,7 +19,7 @@ public class Update extends NamedCommand implements Commandable {
             boolean founded = false;
             if (inputData instanceof Movie newMovie) {
                 if(!newMovie.getUserID().equals(userID)) return new Response(1).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));
-                SQLManager.executeMovieUpdate(newMovie.getId(), userID);
+                SQLManager.executeMovieUpdate(newMovie, userID);
                 CollectionManager cm = new CollectionManager();
                 for (int i = 0; i < cm.getCollection().size(); i++) {
                     if (cm.getCollection().get(i).getId().equals(newMovie.getId())) {
