@@ -59,7 +59,6 @@ public class CollectionManager {
     public static void readDB() {
         List<Movie> enteredMovies = new ArrayList<>();
         try {
-            // TODO: (WHERE userID == currentUserID)
 
             ResultSet moviesResultSet = SQLManager.executeQuery("SELECT * FROM movies");
             if (moviesResultSet == null) {
