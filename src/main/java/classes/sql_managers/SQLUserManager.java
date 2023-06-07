@@ -25,12 +25,12 @@ public class SQLUserManager extends SQLManager {
         execute(createUserTableQuery);
     }
 
-    public boolean addUser(UserCredentials credentials) {
+    public synchronized boolean addUser(UserCredentials credentials) {
         String addUserQuery = "INSERT INTO users (username, hashed_password) VALUES (?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(addUserQuery)) {
             AtomicInteger index = new AtomicInteger(0);
             preparedStatement.setString(index.incrementAndGet(), credentials.getUsername());
-            preparedStatement.setString(index.get(), credentials.getHashedPassword());
+            preparedStatement.setString(index.incrementAndGet(), credentials.getHashedPassword());
             preparedStatement.execute();
             return true;
         } catch (PSQLException e) {

@@ -1,13 +1,15 @@
 package classes.collection;
 
 import classes.console.TextColor;
-import classes.movie.*;
+import classes.movie.Coordinates;
+import classes.movie.Movie;
 import classes.sql_managers.SQLManager;
 import exceptions.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 public class CollectionManager {
     private static final List<Movie> collection = Collections.synchronizedList(new ArrayList<>());
@@ -30,6 +32,7 @@ public class CollectionManager {
     public static void addMovie(Movie movie) {
         CollectionManager.collection.add(movie);
     }
+
     public static void clear() {
         CollectionManager.collection.clear();
     }
@@ -57,58 +60,20 @@ public class CollectionManager {
     }
 
     public static void readDB() {
-        List<Movie> enteredMovies = new ArrayList<>();
+        List<Movie> moviesList = null;
         try {
-
-            ResultSet moviesResultSet = SQLManager.executeQuery("SELECT * FROM movies");
-            if (moviesResultSet == null) {
-                CollectionManager.clear();
-            } else {
-                while (moviesResultSet.next()) {
-                    Person director = null;
-                    UUID id_director = (UUID) moviesResultSet.getObject("uuid_director");
-                    //TODO лучше бы обобщить этот метод, чтобы можно было бы различные prepared statements вызывать, например второй аргумент - массив Object?
-                    ResultSet directorResultSet = SQLManager.executePreparedQueryUUID("SELECT * FROM directors WHERE uuid_director=?",id_director);
-                    if (directorResultSet != null && directorResultSet.next()) {
-                        director = new Person(
-                                (UUID) directorResultSet.getObject("uuid_director"),
-                                directorResultSet.getString("name"),
-                                directorResultSet.getDate("birthday"),
-                                directorResultSet.getDouble("height"),
-                                directorResultSet.getString("passport_id"),
-                                Color.getById(directorResultSet.getInt("eye_color"))
-                        );
-                        directorResultSet.close();
-                    }
-                    Coordinates coordinates = new Coordinates(moviesResultSet.getInt("coordinatex"),
-                            moviesResultSet.getInt("coordinatey"));
-                    Movie movie = new Movie(
-                            (UUID) moviesResultSet.getObject("uuid_id"),
-                            moviesResultSet.getString("name"),
-                            coordinates,
-                            moviesResultSet.getDate("creation_date"),
-                            moviesResultSet.getLong("oscars_count"),
-                            moviesResultSet.getLong("golden_palm_count"),
-                            moviesResultSet.getFloat("budget"),
-                            MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
-                            director,
-                            moviesResultSet.getString("user_id")
-                    );
-                    enteredMovies.add(movie);
-                }
-                moviesResultSet.close();
-            }
-
-
-
-        } catch (NotGreatThanException | GreatThanException | NullValueException | BlankValueException |
-                 BadValueLengthException | NotUniqueException | SQLException e) {
-            e.printStackTrace();
+            moviesList = SQLManager.executeGetMovies();
+        } catch (BlankValueException | NotGreatThanException | BadValueLengthException | NotUniqueException |
+                 GreatThanException | NullValueException e) {
+            //ignored
         }
-        if (!enteredMovies.isEmpty()) {
-            for (Movie movie : enteredMovies)
+        if (moviesList == null || moviesList.isEmpty()) {
+            System.out.println(TextColor.purple("База данных оказалась пуста"));
+            CollectionManager.clear();
+        } else {
+            for (Movie movie : moviesList)
                 addMovie(movie);
             System.out.println(TextColor.purple("База данных был прочитана..."));
-        } else System.out.println(TextColor.purple("База данных оказалась пуста"));
+        }
     }
 }

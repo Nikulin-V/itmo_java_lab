@@ -10,8 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,21 +23,15 @@ public class ClientSession implements Runnable {
     }
 
     private boolean checkPassword(UserCredentials userCredentials) {
-        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=?", userCredentials.getUsername());
-        try {
-            if (loginResultSet != null && loginResultSet.next()) {
-                String hashedPassword = loginResultSet.getString("hashed_password");
-                return hashedPassword.equals(userCredentials.getHashedPassword());
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        String password = SQLManager.executePreparedQueryGetPassword(userCredentials.getUsername());
+        if (password != null ) {
+            return password.equals(userCredentials.getHashedPassword());
         }
         return false;
     }
 
     private boolean isLoginInDB(String username) {
-        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=?",username);
-        return loginResultSet != null;
+        return SQLManager.executeCheckLogin(username);
     }
 
     private Response executeCommand(ObjectInputStream inputStream,
@@ -62,7 +54,6 @@ public class ClientSession implements Runnable {
         ) {
             System.out.println(TextColor.grey("Соединение установлено: " + socket.getInetAddress()));
             UserCredentials currentUserCredentials = authorize(inputStream, outputStream);
-
             while (!socket.isClosed()) {
                 inputCachedThreadPool.execute(() -> {
                     try {

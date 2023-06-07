@@ -1,17 +1,22 @@
 package classes.sql_managers;
 
 import classes.console.TextColor;
-import classes.movie.Movie;
-import classes.movie.Person;
+import classes.movie.*;
+import exceptions.*;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.postgresql.util.PSQLException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLManager {
+
+    private final static ExecutorService outputFixedThreadPool = Executors.newFixedThreadPool(50);
+
     private final static String createMovieTable = """
             CREATE TABLE IF NOT EXISTS movies(
                 uuid_id uuid PRIMARY KEY,
@@ -62,56 +67,109 @@ public class SQLManager {
     public static void execute(String command) {
         try (Connection dbConnection = getDBConnection(); Statement statement = dbConnection.createStatement()) {
             statement.execute(command);
-            System.out.println(TextColor.cyan("Обращение к базе данных выполнено"));
-        } catch (SQLException e) {
+//            System.out.println(TextColor.cyan("Обращение к базе данных выполнено"));
+        } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
         }
     }
 
-    public static ResultSet executePreparedQueryUUID(String command, UUID arg) {
-        Connection dbConnection = getDBConnection();
-        try {
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(command);
-            preparedStatement.setObject(1, arg);
-            return preparedStatement.executeQuery();
+    public synchronized static Person executeGetDirectorByUUID(UUID uuid) throws BlankValueException, NotGreatThanException, BadValueLengthException, NotUniqueException, GreatThanException, NullValueException {
+        Person director = null;
+        try (Connection dbConnection = getDBConnection()) {
+            PreparedStatement preparedStatement = dbConnection.prepareStatement("SELECT * FROM directors WHERE uuid_director=?");
+            preparedStatement.setObject(1, uuid);
+            ResultSet directorResultSet = preparedStatement.executeQuery();
+            if (directorResultSet != null && directorResultSet.next()) {
+                director = new Person(
+                        (UUID) directorResultSet.getObject("uuid_director"),
+                        directorResultSet.getString("name"),
+                        directorResultSet.getDate("birthday"),
+                        directorResultSet.getDouble("height"),
+                        directorResultSet.getString("passport_id"),
+                        Color.getById(directorResultSet.getInt("eye_color")));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
         }
-        return null;
+        return director;
     }
 
-    public static ResultSet executePreparedQuery(String command, String arg) {
-        Connection dbConnection = getDBConnection();
-        try {
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(command);
-            preparedStatement.setString(1, arg);
-            return preparedStatement.executeQuery();
+    public static boolean executeCheckLogin(String username) {
+        try (Connection dbConnection = getDBConnection()) {
+            PreparedStatement preparedStatement = dbConnection.prepareStatement("SELECT * FROM users WHERE username=?");
+            preparedStatement.setString(1, username);
+            ResultSet checkLoginResultSet = preparedStatement.executeQuery();
+            return checkLoginResultSet != null && checkLoginResultSet.next();
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
 
         }
-        return null;
+        return false;
     }
 
-    public static ResultSet executeQuery(String command) {
-        Connection dbConnection = getDBConnection();
-        try {
+    public static String executePreparedQueryGetPassword(String username) {
+        String hashedPassword = null;
+        try (Connection dbConnection = getDBConnection()) {
+            PreparedStatement preparedStatement = dbConnection.prepareStatement("SELECT * FROM users WHERE username=?");
+            preparedStatement.setString(1, username);
+            ResultSet passwordResultSet = preparedStatement.executeQuery();
+            if (passwordResultSet.next()) hashedPassword = passwordResultSet.getString("hashed_password");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
+
+        }
+        return hashedPassword;
+    }
+
+
+    public synchronized static ArrayList<Movie> executeGetMovies() throws BlankValueException, NotGreatThanException, BadValueLengthException, NotUniqueException, GreatThanException, NullValueException {
+        ArrayList<Movie> movies = new ArrayList<>();
+
+        try (Connection dbConnection = getDBConnection()) {
             Statement statement = dbConnection.createStatement();
-            return statement.executeQuery(command);
+            ResultSet moviesResultSet = statement.executeQuery("SELECT * FROM movies");
+            while (moviesResultSet.next()) {
+                UUID id_director = (UUID) moviesResultSet.getObject("uuid_director");
+                Person director = SQLManager.executeGetDirectorByUUID(id_director);
+                Coordinates coordinates = new Coordinates(moviesResultSet.getInt("coordinatex"),
+                        moviesResultSet.getInt("coordinatey"));
+                Movie movie = new Movie(
+                        (UUID) moviesResultSet.getObject("uuid_id"),
+                        moviesResultSet.getString("name"),
+                        coordinates,
+                        moviesResultSet.getDate("creation_date"),
+                        moviesResultSet.getLong("oscars_count"),
+                        moviesResultSet.getLong("golden_palm_count"),
+                        moviesResultSet.getFloat("budget"),
+                        MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
+                        director,
+                        moviesResultSet.getString("user_id")
+                );
+
+                movies.add(movie);
+
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
-
         }
-        return null;
+        return movies;
     }
 
-    public static int executeUpdate(String command) {
-        try (Connection dbConnection = getDBConnection(); Statement statement = dbConnection.createStatement()) {
-            return statement.executeUpdate(command);
+    public synchronized static int executeDelete(String username) {
+        String r = """
+            DELETE FROM movies WHERE user_id=?
+                    """;
+
+        try (Connection dbConnection = getDBConnection(); PreparedStatement statement = dbConnection.prepareStatement(r)) {
+            statement.setString(1, username);
+            return statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
@@ -119,7 +177,7 @@ public class SQLManager {
         return Integer.MAX_VALUE;
     }
 
-    public static void executeMovieDelete(UUID uuid, String userID) {
+    public synchronized static void executeMovieDelete(UUID uuid, String userID) {
 
         String r = """
                 DELETE FROM movies WHERE uuid_id=? AND user_id=?
@@ -128,7 +186,7 @@ public class SQLManager {
         try (Connection dbConnection = getDBConnection(); PreparedStatement ps = dbConnection.prepareStatement(r)) {
             AtomicInteger index = new AtomicInteger(0);
             ps.setObject(index.incrementAndGet(), uuid);
-            ps.setString(index.get(), userID);
+            ps.setString(index.incrementAndGet(), userID);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,8 +194,8 @@ public class SQLManager {
         }
 
     }
-//deleted argument user id
-    public static int executeMovieUpdate(Movie movie) {
+
+    public synchronized static void executeMovieUpdate(Movie movie) {
 
         String movieQuery = """
                 UPDATE movies
@@ -162,11 +220,10 @@ public class SQLManager {
             psDirector.setDate(directorIndex.incrementAndGet(), new java.sql.Date(director.getBirthday().getTime()));
             psDirector.setDouble(directorIndex.incrementAndGet(), director.getHeight());
             psDirector.setString(directorIndex.incrementAndGet(), director.getPassportID());
-            psDirector.setInt(directorIndex.get(), director.getEyeColor().ordinal() + 1);
+            psDirector.setInt(directorIndex.incrementAndGet(), director.getEyeColor().ordinal() + 1);
             psDirector.executeUpdate();
 
             AtomicInteger movieIndex = new AtomicInteger(0);
-
             psMovie.setString(movieIndex.incrementAndGet(), movie.getName());
             psMovie.setLong(movieIndex.incrementAndGet(), movie.getCoordinates().getX());
             psMovie.setLong(movieIndex.incrementAndGet(), movie.getCoordinates().getY());
@@ -175,28 +232,25 @@ public class SQLManager {
             psMovie.setFloat(movieIndex.incrementAndGet(), movie.getBudget());
             psMovie.setInt(movieIndex.incrementAndGet(), movie.getMpaaRating().ordinal() + 1);
             psMovie.setObject(movieIndex.incrementAndGet(), director.getID());
-            psMovie.setObject(movieIndex.get(), movie.getId());
-            return psMovie.executeUpdate();
-        } catch (SQLException e) {
+            psMovie.setObject(movieIndex.incrementAndGet(), movie.getId());
+            psMovie.executeUpdate();
+        } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
         }
-        return Integer.MAX_VALUE;
     }
 
-    public static boolean insertMovie(Movie movie) throws SQLException {
-        Connection connection = getDBConnection();
-        insertDirector(movie.getDirector(), connection);
-
+    public synchronized static boolean insertMovie(Movie movie) {
         String r = """
                 INSERT INTO movies
                 (uuid_id, name, coordinatex, coordinatey, creation_date, oscars_count, golden_palm_count, budget, id_mpaarating, uuid_director, user_id) values
                 (?, ?, ?, ?, ?, ?, ?, ?,?,?,?) ON CONFLICT DO NOTHING;
                 """;
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(r)) {
-            AtomicInteger index = new AtomicInteger(0);
+        try (Connection connection = getDBConnection(); PreparedStatement preparedStatement = connection.prepareStatement(r)) {
+            insertDirector(movie.getDirector(), connection);
 
+            AtomicInteger index = new AtomicInteger(0);
             preparedStatement.setObject(index.incrementAndGet(), movie.getId());
             preparedStatement.setString(index.incrementAndGet(), movie.getName());
             preparedStatement.setInt(index.incrementAndGet(), (int) movie.getCoordinates().getX());
@@ -208,17 +262,17 @@ public class SQLManager {
             if (movie.getMpaaRating() == null) preparedStatement.setNull(index.incrementAndGet(), Types.INTEGER);
             else preparedStatement.setInt(index.incrementAndGet(), movie.getMpaaRating().ordinal() + 1);
             preparedStatement.setObject(index.incrementAndGet(), movie.getDirector().getID());
-            preparedStatement.setString(index.get(), movie.getUserID());
+            preparedStatement.setString(index.incrementAndGet(), movie.getUserID());
             preparedStatement.execute();
             return true;
-        } catch (PSQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.cyan("Ошибка при обращении к базе данных"));
         }
         return false;
     }
 
-    private static boolean insertDirector(Person person, Connection connection) {
+    private synchronized static void insertDirector(Person person, Connection connection) {
         String r = """
                 INSERT INTO directors
                 (uuid_director, name, birthday, height, passport_id, eye_color) values
@@ -234,14 +288,12 @@ public class SQLManager {
             if (person.getHeight() == null) preparedStatement.setNull(index.incrementAndGet(), Types.FLOAT);
             else preparedStatement.setDouble(index.incrementAndGet(), person.getHeight());
             preparedStatement.setString(index.incrementAndGet(), person.getPassportID());
-            preparedStatement.setInt(index.get(), person.getEyeColor().ordinal() + 1);
-            return preparedStatement.execute();
-
+            preparedStatement.setInt(index.incrementAndGet(), person.getEyeColor().ordinal() + 1);
+            preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.cyan("Ошибка при обращении к базе данных"));
         }
-        return false;
     }
 
     public static void initDB() {

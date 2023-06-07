@@ -72,6 +72,7 @@ public class Client {
             System.out.println(TextColor.green("Соединение установлено"));
             connectAttemptsCount = 0;
             SQLManager.initDB();
+
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             UserCredentials credentials = authorize(in, out);
