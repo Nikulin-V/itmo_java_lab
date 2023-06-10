@@ -25,9 +25,10 @@ public class Server {
                 Runtime.getRuntime().exit(0);
             }
             CollectionManager.readDB();
+
             System.out.println(TextColor.green("Сервер запущен на " + port + " порту"));
             System.out.println(TextColor.grey("Ожидание соединения..."));
-            //noinspection InfiniteLoopStatement
+            // noinspection InfiniteLoopStatement
             while (true) {
                 try (ServerSocket server = new ServerSocket(port)) {
                     server.setReuseAddress(true);

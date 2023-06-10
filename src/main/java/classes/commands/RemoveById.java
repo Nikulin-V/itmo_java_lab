@@ -9,6 +9,7 @@ import classes.sql_managers.SQLManager;
 import interfaces.Commandable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class RemoveById extends NamedCommand implements Commandable {
@@ -21,7 +22,7 @@ public class RemoveById extends NamedCommand implements Commandable {
     public Response execute(Object inputData, String userID) {
 
         if (inputData instanceof String[] arg) {
-            ArrayList<Movie> movies = new CollectionManager().getCollection();
+            List<Movie> movies = new CollectionManager().getCollection();
             boolean isFound = false;
 
                 UUID uuid = UUID.fromString(arg[0]);

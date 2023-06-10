@@ -9,14 +9,14 @@ import interfaces.Commandable;
 public class Sort extends NamedCommand implements Commandable {
     @Override
     public String getInfo() {
-        return getName() + " <file_name>\t\t\t\t\t\t\t-\tотсортировать коллекцию в естественном порядке";
+        return getName() + " \t\t\t\t\t\t\t-\tотсортировать коллекцию в естественном порядке";
     }
 
     @Override
     public Response execute(Object inputData, String userID) {
         CollectionManager collectionManager = new CollectionManager();
         if (!collectionManager.getCollection().isEmpty()) {
-            CollectionManager.sort(collectionManager.getCollection());
+            CollectionManager.sort( collectionManager.getCollection());
             return new Response(0, TextColor.cyan("Коллекция успешно отсортирована в порядке убывания"));
         }
         return new Response(0, TextColor.cyan("Коллекция пустая, нечего сортировать"));

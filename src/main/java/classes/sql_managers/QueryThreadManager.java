@@ -4,48 +4,36 @@ import interfaces.Commandable;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class QueryThreadManager implements Runnable {
+public class QueryThreadManager{
     private final Connection connection;
     private final ArrayList<Commandable> commands;
 
+    private final static ExecutorService outputFixedThreadPool = Executors.newFixedThreadPool(50);
 
-    public QueryThreadManager(Connection connection,ArrayList<Commandable> commands){
-        this.connection=connection;
-        this.commands=commands;
+    public QueryThreadManager(Connection connection, ArrayList<Commandable> commands) {
+        this.connection = connection;
+        this.commands = commands;
     }
 
-    @Override
-    public void run() {
-//        try {
-//            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-//            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-//            System.out.println(TextColor.grey("Соединение установлено: " + socket.getInetAddress()));
+
+    public static void run() {
 //
-//            while (!socket.isClosed()) {
-//                try {
-//                    Object inputObject = inputStream.readObject();
-//                    if (inputObject instanceof NamedCommand command) {
-//                        String outputData;
-//                        if (command.hasTransferData()) {
-//                            Object inputData = inputStream.readObject();
-//                            outputData = (String) command.execute(inputData);
-//                        } else
-//                            outputData = (String) command.execute(null);
-//                        if (outputData != null)
-//                            outputStream.writeUTF(outputData);
-//                    } else throw new ClassNotFoundException();
-//                } catch (ClassNotFoundException e) {
-//                    outputStream.writeUTF(TextColor.yellow("Передана неизвестная команда"));
-//                } finally {
-//                    outputStream.flush();
-//                }
+//        outputFixedThreadPool.execute(() -> {
+//            try {
+//                if (currentUserCredentials.equals(credentials)) {
+//                    outputStream.writeObject(executeCommand(inputStream, currentUserCredentials));
+//                } else
+//                    outputStream.writeObject(new Response(1, TextColor.red("Попытка подмены данных пользователя")));
+//                outputStream.flush();
+//            } catch (IOException | ClassNotFoundException | InvocationTargetException |
+//                     NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+//                throw new RuntimeException(e);
 //            }
-//        } catch (IOException e) {
-//            System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
-//            CollectionManager.saveCollection();
-//            System.out.println(TextColor.green("Хранилище сохранено в файл"));
-//        }
-//    }
+//        });
+
+
     }
 }

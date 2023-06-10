@@ -8,6 +8,7 @@ import classes.movie.Movie;
 import interfaces.Commandable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CountByOscarsCount extends NamedCommand implements Commandable {
     @Override
@@ -19,7 +20,7 @@ public class CountByOscarsCount extends NamedCommand implements Commandable {
     public Response execute(Object inputData, String userID) {
         String[] arg = (String[]) inputData;
         if (arg != null && String.valueOf(arg[0]).chars().allMatch(Character::isDigit)) {
-            ArrayList<Movie> movies = new CollectionManager().getCollection();
+            List<Movie> movies = new CollectionManager().getCollection();
             int searchMoviesCount = 0;
                 int searchOscarsCount = Integer.parseInt(arg[0]);
                 for (Movie movie : movies) {

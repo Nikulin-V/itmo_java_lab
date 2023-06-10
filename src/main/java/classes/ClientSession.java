@@ -8,46 +8,32 @@ import classes.sql_managers.SQLUserManager;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayDeque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientSession implements Runnable {
     private final Socket socket;
+    public final static ExecutorService outputFixedThreadPool = Executors.newFixedThreadPool(10);
+    public final static ExecutorService inputCachedThreadPool = Executors.newCachedThreadPool();
+    public final ArrayDeque<Object> objectsQueue = new ArrayDeque<>();
+    public final ArrayDeque<Object> commandsQueue = new ArrayDeque<>();
 
     public ClientSession(Socket socket) {
         this.socket = socket;
     }
 
     private boolean checkPassword(UserCredentials userCredentials) {
-        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=?",userCredentials.getUsername());
-        try {
-            if (loginResultSet != null && loginResultSet.next()) {
-                String hashedPassword = loginResultSet.getString("hashed_password");
-                return hashedPassword.equals(userCredentials.getHashedPassword());
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        String password = SQLManager.executePreparedQueryGetPassword(userCredentials.getUsername());
+        if (password != null) {
+            return password.equals(userCredentials.getHashedPassword());
         }
         return false;
     }
 
     private boolean isLoginInDB(String username) {
-        ResultSet loginResultSet = SQLManager.executePreparedQuery("SELECT * FROM users WHERE username=?",username);
-        return loginResultSet != null;
-    }
-
-    private Response executeCommand(ObjectInputStream inputStream,
-                                    UserCredentials userCredentials) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Object inputObject = inputStream.readObject();
-        if (inputObject instanceof NamedCommand command) {
-            if (command.hasTransferData()) {
-                Object inputData = inputStream.readObject();
-                return command.execute(inputData, userCredentials.getUsername());
-            } else return command.execute(null, userCredentials.getUsername());
-        }
-        return new Response(1, TextColor.yellow("Передана неизвестная команда"));
+        return SQLManager.executeCheckLogin(username);
     }
 
     @Override
@@ -58,20 +44,27 @@ public class ClientSession implements Runnable {
         ) {
             System.out.println(TextColor.grey("Соединение установлено: " + socket.getInetAddress()));
             UserCredentials currentUserCredentials = authorize(inputStream, outputStream);
-
             while (!socket.isClosed()) {
-                Object inputObject = inputStream.readObject();
-                if (inputObject instanceof UserCredentials credentials) {
-                    if (currentUserCredentials.equals(credentials)) {
-                        outputStream.writeObject(executeCommand(inputStream, currentUserCredentials));
-                    } else
-                        outputStream.writeObject(new Response(1, TextColor.red("Попытка подмены данных пользователя")));
-                    outputStream.flush();
-                }
+                readFullRequest(inputStream);
+                inputCachedThreadPool.execute(new ReadQueryTask(this, currentUserCredentials, outputFixedThreadPool, outputStream));
             }
-        } catch (IOException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
-                 InstantiationException | IllegalAccessException e) {
-            System.out.println(TextColor.grey("Соединение разорвано, ожидаю нового подключения"));
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void readFullRequest(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+        Object credentials;
+        Object inputObject;
+        credentials = inputStream.readObject();
+        if (credentials instanceof UserCredentials) {
+            inputObject = inputStream.readObject();
+            if (inputObject instanceof NamedCommand command) {
+                objectsQueue.add(credentials);
+                objectsQueue.add(command);
+                if (command.hasTransferData())
+                    objectsQueue.add(inputStream.readObject());
+            }
         }
     }
 

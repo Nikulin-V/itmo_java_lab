@@ -8,6 +8,7 @@ import classes.movie.Movie;
 import interfaces.Commandable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Show extends NamedCommand implements Commandable {
     @Override
@@ -18,7 +19,7 @@ public class Show extends NamedCommand implements Commandable {
     @Override
     public Response execute(Object inputData, String userID) {
         CollectionManager collectionManager = new CollectionManager();
-        ArrayList<Movie> movies = collectionManager.getCollection();
+        List<Movie> movies = collectionManager.getCollection();
         StringBuilder output = new StringBuilder(TextColor.cyan("Содержимое коллекции:\n"));
         if (movies.size() != 0)
             for (Movie movie : movies)
