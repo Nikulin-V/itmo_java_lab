@@ -8,8 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Model of Movie. Sub-model of the <code>Route</code>. Contains getters/setters of each class fields.
@@ -240,6 +239,20 @@ public class Movie implements Serializable {
         }
         movieString.append(TextColor.cyan("\t}"));
         return movieString.toString();
+    }
+
+
+    public Map<String,Object> toSQLRepresentation() {
+        ArrayList<String> arr = new ArrayList<String>();
+        String[] fieldNames = {"ID", "Creator", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
+        Object[] fieldValues = {id, userID, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director};
+        Map<String, Object> dict = new HashMap<>();
+
+        for (int i = 0; i < fieldNames.length; i++) {
+            dict.put(fieldNames[i], fieldValues[i]);
+        }
+
+        return dict;
     }
 }
 
