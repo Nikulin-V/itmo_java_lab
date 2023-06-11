@@ -57,7 +57,7 @@ public class SQLManager {
             props.setProperty("password", env.get("DB_PASS"));
             dbConnection = DriverManager.getConnection(url, props);
         } catch (SQLException e) {
-            System.out.println(TextColor.green(e.getMessage()));
+            System.out.println(TextColor.red(e.getMessage()));
         } catch (NumberFormatException e) {
             System.out.println(TextColor.red("Переменная окружения DB_PORT должна быть в формате целого числа 0-65535"));
         }
