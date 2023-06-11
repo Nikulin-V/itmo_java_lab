@@ -3,6 +3,7 @@ package ui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import ui.locale.Lang;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -42,6 +43,7 @@ public class Registration extends JFrame {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
+        createUIComponents();
         MainRegisterPanel = new JPanel();
         MainRegisterPanel.setLayout(new GridLayoutManager(4, 5, new Insets(0, 0, 0, 0), -1, -1));
         final Spacer spacer1 = new Spacer();
@@ -59,10 +61,8 @@ public class Registration extends JFrame {
         RegisterPanel.setLayout(new GridLayoutManager(5, 1, new Insets(10, 10, 10, 10), -1, 3));
         MainRegisterPanel.add(RegisterPanel, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         RegisterPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-12743731)), "Регистрация", TitledBorder.CENTER, TitledBorder.BELOW_TOP, this.$$$getFont$$$(null, Font.BOLD, 14, RegisterPanel.getFont()), new Color(-12743731)));
-        LoginLabel = new JLabel();
         LoginLabel.setText("Логин");
         RegisterPanel.add(LoginLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        PasswordLabel = new JLabel();
         PasswordLabel.setText("Пароль");
         RegisterPanel.add(PasswordLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         LoginField = new JTextField();
@@ -112,4 +112,9 @@ public class Registration extends JFrame {
         return MainRegisterPanel;
     }
 
+    private void createUIComponents() {
+        Lang lang = new Lang();
+        LoginLabel = new JLabel(lang.getString("enter_login"));
+        PasswordLabel = new JLabel(lang.getString("enter_password"));
+    }
 }

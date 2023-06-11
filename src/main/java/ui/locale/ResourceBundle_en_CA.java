@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 public class ResourceBundle_en_CA extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
-        Object[][] resources = new Object[100][100];
+        Object[][] resources = new Object[15][2];
 
         resources[0][0] = "greetings_main_title";
         resources[0][1] = "Welcome back, sir!";
@@ -31,49 +31,44 @@ public class ResourceBundle_en_CA extends ListResourceBundle {
         resources[6][0] = "enter_login";
         resources[6][1] = "Login";
 
-        resources[7][0] = "enter_login";
-        resources[7][1] = "Login";
 
-        resources[8][0] = "enter_password";
-        resources[8][1] = "Password";
+        resources[7][0] = "enter_password";
+        resources[7][1] = "Password";
 
-        resources[9][0] = "confirm_button";
-        resources[9][1] = "OK";
+        resources[8][0] = "confirm_button";
+        resources[8][1] = "OK";
 
 
-        resources[10][0] = "collection_label";
-        resources[10][1] = "Collection";
+        resources[9][0] = "collection_label";
+        resources[9][1] = "Collection";
 
-        resources[11][0] = "chosen_movie_label";
-        resources[11][1] = "Chosen film";
+        resources[10][0] = "chosen_movie_label";
+        resources[10][1] = "Chosen film";
 
-        resources[12][0] = "enter_login";
-        resources[12][1] = "Login";
+        resources[11][0] = "clear_collection_button";
+        resources[11][1] = "Clear collection";
 
-        resources[13][0] = "enter_login";
-        resources[13][1] = "Login";
+        resources[12][0] = "sort_collection_button";
+        resources[12][1] = "Sort";
 
-        resources[14][0] = "enter_password";
-        resources[14][1] = "Password";
+        resources[13][0] = "update_movie_button";
+        resources[13][1] = "Update";
 
-        resources[15][0] = "confirm_button";
-        resources[15][1] = "OK";
+        resources[14][0] = "remove_collection_button";
+        resources[14][1] = "Remove";
 
         return resources;
     }
+
     public static void main(String[] args) {
 
 
         ResourceBundle rd = ResourceBundle
                 .getBundle("ui.locale.ResourceBundle",
                         new Locale("en", "CA"));
-        System.out.println("\nGerman Version");
         System.out.println("String for Title key: "
-                + rd.getString("title"));
-        System.out.println("String for StopText key: "
-                + rd.getString("StopText"));
-        System.out.println("String for StartText key: "
-                + rd.getString("StartText"));
-    }
+                + rd.getString("greetings_main_title"));
 
+
+    }
 }

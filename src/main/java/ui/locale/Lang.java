@@ -1,30 +1,58 @@
 package ui.locale;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
-public enum Lang {
-    Canada(new Locale("en","CA")),
-    Russian(new Locale("ru", "RU")),
-    Belorussian( new Locale("ru", "BY"));
+public class Lang {
+    private ResourceBundle resourceBundle;
+    private Locale currentLocale;
+    private static final Map<String, Locale> locales = new HashMap<>() {
+        {
+            put("EN", new Locale("en", "CA"));
+            put("RU", new Locale("ru", "RU"));
+            put("BY", new Locale("ru", "BY"));
+        }
+    };
+    //TODO need to translate even jcomboboxes to current language -> rewrite
+    private static final String[] availableLanguages = {"Русский", "Канадский", "Белорусский"};
 
-    private final Locale loc;
 
-    Lang(Locale l) {
-        loc = l;
+    public Lang() {
+        Dotenv env = Dotenv.load();
+        this.currentLocale = locales.get(env.get("GUI_LANG", "RU"));
+        this.resourceBundle = ResourceBundle.getBundle("ui.locale.ResourceBundle",
+                currentLocale);
     }
 
     String getDate(Date date) {
-        return DateFormat.getDateInstance(DateFormat.FULL, loc).format(date);
+        return DateFormat.getDateInstance(DateFormat.FULL, currentLocale).format(date);
     }
 
     String getCurrency(int number) {
-        return NumberFormat.getCurrencyInstance(loc).format(number);
+        return NumberFormat.getCurrencyInstance(currentLocale).format(number);
     }
 
-    Locale getLocale() {
-        return loc;
+    public String getString(String tag) {
+        return resourceBundle.getString(tag);
     }
+
+    public static String[] getAvailableLanguagesList() {
+        return availableLanguages;
+    }
+
+    public void setLanguage(String tag) {
+        this.currentLocale = locales.get(tag);
+        resourceBundle = ResourceBundle.getBundle("ui.locale.ResourceBundle",
+                currentLocale);
+        //TODO - how to update every labels in time?
+    }
+
+    Locale getCurrentLocale() {
+        return currentLocale;
+    }
+
+
 }
