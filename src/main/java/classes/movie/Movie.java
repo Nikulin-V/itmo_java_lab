@@ -242,17 +242,34 @@ public class Movie implements Serializable {
     }
 
 
-    public Map<String,Object> toSQLRepresentation() {
-        ArrayList<String> arr = new ArrayList<String>();
-        String[] fieldNames = {"ID", "Creator", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
+    public String[] toSQLRepresentation() {
         Object[] fieldValues = {id, userID, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director};
-        Map<String, Object> dict = new HashMap<>();
+        String[] arr = new String[fieldValues.length];
 
-        for (int i = 0; i < fieldNames.length; i++) {
-            dict.put(fieldNames[i], fieldValues[i]);
+        for (int i = 0; i < fieldValues.length; i++) {
+            arr[i] = fieldValues[i].toString();
         }
 
-        return dict;
+        return arr;
     }
+    public static String[] getSQLColumn() {
+        return new String[]{"ID", "Creator", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
+    }
+//    public static ArrayList<String> getSQLColumn() {
+//        return new ArrayList<>() {
+//            {
+//                add("ID");
+//                add("Creator");
+//                add("Name");
+//                add("Coordinates");
+//                add("CreationDate");
+//                add("OscarsCount");
+//                add("GoldenPalmCount");
+//                add("Budget");
+//                add("MpaaRating");
+//                add("Director");
+//            }
+//        };
+//    }
 }
 
