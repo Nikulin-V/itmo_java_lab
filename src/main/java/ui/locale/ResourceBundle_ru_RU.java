@@ -31,7 +31,6 @@ public class ResourceBundle_ru_RU extends ListResourceBundle {
         resources[6][0] = "enter_login";
         resources[6][1] = "Логин";
 
-
         resources[7][0] = "enter_password";
         resources[7][1] = "Пароль";
 

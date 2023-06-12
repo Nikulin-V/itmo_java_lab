@@ -8,15 +8,15 @@ import com.intellij.uiDesigner.core.Spacer;
 import ui.locale.Lang;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends JFrame {
     private JPanel MainActivityPanel;
     private JTable collectionTable;
-    private JButton saveCollectionButton;
+    private JButton clearCollectionButton;
     private JButton ascFilterTypeButton;
     private JButton descFilterTypeButton;
     private JButton sortButton;
@@ -31,9 +31,10 @@ public class MainActivity extends JFrame {
     private JPanel selectedMoviePanel;
     private JPanel movieInformationPanel;
     private JPanel movieActionsButtonPanel;
-    private JScrollPane tableScrollPane;
     private JComboBox selectLanguageComboBox;
     private JComboBox selectSortByComboBox;
+    private JScrollPane scrollPane;
+    private JLabel movieInformationLabel;
 
     public MainActivity() {
         $$$setupUI$$$();
@@ -60,62 +61,68 @@ public class MainActivity extends JFrame {
         MainActivityPanel = new JPanel();
         MainActivityPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         collectionPanel = new JPanel();
-        collectionPanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
-        MainActivityPanel.add(collectionPanel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        collectionPanel.setLayout(new GridLayoutManager(2, 3, new Insets(10, 10, 10, 10), -1, -1));
+        MainActivityPanel.add(collectionPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tablePanel = new JPanel();
-        tablePanel.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        collectionPanel.add(tablePanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        tablePanel.add(collectionTable, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
-        tableScrollPane = new JScrollPane();
-        tablePanel.add(tableScrollPane, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        collectionPanel.add(spacer1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        tablePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        collectionPanel.add(tablePanel, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        scrollPane.setEnabled(true);
+        tablePanel.add(scrollPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, 1, null, null, null, 0, false));
+        collectionTable.setAutoResizeMode(1);
+        collectionTable.setCellSelectionEnabled(false);
+        collectionTable.setColumnSelectionAllowed(false);
+        collectionTable.setDoubleBuffered(false);
+        collectionTable.setEditingColumn(1);
+        collectionTable.setEditingRow(1);
+        collectionTable.setEnabled(true);
+        collectionTable.setRowSelectionAllowed(true);
+        collectionTable.setSurrendersFocusOnKeystroke(true);
+        collectionTable.setToolTipText("meow meow");
+        scrollPane.setViewportView(collectionTable);
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 0), -1, -1));
         collectionPanel.add(panel1, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        collectionLabel = new JLabel();
-        collectionLabel.setText("Коллекция");
+        collectionLabel.setText("");
         panel1.add(collectionLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
-        panel1.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        panel1.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel2, new GridConstraints(0, 2, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         selectLanguageComboBox.setEditable(false);
         panel2.add(selectLanguageComboBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         selectedMoviePanel = new JPanel();
-        selectedMoviePanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        MainActivityPanel.add(selectedMoviePanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        selectedMovieLabel = new JLabel();
-        selectedMovieLabel.setText("Выбранный фильм");
+        selectedMoviePanel.setLayout(new GridLayoutManager(2, 2, new Insets(10, 5, 10, 5), -1, -1));
+        MainActivityPanel.add(selectedMoviePanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        selectedMovieLabel.setText("");
         selectedMoviePanel.add(selectedMovieLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         canvasRatingPanel = new JPanel();
         canvasRatingPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         canvasRatingPanel.setAutoscrolls(false);
         canvasRatingPanel.setBackground(new Color(-1976857));
-        selectedMoviePanel.add(canvasRatingPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        canvasRatingPanel.setForeground(new Color(-4489393));
+        selectedMoviePanel.add(canvasRatingPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        canvasRatingPanel.setBorder(BorderFactory.createTitledBorder(null, "Рейтинг фильмов", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         movieInformationPanel = new JPanel();
         movieInformationPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        selectedMoviePanel.add(movieInformationPanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        selectedMoviePanel.add(movieInformationPanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        movieInformationPanel.setBorder(BorderFactory.createTitledBorder(null, "Дополнительная информация", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         movieActionsButtonPanel = new JPanel();
         movieActionsButtonPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        movieInformationPanel.add(movieActionsButtonPanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        deleteMovieButton = new JButton();
-        deleteMovieButton.setText("Удалить");
-        movieActionsButtonPanel.add(deleteMovieButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        updateMovieButton = new JButton();
-        updateMovieButton.setText("Обновить");
-        movieActionsButtonPanel.add(updateMovieButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer3 = new Spacer();
-        movieInformationPanel.add(spacer3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final Spacer spacer4 = new Spacer();
-        movieInformationPanel.add(spacer4, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        movieInformationPanel.add(movieActionsButtonPanel, new GridConstraints(0, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        deleteMovieButton.setInheritsPopupMenu(false);
+        deleteMovieButton.setLabel("");
+        deleteMovieButton.setText("");
+        movieActionsButtonPanel.add(deleteMovieButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        updateMovieButton.setText("");
+        movieActionsButtonPanel.add(updateMovieButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        movieInformationLabel.setText("Label");
+        movieInformationPanel.add(movieInformationLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tableSettingsPanel = new JPanel();
-        tableSettingsPanel.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
-        MainActivityPanel.add(tableSettingsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        saveCollectionButton = new JButton();
-        saveCollectionButton.setText("Очистить коллекцию");
-        tableSettingsPanel.add(saveCollectionButton, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        tableSettingsPanel.setLayout(new GridLayoutManager(4, 3, new Insets(5, 5, 5, 5), -1, -1));
+        MainActivityPanel.add(tableSettingsPanel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        clearCollectionButton.setText("");
+        tableSettingsPanel.add(clearCollectionButton, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         ascFilterTypeButton = new JButton();
         ascFilterTypeButton.setIcon(new ImageIcon(getClass().getResource("/images/down_arrow_sorting.png")));
         ascFilterTypeButton.setText("");
@@ -125,9 +132,8 @@ public class MainActivity extends JFrame {
         descFilterTypeButton.setText("");
         tableSettingsPanel.add(descFilterTypeButton, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tableSettingsPanel.add(selectSortByComboBox, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        sortButton = new JButton();
-        sortButton.setText("Сортировать");
-        tableSettingsPanel.add(sortButton, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        sortButton.setText("");
+        tableSettingsPanel.add(sortButton, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -138,40 +144,67 @@ public class MainActivity extends JFrame {
     }
 
     private void createUIComponents() {
+        Lang lang = new Lang();
+        clearCollectionButton = new JButton(lang.getString("clear_collection_button"));
+        sortButton = new JButton(lang.getString("sort_collection_button"));
+        deleteMovieButton = new JButton(lang.getString("remove_collection_button"));
+        updateMovieButton = new JButton(lang.getString("update_movie_button"));
+        selectedMovieLabel = new JLabel(lang.getString("chosen_movie_label"));
+        collectionLabel = new JLabel(lang.getString("collection_label"));
+
+        List<Icon> iconList = new ArrayList<>() {{
+            add(new ImageIcon("images/russia_flag.png"));
+            add(new ImageIcon("images/belorussia_flag.png"));
+            add(new ImageIcon("images/canada_flag.png"));
+
+        }};
+        DefaultComboBoxModel<Icon> defaultComboBoxModel = new DefaultComboBoxModel<>();
+        defaultComboBoxModel.addAll(iconList);
 
         selectLanguageComboBox = new JComboBox<>(Lang.getAvailableLanguagesList());
+//        selectLanguageComboBox = new JComboBox<>(defaultComboBoxModel);
+        selectLanguageComboBox.setPreferredSize(new Dimension(50, 60));
+
+
+
         selectSortByComboBox = new JComboBox<>(Movie.getSQLColumn());
         selectSortByComboBox.setSelectedIndex(1);
 
+        movieInformationLabel = new JLabel("Здесь будет информация о фильме");
 
-        String[][] arr = new String[30][10];
         CollectionManager.readDB();
         CollectionManager collectionManager = new CollectionManager();
         List<Movie> movies = collectionManager.getCollection();
+        String[][] arr = new String[movies.size()][10];
         for (int i = 0; i < movies.size(); i++) {
             arr[i] = movies.get(i).toSQLRepresentation();
         }
 
         String[] column = {"имя", "координаты", "дата создания", "количество оскаров", "количество золотых пальм", "бюджет", "возрастной рейтинг", "создатель"};
-        collectionTable = new JTable(arr, column);
-        tableScrollPane = new JScrollPane(collectionTable);
-        collectionTable.setBounds(30, 40, 200, 300);
+        collectionTable = new JTable(arr, column) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        scrollPane = new JScrollPane(collectionTable);
+        scrollPane.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        collectionTable.setBounds(10, 20, 150, 100);
+        getContentPane().add(scrollPane);
         collectionTable.setCellSelectionEnabled(true);
         ListSelectionModel select = collectionTable.getSelectionModel();
         select.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        select.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                String Data = null;
-                int[] row = collectionTable.getSelectedRows();
-                int[] columns = collectionTable.getSelectedColumns();
-                for (int i = 0; i < row.length; i++) {
-                    for (int j = 0; j < columns.length; j++) {
-                        Data = (String) collectionTable.getValueAt(row[i], columns[j]);
-                    }
-                }
-                System.out.println("Table element selected is: " + Data);
+        select.addListSelectionListener(e -> {
+            int row = collectionTable.getSelectedRow();
+            StringBuilder data = new StringBuilder();
+            for (int i = 0; i < column.length; i++) {
+                data.append(collectionTable.getValueAt(row, i)).append(" ");
+
             }
+            System.out.println("Table row selected is: " + data);
         });
     }
 }
