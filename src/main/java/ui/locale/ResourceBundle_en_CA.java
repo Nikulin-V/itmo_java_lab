@@ -7,55 +7,44 @@ import java.util.ResourceBundle;
 public class ResourceBundle_en_CA extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
-        Object[][] resources = new Object[15][2];
+        Object[][] resources = {
+                {"table_name", "Name"},
+                {"table_coordinates", "Coordinates"},
+                {"table_creation_date", "Creation date"},
+                {"table_count_oscars", "Oscars count"},
+                {"table_count_golden_palms", "Golden Palm's count"},
+                {"table_budget", "Budget"},
+                {"table_mpaarating", "Mpaarating"},
+                {"table_creator", "Creator"},
+                {"table_uuid_director", "ID director"},
+                {"table_name_director", "Name of director"},
+                {"table_birthday_director", "Birthday"},
+                {"table_height_director", "Height"},
+                {"table_passport_id_director", "Passport ID"},
+                {"table_eye_color_director", "Eye color"},
 
-        resources[0][0] = "greetings_main_title";
-        resources[0][1] = "Welcome back, sir!";
+                {"russian_language", "Russian"},
+                {"belorussian_language", "Belorussian"},
+                {"canadian_language", "Canadian"},
 
-        resources[1][0] = "greetings_sub_title";
-        resources[1][1] = "This is the best collection manager of whose who remains";
+                {"greetings_main_title", "Welcome back, sir!"},
+                {"greetings_sub_title", "This is the best collection manager of whose who remains"},
+                {"greetings_sign_in", "Sign in"},
+                {"greetings_sign_up", "Sign up"},
+                {"sign_up_label", "Registration of new user"},
+                {"sign_in_label", "Log in of new user"},
+                {"enter_login", "Login"},
+                {"enter_password", "Password"},
+                {"confirm_button", "OK"},
+                {"collection_label", "Collection"},
+                {"chosen_movie_label", "Chosen film"},
+                {"movie_information_label", "Extra information"},
+                {"clear_collection_button", "Clear collection"},
+                {"sort_collection_button", "Sort"},
+                {"update_movie_button", "Update"},
+                {"remove_collection_button", "Remove"},
+        };
 
-        resources[2][0] = "greetings_sign_in";
-        resources[2][1] = "Sign in";
-
-        resources[3][0] = "greetings_sign_up";
-        resources[3][1] = "Sign up";
-
-
-        resources[4][0] = "sign_up_label";
-        resources[4][1] = "Registration of new user";
-
-        resources[5][0] = "sign_in_label";
-        resources[5][1] = "Log in of new user";
-
-        resources[6][0] = "enter_login";
-        resources[6][1] = "Login";
-
-
-        resources[7][0] = "enter_password";
-        resources[7][1] = "Password";
-
-        resources[8][0] = "confirm_button";
-        resources[8][1] = "OK";
-
-
-        resources[9][0] = "collection_label";
-        resources[9][1] = "Collection";
-
-        resources[10][0] = "chosen_movie_label";
-        resources[10][1] = "Chosen film";
-
-        resources[11][0] = "clear_collection_button";
-        resources[11][1] = "Clear collection";
-
-        resources[12][0] = "sort_collection_button";
-        resources[12][1] = "Sort";
-
-        resources[13][0] = "update_movie_button";
-        resources[13][1] = "Update";
-
-        resources[14][0] = "remove_collection_button";
-        resources[14][1] = "Remove";
 
         return resources;
     }

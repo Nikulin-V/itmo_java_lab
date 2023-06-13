@@ -1,61 +1,48 @@
 package ui.locale;
 
 import java.util.ListResourceBundle;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class ResourceBundle_ru_RU extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
-        Object[][] resources = new Object[15][2];
+        Object[][] resources = {
+                {"table_name", "Имя"},
+                {"table_coordinates", "Координаты"},
+                {"table_creation_date", "Дата создания"},
+                {"table_count_oscars", "Количество оскаров"},
+                {"table_count_golden_palms", "Количество золотых пальм"},
+                {"table_budget", "Бюджет"},
+                {"table_mpaarating", "Возрастной рейтинг"},
+                {"table_creator", "Создатель"},
+                {"table_uuid_director", "ИД режиссёра"},
+                {"table_name_director", "Имя режиссёра"},
+                {"table_birthday_director", "Дата рождения"},
+                {"table_height_director", "Рост"},
+                {"table_passport_id_director", "Паспорт"},
+                {"table_eye_color_director", "Цвет глаз"},
 
-        resources[0][0] = "greetings_main_title";
-        resources[0][1] = "Добро пожаловать!";
+                {"russian_language", "Русский"},
+                {"belorussian_language", "Белорусский"},
+                {"canadian_language", "Канадский английский"},
 
-        resources[1][0] = "greetings_sub_title";
-        resources[1][1] = "Это пожалуй лучшее приложение для кино-хранилища, из оставшихся...";
+                {"greetings_main_title", "Добро пожаловать!"},
+                {"greetings_sub_title", "Это пожалуй лучшее приложение для кино-хранилища, из оставшихся..."},
+                {"greetings_sign_in", "Войти"},
+                {"greetings_sign_up", "Зарегистрироваться"},
+                {"sign_up_label", "Регистрация нового пользователя"},
+                {"sign_in_label", "Вход для пользователя"},
+                {"enter_login", "Логин"},
+                {"enter_password", "Пароль"},
+                {"confirm_button", "По рукам, впусти меня уже"},
+                {"collection_label", "Коллекция"},
+                {"chosen_movie_label", "Выбранный фильм"},
+                {"movie_information_label", "Дополнительная информация"},
+                {"clear_collection_button", "Очистить коллекцию"},
+                {"sort_collection_button", "Сортировать"},
+                {"update_movie_button", "Обновить"},
+                {"remove_collection_button", "Удалить"},
+        };
 
-        resources[2][0] = "greetings_sign_in";
-        resources[2][1] = "Войти";
-
-        resources[3][0] = "greetings_sign_up";
-        resources[3][1] = "Зарегистрироваться";
-
-
-        resources[4][0] = "sign_up_label";
-        resources[4][1] = "Регистрация нового пользователя";
-
-        resources[5][0] = "sign_in_label";
-        resources[5][1] = "Вход для пользователя";
-
-        resources[6][0] = "enter_login";
-        resources[6][1] = "Логин";
-
-        resources[7][0] = "enter_password";
-        resources[7][1] = "Пароль";
-
-        resources[8][0] = "confirm_button";
-        resources[8][1] = "Окей";
-
-
-        resources[9][0] = "collection_label";
-        resources[9][1] = "Коллекция";
-
-        resources[10][0] = "chosen_movie_label";
-        resources[10][1] = "Выбранный фильм";
-
-        resources[11][0] = "clear_collection_button";
-        resources[11][1] = "Очистить коллекцию";
-
-        resources[12][0] = "sort_collection_button";
-        resources[12][1] = "Сортировать";
-
-        resources[13][0] = "update_movie_button";
-        resources[13][1] = "Обновить";
-
-        resources[14][0] = "remove_collection_button";
-        resources[14][1] = "Удалить";
-        
         return resources;
     }
 }

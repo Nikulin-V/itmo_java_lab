@@ -243,7 +243,7 @@ public class Movie implements Serializable {
 
 
     public String[] toSQLRepresentation() {
-        Object[] fieldValues = {id, userID, name, coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, director};
+        Object[] fieldValues = {name , coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, userID, director, name};
         String[] arr = new String[fieldValues.length];
 
         for (int i = 0; i < fieldValues.length; i++) {

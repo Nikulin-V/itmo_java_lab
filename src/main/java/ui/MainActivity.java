@@ -35,6 +35,10 @@ public class MainActivity extends JFrame {
     private JComboBox selectSortByComboBox;
     private JScrollPane scrollPane;
     private JLabel movieInformationLabel;
+    private JPanel userInformationPanel;
+    private JButton addAddRandomWilButton;
+    private JButton remove_at_indexButton;
+    private JButton remove_by_idButton;
 
     public MainActivity() {
         $$$setupUI$$$();
@@ -60,11 +64,16 @@ public class MainActivity extends JFrame {
         createUIComponents();
         MainActivityPanel = new JPanel();
         MainActivityPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        MainActivityPanel.setBackground(new Color(-14532293));
+        MainActivityPanel.setForeground(new Color(-14532293));
         collectionPanel = new JPanel();
         collectionPanel.setLayout(new GridLayoutManager(2, 3, new Insets(10, 10, 10, 10), -1, -1));
         MainActivityPanel.add(collectionPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tablePanel = new JPanel();
         tablePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        tablePanel.setOpaque(false);
+        tablePanel.setRequestFocusEnabled(false);
+        tablePanel.setVerifyInputWhenFocusTarget(false);
         collectionPanel.add(tablePanel, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         scrollPane.setEnabled(true);
         tablePanel.add(scrollPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, 1, null, null, null, 0, false));
@@ -79,22 +88,19 @@ public class MainActivity extends JFrame {
         collectionTable.setSurrendersFocusOnKeystroke(true);
         collectionTable.setToolTipText("meow meow");
         scrollPane.setViewportView(collectionTable);
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 0), -1, -1));
-        collectionPanel.add(panel1, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        collectionLabel.setText("");
-        panel1.add(collectionLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        userInformationPanel = new JPanel();
+        userInformationPanel.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 0), -1, -1));
+        userInformationPanel.setBackground(new Color(-6701422));
+        collectionPanel.add(userInformationPanel, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
+        final JLabel label1 = new JLabel();
+        label1.setText("Welcome back, INSERT NAME");
+        userInformationPanel.add(label1, new GridConstraints(0, 3, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        panel1.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(panel2, new GridConstraints(0, 2, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        selectLanguageComboBox.setEditable(false);
-        panel2.add(selectLanguageComboBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        userInformationPanel.add(spacer1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        userInformationPanel.add(collectionLabel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));
         selectedMoviePanel = new JPanel();
         selectedMoviePanel.setLayout(new GridLayoutManager(2, 2, new Insets(10, 5, 10, 5), -1, -1));
         MainActivityPanel.add(selectedMoviePanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        selectedMovieLabel.setText("");
         selectedMoviePanel.add(selectedMovieLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         canvasRatingPanel = new JPanel();
         canvasRatingPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -103,7 +109,6 @@ public class MainActivity extends JFrame {
         canvasRatingPanel.setForeground(new Color(-4489393));
         selectedMoviePanel.add(canvasRatingPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         canvasRatingPanel.setBorder(BorderFactory.createTitledBorder(null, "Рейтинг фильмов", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        movieInformationPanel = new JPanel();
         movieInformationPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         selectedMoviePanel.add(movieInformationPanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         movieInformationPanel.setBorder(BorderFactory.createTitledBorder(null, "Дополнительная информация", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
@@ -112,28 +117,38 @@ public class MainActivity extends JFrame {
         movieInformationPanel.add(movieActionsButtonPanel, new GridConstraints(0, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         deleteMovieButton.setInheritsPopupMenu(false);
         deleteMovieButton.setLabel("");
-        deleteMovieButton.setText("");
         movieActionsButtonPanel.add(deleteMovieButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        updateMovieButton.setText("");
         movieActionsButtonPanel.add(updateMovieButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         movieInformationLabel.setText("Label");
         movieInformationPanel.add(movieInformationLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tableSettingsPanel = new JPanel();
-        tableSettingsPanel.setLayout(new GridLayoutManager(4, 3, new Insets(5, 5, 5, 5), -1, -1));
+        tableSettingsPanel.setLayout(new GridLayoutManager(2, 3, new Insets(5, 5, 5, 5), -1, -1));
         MainActivityPanel.add(tableSettingsPanel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        clearCollectionButton.setText("");
-        tableSettingsPanel.add(clearCollectionButton, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        ascFilterTypeButton = new JButton();
-        ascFilterTypeButton.setIcon(new ImageIcon(getClass().getResource("/images/down_arrow_sorting.png")));
-        ascFilterTypeButton.setText("");
-        tableSettingsPanel.add(ascFilterTypeButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
+        tableSettingsPanel.add(panel1, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel1.add(sortButton, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         descFilterTypeButton = new JButton();
         descFilterTypeButton.setIcon(new ImageIcon(getClass().getResource("/images/up_arrow_sorting.png")));
         descFilterTypeButton.setText("");
-        tableSettingsPanel.add(descFilterTypeButton, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        tableSettingsPanel.add(selectSortByComboBox, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        sortButton.setText("");
-        tableSettingsPanel.add(sortButton, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(descFilterTypeButton, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(selectSortByComboBox, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        ascFilterTypeButton = new JButton();
+        ascFilterTypeButton.setIcon(new ImageIcon(getClass().getResource("/images/down_arrow_sorting.png")));
+        ascFilterTypeButton.setText("");
+        panel1.add(ascFilterTypeButton, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(clearCollectionButton, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addAddRandomWilButton = new JButton();
+        addAddRandomWilButton.setText("add(add random wil lbe inside popup window)");
+        panel1.add(addAddRandomWilButton, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        remove_at_indexButton = new JButton();
+        remove_at_indexButton.setText("remove_at_index");
+        panel1.add(remove_at_indexButton, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        remove_by_idButton = new JButton();
+        remove_by_idButton.setText("remove_by_id");
+        panel1.add(remove_by_idButton, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        selectLanguageComboBox.setEditable(false);
+        tableSettingsPanel.add(selectLanguageComboBox, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -145,12 +160,18 @@ public class MainActivity extends JFrame {
 
     private void createUIComponents() {
         Lang lang = new Lang();
+
+
         clearCollectionButton = new JButton(lang.getString("clear_collection_button"));
         sortButton = new JButton(lang.getString("sort_collection_button"));
         deleteMovieButton = new JButton(lang.getString("remove_collection_button"));
         updateMovieButton = new JButton(lang.getString("update_movie_button"));
         selectedMovieLabel = new JLabel(lang.getString("chosen_movie_label"));
         collectionLabel = new JLabel(lang.getString("collection_label"));
+        movieInformationLabel = new JLabel();
+        movieInformationPanel = new JPanel();
+        movieInformationPanel.setBorder(BorderFactory.createTitledBorder(lang.getString("movie_information_label")));
+
 
         List<Icon> iconList = new ArrayList<>() {{
             add(new ImageIcon("images/russia_flag.png"));
@@ -166,7 +187,6 @@ public class MainActivity extends JFrame {
         selectLanguageComboBox.setPreferredSize(new Dimension(50, 60));
 
 
-
         selectSortByComboBox = new JComboBox<>(Movie.getSQLColumn());
         selectSortByComboBox.setSelectedIndex(1);
 
@@ -174,14 +194,10 @@ public class MainActivity extends JFrame {
 
         CollectionManager.readDB();
         CollectionManager collectionManager = new CollectionManager();
-        List<Movie> movies = collectionManager.getCollection();
-        String[][] arr = new String[movies.size()][10];
-        for (int i = 0; i < movies.size(); i++) {
-            arr[i] = movies.get(i).toSQLRepresentation();
-        }
+        collectionManager.renderMainJTable();
 
-        String[] column = {"имя", "координаты", "дата создания", "количество оскаров", "количество золотых пальм", "бюджет", "возрастной рейтинг", "создатель"};
-        collectionTable = new JTable(arr, column) {
+
+        collectionTable = new JTable(collectionManager.getTableContent(), lang.getTableColumns()) {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -191,7 +207,6 @@ public class MainActivity extends JFrame {
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
         collectionTable.setBounds(10, 20, 150, 100);
         getContentPane().add(scrollPane);
         collectionTable.setCellSelectionEnabled(true);
@@ -200,7 +215,7 @@ public class MainActivity extends JFrame {
         select.addListSelectionListener(e -> {
             int row = collectionTable.getSelectedRow();
             StringBuilder data = new StringBuilder();
-            for (int i = 0; i < column.length; i++) {
+            for (int i = 0; i < lang.getTableColumns().length; i++) {
                 data.append(collectionTable.getValueAt(row, i)).append(" ");
 
             }

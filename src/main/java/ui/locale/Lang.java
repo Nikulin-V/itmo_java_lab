@@ -43,6 +43,18 @@ public class Lang {
         return availableLanguages;
     }
 
+    public  String[] getTableColumns() {
+        return new String[] {
+                getString("table_name"),
+                getString("table_coordinates"),
+                getString("table_creation_date"),
+                getString("table_count_oscars"),
+                getString("table_count_golden_palms"),
+                getString("table_budget"),
+                getString("table_mpaarating"),
+                getString("table_creator")};
+    }
+
     public void setLanguage(String tag) {
         this.currentLocale = locales.get(tag);
         resourceBundle = ResourceBundle.getBundle("ui.locale.ResourceBundle",

@@ -16,6 +16,11 @@ public class CollectionManager {
 
     private static final String type = "ArrayList";
     private static final Date initDate = new Date();
+    private String[][] tableInformation;
+
+    public CollectionManager(){
+        renderMainJTable();
+    }
 
     public List<Movie> getCollection() {
         return CollectionManager.collection;
@@ -75,5 +80,19 @@ public class CollectionManager {
                 addMovie(movie);
             System.out.println(TextColor.purple("База данных был прочитана..."));
         }
+    }
+
+    public void renderMainJTable() {
+        String[][] renderedTable = new String[collection.size()][10];
+
+        for (int i = 0; i < renderedTable.length; i++) {
+            renderedTable[i] = collection.get(i).toSQLRepresentation();
+        }
+
+        this.tableInformation = renderedTable;
+    }
+
+    public String[][] getTableContent() {
+        return tableInformation;
     }
 }
