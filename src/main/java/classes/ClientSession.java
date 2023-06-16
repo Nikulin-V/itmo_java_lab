@@ -26,9 +26,8 @@ public class ClientSession implements Runnable {
 
     private boolean checkPassword(UserCredentials userCredentials) {
         String password = SQLManager.executePreparedQueryGetPassword(userCredentials.getUsername());
-        if (password != null) {
+        if (password != null)
             return password.equals(userCredentials.getHashedPassword());
-        }
         return false;
     }
 
@@ -49,7 +48,7 @@ public class ClientSession implements Runnable {
                 inputCachedThreadPool.execute(new ReadQueryTask(this, currentUserCredentials, outputFixedThreadPool, outputStream));
             }
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            System.out.println(TextColor.grey("Соединение разорвано: " + socket.getInetAddress()));
         }
     }
 
@@ -85,16 +84,16 @@ public class ClientSession implements Runnable {
     private Response login(UserCredentials userCredentials) {
         if (isLoginInDB(userCredentials.getUsername()))
             if (checkPassword(userCredentials))
-                return new Response(0, TextColor.green("Авторизация прошла успешно"));
-            else return new Response(1, TextColor.red("Неверный пароль\n"));
-        return new Response(1, TextColor.yellow("Пользователя с таким логином не существует\n"));
+                return new Response(0, "Авторизация прошла успешно");
+            else return new Response(1, "Неверный пароль");
+        return new Response(1, "Пользователя с таким логином не существует");
     }
 
     private Response register(UserCredentials userCredentials) {
         if (!isLoginInDB(userCredentials.getUsername()))
             if (new SQLUserManager().addUser(userCredentials))
-                return new Response(0, TextColor.green("Аккаунт зарегистрирован\n"));
-            else return new Response(1, TextColor.red("Ошибка регистрации\n"));
-        return new Response(1, TextColor.yellow("Пользователь с таким логином уже существует\n"));
+                return new Response(0, "Аккаунт зарегистрирован");
+            else return new Response(1, "Ошибка регистрации");
+        return new Response(1, "Пользователь с таким логином уже существует");
     }
 }

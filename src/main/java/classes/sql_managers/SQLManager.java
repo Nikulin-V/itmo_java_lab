@@ -9,13 +9,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLManager {
-
-    private final static ExecutorService outputFixedThreadPool = Executors.newFixedThreadPool(50);
 
     private final static String createMovieTable = """
             CREATE TABLE IF NOT EXISTS movies(
@@ -117,12 +113,11 @@ public class SQLManager {
             PreparedStatement preparedStatement = dbConnection.prepareStatement("SELECT * FROM users WHERE username=?");
             preparedStatement.setString(1, username);
             ResultSet passwordResultSet = preparedStatement.executeQuery();
-            if (passwordResultSet.next()) hashedPassword = passwordResultSet.getString("hashed_password");
-
+            if (passwordResultSet.next())
+                hashedPassword = passwordResultSet.getString("hashed_password");
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
-
         }
         return hashedPassword;
     }

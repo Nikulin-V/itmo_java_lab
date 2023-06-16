@@ -1,5 +1,8 @@
 package ui;
 
+import classes.Response;
+import classes.UserCredentials;
+import classes.console.TextColor;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -10,7 +13,13 @@ import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
+
+import static ui.Introduction.in;
+import static ui.Introduction.out;
 
 public class Registration extends JFrame {
     private JPanel MainRegisterPanel;
@@ -21,12 +30,14 @@ public class Registration extends JFrame {
     private JTextField LoginField;
     private JPasswordField PasswordField;
     private JButton RegistrationButton;
+    private JLabel ErrorLabel;
 
     public Registration() {
         $$$setupUI$$$();
         setContentPane(MainRegisterPanel);
-        setTitle("Добро пожаловать!");
+        setTitle("База данных фильмов - Регистрация");
         setSize(700, 700);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -45,21 +56,20 @@ public class Registration extends JFrame {
     private void $$$setupUI$$$() {
         createUIComponents();
         MainRegisterPanel = new JPanel();
-        MainRegisterPanel.setLayout(new GridLayoutManager(4, 5, new Insets(0, 0, 0, 0), -1, -1));
+        MainRegisterPanel.setLayout(new GridLayoutManager(3, 5, new Insets(0, 0, 0, 0), -1, -1));
         final Spacer spacer1 = new Spacer();
         MainRegisterPanel.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, new Dimension(10, -1), new Dimension(10, -1), new Dimension(20, -1), 0, false));
         final Spacer spacer2 = new Spacer();
         MainRegisterPanel.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, 1, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 10), null, new Dimension(-1, 10), 0, false));
-        BackButton = new JButton();
         BackButton.setBackground(new Color(-2299922));
         BackButton.setFocusPainted(false);
         BackButton.setForeground(new Color(-16777216));
         BackButton.setSelected(true);
         BackButton.setText("Назад");
-        MainRegisterPanel.add(BackButton, new GridConstraints(1, 1, 2, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(70, 30), new Dimension(70, 30), new Dimension(100, 30), 0, false));
+        MainRegisterPanel.add(BackButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(80, 30), new Dimension(80, 30), new Dimension(100, 30), 0, false));
         RegisterPanel = new JPanel();
-        RegisterPanel.setLayout(new GridLayoutManager(5, 1, new Insets(10, 10, 10, 10), -1, 3));
-        MainRegisterPanel.add(RegisterPanel, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        RegisterPanel.setLayout(new GridLayoutManager(6, 1, new Insets(10, 10, 10, 10), -1, 3));
+        MainRegisterPanel.add(RegisterPanel, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         RegisterPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-12743731)), "Регистрация", TitledBorder.CENTER, TitledBorder.BELOW_TOP, this.$$$getFont$$$(null, Font.BOLD, 14, RegisterPanel.getFont()), new Color(-12743731)));
         LoginLabel.setText("Логин");
         RegisterPanel.add(LoginLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -69,7 +79,6 @@ public class Registration extends JFrame {
         RegisterPanel.add(LoginField, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         PasswordField = new JPasswordField();
         RegisterPanel.add(PasswordField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        RegistrationButton = new JButton();
         RegistrationButton.setBackground(new Color(-12743731));
         RegistrationButton.setBorderPainted(true);
         RegistrationButton.setFocusPainted(false);
@@ -78,7 +87,17 @@ public class Registration extends JFrame {
         RegistrationButton.setMargin(new Insets(0, 0, 0, 0));
         RegistrationButton.setSelected(true);
         RegistrationButton.setText("Зарегистрироваться");
-        RegisterPanel.add(RegistrationButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, 1, GridConstraints.SIZEPOLICY_FIXED, new Dimension(150, 30), new Dimension(200, 30), new Dimension(300, 30), 0, false));
+        RegisterPanel.add(RegistrationButton, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, 1, GridConstraints.SIZEPOLICY_FIXED, new Dimension(150, 30), new Dimension(200, 30), new Dimension(300, 30), 0, false));
+        ErrorLabel = new JLabel();
+        ErrorLabel.setEnabled(true);
+        ErrorLabel.setFocusable(false);
+        Font ErrorLabelFont = this.$$$getFont$$$(null, Font.BOLD, 12, ErrorLabel.getFont());
+        if (ErrorLabelFont != null) ErrorLabel.setFont(ErrorLabelFont);
+        ErrorLabel.setForeground(new Color(-4521984));
+        ErrorLabel.setOpaque(false);
+        ErrorLabel.setText("");
+        ErrorLabel.setVisible(true);
+        RegisterPanel.add(ErrorLabel, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer3 = new Spacer();
         MainRegisterPanel.add(spacer3, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, new Dimension(10, -1), new Dimension(10, -1), new Dimension(20, -1), 0, false));
     }
@@ -116,5 +135,43 @@ public class Registration extends JFrame {
         Lang lang = new Lang();
         LoginLabel = new JLabel(lang.getString("enter_login"));
         PasswordLabel = new JLabel(lang.getString("enter_password"));
+
+        BackButton = new JButton();
+        BackButton.addActionListener(this::backButtonPressed);
+
+        RegistrationButton = new JButton();
+        RegistrationButton.addActionListener(this::registerButtonPressed);
+    }
+
+    private void registerButtonPressed(ActionEvent e) {
+        String login = LoginField.getText();
+        String password = Arrays.toString(PasswordField.getPassword());
+        UserCredentials credentials = new UserCredentials(login, password);
+        credentials.setRegistration(true);
+        try {
+            out.writeObject(credentials);
+            out.flush();
+            Response response = (Response) in.readObject();
+            if (response.getCode() == 0) {
+                ErrorLabel.setForeground(new Color(0, 80, 0));
+                ErrorLabel.setText("Вход выполнен. Открывается база фильмов...");
+                Introduction.mainActivityWindow = new MainActivity(credentials);
+                this.dispose();
+            } else printErrorMessage((String) response.getData());
+        } catch (ClassNotFoundException error) {
+            printErrorMessage(TextColor.yellow("Ошибка авторизации"));
+        } catch (IOException ex) {
+            printErrorMessage(TextColor.red("Ошибка ввода-вывода"));
+        }
+    }
+
+    public void printErrorMessage(String message) {
+        ErrorLabel.setText(message);
+        ErrorLabel.setVisible(true);
+    }
+
+    private void backButtonPressed(ActionEvent e) {
+        this.dispose();
+        new Introduction();
     }
 }

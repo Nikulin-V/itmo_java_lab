@@ -1,5 +1,6 @@
 package ui;
 
+import classes.UserCredentials;
 import classes.collection.CollectionManager;
 import classes.movie.Movie;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -39,18 +40,20 @@ public class MainActivity extends JFrame {
     private JButton addAddRandomWilButton;
     private JButton remove_at_indexButton;
     private JButton remove_by_idButton;
+    private final UserCredentials credentials;
 
-    public MainActivity() {
+    public MainActivity(UserCredentials credentials) {
+        this.credentials = credentials;
         $$$setupUI$$$();
         setContentPane(MainActivityPanel);
-        setTitle("Основное меню");
+        setTitle("База данных фильмов");
         setSize(1000, 1200);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
     public static void main(String[] args) {
-        MainActivity mainFrame = new MainActivity();
+        MainActivity mainFrame = new MainActivity(new UserCredentials("anton", "anton"));
     }
 
     /**
