@@ -92,7 +92,7 @@ public class CollectionManager {
         this.tableInformation = renderedTable;
     }
 
-    public String[][] getTableContent() {
+    public  String[][] getTableContent() {
         return tableInformation;
     }
 }

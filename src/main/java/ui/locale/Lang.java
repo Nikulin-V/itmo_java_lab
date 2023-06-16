@@ -9,11 +9,19 @@ import java.util.*;
 public class Lang {
     private ResourceBundle resourceBundle;
     private Locale currentLocale;
+    private String currentLocaleTag;
     private static final Map<String, Locale> locales = new HashMap<>() {
         {
             put("EN", new Locale("en", "CA"));
             put("RU", new Locale("ru", "RU"));
             put("BY", new Locale("ru", "BY"));
+        }
+    };
+    private static final ArrayList<String> indexToLanguageTag = new ArrayList<>() {
+        {
+            add("EN");
+            add("RU");
+            add("BY");
         }
     };
     //TODO need to translate even jcomboboxes to current language -> rewrite
@@ -22,9 +30,11 @@ public class Lang {
 
     public Lang() {
         Dotenv env = Dotenv.load();
-        this.currentLocale = locales.get(env.get("GUI_LANG", "RU"));
+        this.currentLocaleTag = env.get("GUI_LANG", "RU");
+        this.currentLocale = locales.get(currentLocaleTag);
         this.resourceBundle = ResourceBundle.getBundle("ui.locale.ResourceBundle",
                 currentLocale);
+
     }
 
     String getDate(Date date) {
@@ -43,8 +53,8 @@ public class Lang {
         return availableLanguages;
     }
 
-    public  String[] getTableColumns() {
-        return new String[] {
+    public String[] getTableColumns() {
+        return new String[]{
                 getString("table_name"),
                 getString("table_coordinates"),
                 getString("table_creation_date"),
@@ -55,15 +65,16 @@ public class Lang {
                 getString("table_creator")};
     }
 
-    public void setLanguage(String tag) {
-        this.currentLocale = locales.get(tag);
+    public void setLanguage(int index) {
+        this.currentLocale = locales.get(indexToLanguageTag.get(index));
+        this.currentLocaleTag = indexToLanguageTag.get(index);
         resourceBundle = ResourceBundle.getBundle("ui.locale.ResourceBundle",
                 currentLocale);
         //TODO - how to update every labels in time?
     }
 
-    Locale getCurrentLocale() {
-        return currentLocale;
+    public int getCurrentLocaleIndex() {
+        return indexToLanguageTag.indexOf(currentLocaleTag);
     }
 
 

@@ -8,6 +8,9 @@ public class ResourceBundle_en_CA extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
         Object[][] resources = {
+
+                {"hello_user", "Hello, "},
+
                 {"table_name", "Name"},
                 {"table_coordinates", "Coordinates"},
                 {"table_creation_date", "Creation date"},

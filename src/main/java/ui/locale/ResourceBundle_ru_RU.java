@@ -6,6 +6,9 @@ public class ResourceBundle_ru_RU extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
         Object[][] resources = {
+
+                {"hello_user", "Привет, "},
+
                 {"table_name", "Имя"},
                 {"table_coordinates", "Координаты"},
                 {"table_creation_date", "Дата создания"},
