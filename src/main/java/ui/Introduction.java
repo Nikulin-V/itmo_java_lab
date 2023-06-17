@@ -22,7 +22,6 @@ public class Introduction extends JFrame {
     private JLabel GreetingsDescriptionLabel;
     private JPanel IntroductionLabelsPanel;
     private JLabel ConnectionLabel;
-    private boolean isRegistration = false;
     public JFrame nextWindow;
     private static String host;
     private static int port;
@@ -45,7 +44,7 @@ public class Introduction extends JFrame {
             ConnectionLabel.setForeground(new Color(204, 204, 0));
             ConnectionLabel.setText("Пытаюсь установить соединение с сервером...");
             try {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException ignored) {
             }
             try {
@@ -64,10 +63,9 @@ public class Introduction extends JFrame {
                 AuthorizationButton.setEnabled(false);
                 RegistrationButton.setEnabled(false);
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ignored) {
                 }
-                e.printStackTrace();
             }
         }
     }
@@ -91,7 +89,7 @@ public class Introduction extends JFrame {
             System.out.println("Завершение работы...");
             Runtime.getRuntime().exit(0);
         }
-        Introduction mainFrame = new Introduction();
+        new Introduction();
     }
 
 
@@ -119,7 +117,6 @@ public class Introduction extends JFrame {
         if (e.getActionCommand().equals("login"))
             nextWindow = new Authorization();
         else if (e.getActionCommand().equals("register")) {
-            isRegistration = true;
             nextWindow = new Registration();
         }
     }
