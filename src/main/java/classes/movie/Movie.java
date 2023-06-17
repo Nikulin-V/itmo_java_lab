@@ -252,24 +252,5 @@ public class Movie implements Serializable {
 
         return arr;
     }
-    public static String[] getSQLColumn() {
-        return new String[]{"ID", "Creator", "Name", "Coordinates", "CreationDate", "OscarsCount", "GoldenPalmCount", "Budget", "MpaaRating", "Director"};
-    }
-//    public static ArrayList<String> getSQLColumn() {
-//        return new ArrayList<>() {
-//            {
-//                add("ID");
-//                add("Creator");
-//                add("Name");
-//                add("Coordinates");
-//                add("CreationDate");
-//                add("OscarsCount");
-//                add("GoldenPalmCount");
-//                add("Budget");
-//                add("MpaaRating");
-//                add("Director");
-//            }
-//        };
-//    }
 }
 

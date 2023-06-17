@@ -15,18 +15,9 @@ public class Lang {
             put("EN", new Locale("en", "CA"));
             put("RU", new Locale("ru", "RU"));
             put("BY", new Locale("ru", "BY"));
+            put("HUN", new Locale("hu", "HU"));
         }
     };
-    private static final ArrayList<String> indexToLanguageTag = new ArrayList<>() {
-        {
-            add("EN");
-            add("RU");
-            add("BY");
-        }
-    };
-    //TODO need to translate even jcomboboxes to current language -> rewrite
-    private static final String[] availableLanguages = {"Русский", "Канадский", "Белорусский"};
-
 
     public Lang() {
         Dotenv env = Dotenv.load();
@@ -49,10 +40,6 @@ public class Lang {
         return resourceBundle.getString(tag);
     }
 
-    public static String[] getAvailableLanguagesList() {
-        return availableLanguages;
-    }
-
     public String[] getTableColumns() {
         return new String[]{
                 getString("table_name"),
@@ -66,16 +53,16 @@ public class Lang {
     }
 
     public void setLanguage(int index) {
-        this.currentLocale = locales.get(indexToLanguageTag.get(index));
-        this.currentLocaleTag = indexToLanguageTag.get(index);
+        this.currentLocale = locales.get(Languages.getTag(index));
+        this.currentLocaleTag = Languages.getTag(index);
         resourceBundle = ResourceBundle.getBundle("ui.locale.ResourceBundle",
                 currentLocale);
-        //TODO - how to update every labels in time?
     }
 
     public int getCurrentLocaleIndex() {
-        return indexToLanguageTag.indexOf(currentLocaleTag);
+        return Languages.getIndex(currentLocaleTag);
     }
+
 
 
 }

@@ -2,7 +2,6 @@ package ui;
 
 import classes.UserCredentials;
 import classes.collection.CollectionManager;
-import classes.movie.Movie;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -10,10 +9,10 @@ import ui.locale.Lang;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,6 +174,22 @@ public class MainActivity extends JFrame {
 
     private void createUIComponents() {
         lang = new Lang();
+        componentsInitialization();
+
+        selectLanguageComboBox.addActionListener(e -> {
+            //TODO
+            System.out.println(selectLanguageComboBox.getSelectedItem());
+            lang.setLanguage(selectLanguageComboBox.getSelectedIndex());
+            changeComponentsLanguage();
+        });
+
+        sortDESCButton.addActionListener(this::descButtonSortClicked);
+        sortASCButton.addActionListener(this::ascButtonSortClicked);
+
+        collectionTable = getCollectionTable();
+    }
+
+    private void componentsInitialization() {
         welcomeBackLabel = new JLabel(lang.getString("hello_user") + credentials.getUsername());
         clearCollectionButton = new JButton(lang.getString("clear_collection_button"));
         sortButton = new JButton(lang.getString("sort_collection_button"));
@@ -187,70 +202,78 @@ public class MainActivity extends JFrame {
         collectionLabel = new JLabel(lang.getString("collection_label"));
         movieInformationLabel = new JLabel();
         movieInformationPanel = new JPanel();
-        selectSortByComboBox = new JComboBox<>(Movie.getSQLColumn());
-        selectSortByComboBox.setSelectedIndex(1);
-
-        movieInformationPanel.setBorder(BorderFactory.createTitledBorder(lang.getString("movie_information_label")));
+        selectSortByComboBox = getSortByComboBox();
+        movieInformationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-12743731)), lang.getString("movie_information_label")));
         movieInformationLabel = new JLabel("Здесь будет информация о фильме");
+    }
 
-        selectLanguageComboBox.addActionListener(e -> {
-            lang.setLanguage(selectLanguageComboBox.getSelectedIndex());
-        });
+    private void changeComponentsLanguage() {
+        welcomeBackLabel.setText(lang.getString("hello_user") + credentials.getUsername());
+        clearCollectionButton.setText((lang.getString("clear_collection_button")));
+        sortButton.setText((lang.getString("sort_collection_button")));
+        deleteMovieButton.setText((lang.getString("remove_collection_button")));
+        updateMovieButton.setText((lang.getString("update_movie_button")));
+        selectedMovieLabel.setText((lang.getString("chosen_movie_label")));
+        collectionLabel.setText((lang.getString("collection_label")));
+        selectSortByComboBox.setModel(getNewLanguageTableColumnsComboBoxModel());
+        collectionTable.setColumnModel(getNewLanguageColumnModel());
+    }
 
-        sortASCButton.addActionListener(e -> {
-
-            int columnIndexSortBy = selectSortByComboBox.getSelectedIndex();
-
-            TableRowSorter<TableModel> sorter = new TableRowSorter<>(collectionTable.getModel());
-            collectionTable.setRowSorter(sorter);
-            List<RowSorter.SortKey> sortKeys = new ArrayList<>(5);
-            sortKeys.add(new RowSorter.SortKey(columnIndexSortBy, SortOrder.ASCENDING));
-            sorter.setSortKeys(sortKeys);
-
-        });
-
-        sortDESCButton.addActionListener(e -> {
-
-            int columnIndexSortBy = selectSortByComboBox.getSelectedIndex();
-
-            TableRowSorter<TableModel> sorter = new TableRowSorter<>(collectionTable.getModel());
-            collectionTable.setRowSorter(sorter);
-            List<RowSorter.SortKey> sortKeys = new ArrayList<>(5);
-            sortKeys.add(new RowSorter.SortKey(columnIndexSortBy, SortOrder.DESCENDING));
-            sorter.setSortKeys(sortKeys);
-        });
-
+    private JTable getCollectionTable() {
         CollectionManager.readDB();
         CollectionManager collectionManager = new CollectionManager();
         collectionManager.renderMainJTable();
         String[][] data = collectionManager.getTableContent();
         DefaultTableModel tableModel = new DefaultTableModel(data, lang.getTableColumns());
-
-        collectionTable = new JTable(tableModel) {
+        JTable table = new JTable(tableModel) {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
+        table.setAutoCreateRowSorter(true);
 
-        collectionTable.setAutoCreateRowSorter(true);
-        scrollPane = new JScrollPane(collectionTable);
+        scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        collectionTable.setBounds(10, 20, 150, 100);
+        table.setBounds(10, 20, 150, 100);
         getContentPane().add(scrollPane);
-        collectionTable.setCellSelectionEnabled(true);
-        ListSelectionModel select = collectionTable.getSelectionModel();
+        table.setCellSelectionEnabled(true);
+        ListSelectionModel select = table.getSelectionModel();
         select.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        select.addListSelectionListener(this::tableCellClicked);
+        return table;
+    }
 
-        select.addListSelectionListener(e -> {
-            int row = collectionTable.getSelectedRow();
-            StringBuilder rowData = new StringBuilder();
-            for (int i = 0; i < lang.getTableColumns().length; i++) {
-                rowData.append(collectionTable.getValueAt(row, i)).append(" ");
-            }
-            movieInformationLabel.setText(rowData.toString());
-            System.out.println("Table row selected is: " + rowData);
-        });
+    private void tableCellClicked(ListSelectionEvent e) {
+        int row = collectionTable.getSelectedRow();
+        StringBuilder rowData = new StringBuilder();
+        for (int i = 0; i < lang.getTableColumns().length; i++) {
+            rowData.append(collectionTable.getValueAt(row, i)).append(" ");
+        }
+        movieInformationLabel.setText(rowData.toString());
+        System.out.println("Table row selected is: " + rowData);
+    }
+
+    private void descButtonSortClicked(ActionEvent e) {
+
+        int columnIndexSortBy = selectSortByComboBox.getSelectedIndex();
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(collectionTable.getModel());
+        collectionTable.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>(5);
+        sortKeys.add(new RowSorter.SortKey(columnIndexSortBy, SortOrder.DESCENDING));
+        sorter.setSortKeys(sortKeys);
+    }
+
+    private void ascButtonSortClicked(ActionEvent e) {
+
+        int columnIndexSortBy = selectSortByComboBox.getSelectedIndex();
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(collectionTable.getModel());
+        collectionTable.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>(5);
+        sortKeys.add(new RowSorter.SortKey(columnIndexSortBy, SortOrder.ASCENDING));
+        sorter.setSortKeys(sortKeys);
     }
 
     private JComboBox<Icon> getLanguageIconComboBox() {
@@ -262,8 +285,28 @@ public class MainActivity extends JFrame {
         DefaultComboBoxModel<Icon> comboBoxModel = new DefaultComboBoxModel<>();
         comboBoxModel.addAll(iconList);
         JComboBox<Icon> comboBox = new JComboBox<>(comboBoxModel);
-        comboBox.setSelectedIndex(lang.getCurrentLocaleIndex());
+        comboBox.setSelectedItem(lang.getCurrentLocaleIndex());
         comboBox.setPreferredSize(new Dimension(50, 60));
         return comboBox;
+    }
+
+    private JComboBox<String> getSortByComboBox() {
+        DefaultComboBoxModel<String> comboBoxModel = getNewLanguageTableColumnsComboBoxModel();
+        JComboBox<String> comboBox = new JComboBox<>(comboBoxModel);
+        comboBox.setSelectedIndex(0);
+        return comboBox;
+    }
+
+    private DefaultComboBoxModel<String> getNewLanguageTableColumnsComboBoxModel() {
+        return new DefaultComboBoxModel<>(lang.getTableColumns());
+    }
+    private DefaultTableColumnModel getNewLanguageColumnModel() {
+        DefaultTableColumnModel columnModel = new DefaultTableColumnModel();
+        for (int i = 0; i < lang.getTableColumns().length; i++) {
+            TableColumn tableColumn =  new TableColumn(i);
+            tableColumn.setHeaderValue(lang.getTableColumns()[i]);
+            columnModel.addColumn(tableColumn);
+        }
+        return columnModel;
     }
 }
