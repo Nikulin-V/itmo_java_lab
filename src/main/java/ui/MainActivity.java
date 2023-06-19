@@ -12,12 +12,15 @@ import ui.locale.NumberCellRenderer;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.table.*;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends JFrame {
     private JPanel MainActivityPanel;
@@ -48,7 +51,6 @@ public class MainActivity extends JFrame {
     private JButton removeByIdButton;
     private JPanel sortPanel;
     private JLabel welcomeBackLabel;
-    private JButton countGreaterThanDirectorButton;
     private JButton removeLowerButton;
     private JButton oscarsCountButton;
     private JButton goldenPalmButton;
@@ -81,15 +83,20 @@ public class MainActivity extends JFrame {
         createUIComponents();
         MainActivityPanel = new JPanel();
         MainActivityPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        MainActivityPanel.setBackground(new Color(-14532293));
-        MainActivityPanel.setForeground(new Color(-14532293));
+        MainActivityPanel.setBackground(new Color(-1));
+        MainActivityPanel.setForeground(new Color(-16729671));
         tabbedPane1 = new JTabbedPane();
+        tabbedPane1.setBackground(new Color(-16729671));
+        tabbedPane1.setFocusable(false);
+        tabbedPane1.setForeground(new Color(-1));
+        tabbedPane1.setRequestFocusEnabled(false);
         MainActivityPanel.add(tabbedPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("Main", panel1);
         collectionPanel = new JPanel();
         collectionPanel.setLayout(new GridLayoutManager(2, 2, new Insets(10, 10, 10, 10), -1, -1));
+        collectionPanel.setBackground(new Color(-16729671));
         panel1.add(collectionPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tablePanel = new JPanel();
         tablePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -97,9 +104,12 @@ public class MainActivity extends JFrame {
         tablePanel.setRequestFocusEnabled(false);
         tablePanel.setVerifyInputWhenFocusTarget(false);
         collectionPanel.add(tablePanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        scrollPane.setBackground(new Color(-16729671));
+        scrollPane.setDoubleBuffered(true);
         scrollPane.setEnabled(true);
         tablePanel.add(scrollPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, 1, null, null, null, 0, false));
         collectionTable.setAutoResizeMode(1);
+        collectionTable.setBackground(new Color(-1));
         collectionTable.setCellSelectionEnabled(false);
         collectionTable.setColumnSelectionAllowed(false);
         collectionTable.setDoubleBuffered(false);
@@ -111,62 +121,124 @@ public class MainActivity extends JFrame {
         collectionTable.setToolTipText("meow meow");
         scrollPane.setViewportView(collectionTable);
         userInformationPanel = new JPanel();
-        userInformationPanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        userInformationPanel.setBackground(new Color(-6701422));
+        userInformationPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+        userInformationPanel.setBackground(new Color(-16729671));
+        userInformationPanel.setFocusable(false);
+        userInformationPanel.setForeground(new Color(-1));
         collectionPanel.add(userInformationPanel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
+        welcomeBackLabel.setBackground(new Color(-16729671));
+        welcomeBackLabel.setForeground(new Color(-1));
         userInformationPanel.add(welcomeBackLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         userInformationPanel.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        collectionLabel.setBackground(new Color(-16729671));
+        collectionLabel.setFocusable(true);
+        collectionLabel.setForeground(new Color(-1));
         userInformationPanel.add(collectionLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));
+        selectLanguageComboBox.setBackground(new Color(-16729671));
+        selectLanguageComboBox.setEditable(false);
+        selectLanguageComboBox.setForeground(new Color(-1));
+        selectLanguageComboBox.setLightWeightPopupEnabled(false);
+        userInformationPanel.add(selectLanguageComboBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         rightMenuPanel = new JPanel();
-        rightMenuPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        rightMenuPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        rightMenuPanel.setBackground(new Color(-16729671));
         collectionPanel.add(rightMenuPanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
         tableSettingsPanel = new JPanel();
         tableSettingsPanel.setLayout(new GridLayoutManager(11, 1, new Insets(0, 0, 0, 0), -1, -1));
-        rightMenuPanel.add(tableSettingsPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        tableSettingsPanel.setBackground(new Color(-16729671));
+        rightMenuPanel.add(tableSettingsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         removeAtIndexButton = new JButton();
+        removeAtIndexButton.setBackground(new Color(-1));
+        removeAtIndexButton.setBorderPainted(false);
+        removeAtIndexButton.setFocusable(false);
+        removeAtIndexButton.setForeground(new Color(-16729671));
         removeAtIndexButton.setText("Remove at index");
         tableSettingsPanel.add(removeAtIndexButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         removeByIdButton = new JButton();
+        removeByIdButton.setBackground(new Color(-1));
+        removeByIdButton.setFocusable(false);
+        removeByIdButton.setForeground(new Color(-16729671));
         removeByIdButton.setText("Remove by id");
         tableSettingsPanel.add(removeByIdButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         sortPanel = new JPanel();
         sortPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        sortPanel.setBackground(new Color(-16729671));
+        sortPanel.setForeground(new Color(-1));
         sortPanel.setName("Sort");
         tableSettingsPanel.add(sortPanel, new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
+        sortPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-1)), "Сортировать по", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, new Color(-1)));
+        sortASCButton.setBackground(new Color(-1));
+        sortASCButton.setFocusable(false);
+        Font sortASCButtonFont = this.$$$getFont$$$(null, -1, 20, sortASCButton.getFont());
+        if (sortASCButtonFont != null) sortASCButton.setFont(sortASCButtonFont);
+        sortASCButton.setForeground(new Color(-16729671));
+        sortASCButton.setHideActionText(true);
         sortASCButton.setText("↓");
         sortPanel.add(sortASCButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        sortDESCButton.setBackground(new Color(-1));
+        sortDESCButton.setFocusable(false);
+        Font sortDESCButtonFont = this.$$$getFont$$$(null, -1, 20, sortDESCButton.getFont());
+        if (sortDESCButtonFont != null) sortDESCButton.setFont(sortDESCButtonFont);
+        sortDESCButton.setForeground(new Color(-16729671));
         sortDESCButton.setText("↑");
         sortPanel.add(sortDESCButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        selectSortByComboBox.setBackground(new Color(-1));
+        selectSortByComboBox.setForeground(new Color(-16729671));
         sortPanel.add(selectSortByComboBox, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addButton.setBackground(new Color(-1));
+        addButton.setBorderPainted(true);
+        addButton.setFocusPainted(true);
+        addButton.setFocusable(false);
+        addButton.setForeground(new Color(-16729671));
+        addButton.setHideActionText(false);
         addButton.setText("Add movie");
         tableSettingsPanel.add(addButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        clearCollectionButton.setBackground(new Color(-1));
+        clearCollectionButton.setFocusable(false);
+        clearCollectionButton.setForeground(new Color(-16729671));
         clearCollectionButton.setText("Clear");
         tableSettingsPanel.add(clearCollectionButton, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        countGreaterThanDirectorButton = new JButton();
-        countGreaterThanDirectorButton.setText("Count greater than Director");
-        tableSettingsPanel.add(countGreaterThanDirectorButton, new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         removeLowerButton = new JButton();
+        removeLowerButton.setAutoscrolls(false);
+        removeLowerButton.setBackground(new Color(-1));
+        removeLowerButton.setFocusable(false);
+        removeLowerButton.setForeground(new Color(-16729671));
         removeLowerButton.setText("Remove lower");
         tableSettingsPanel.add(removeLowerButton, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         oscarsCountButton = new JButton();
+        oscarsCountButton.setBackground(new Color(-1));
+        oscarsCountButton.setFocusable(false);
+        oscarsCountButton.setForeground(new Color(-16729671));
         oscarsCountButton.setText("Count by Oscars count");
         tableSettingsPanel.add(oscarsCountButton, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         goldenPalmButton = new JButton();
+        goldenPalmButton.setBackground(new Color(-1));
+        goldenPalmButton.setFocusable(false);
+        goldenPalmButton.setForeground(new Color(-16729671));
         goldenPalmButton.setText("Count by Golden palm count");
         tableSettingsPanel.add(goldenPalmButton, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        infoButton.setBackground(new Color(-1));
+        infoButton.setFocusable(false);
+        infoButton.setForeground(new Color(-16729671));
         infoButton.setText("Info");
         tableSettingsPanel.add(infoButton, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        updateMovieButton.setBackground(new Color(-1));
+        updateMovieButton.setFocusable(false);
+        updateMovieButton.setForeground(new Color(-16729671));
+        updateMovieButton.setHideActionText(false);
         updateMovieButton.setHorizontalTextPosition(0);
         updateMovieButton.setText("Update movie");
         updateMovieButton.setToolTipText("");
         tableSettingsPanel.add(updateMovieButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        deleteMovieButton.setBackground(new Color(-1));
+        deleteMovieButton.setFocusPainted(true);
+        deleteMovieButton.setFocusable(false);
+        deleteMovieButton.setForeground(new Color(-16729671));
         deleteMovieButton.setInheritsPopupMenu(false);
         deleteMovieButton.setLabel("Delete movie");
         deleteMovieButton.setText("Delete movie");
         tableSettingsPanel.add(deleteMovieButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        selectLanguageComboBox.setEditable(false);
-        rightMenuPanel.add(selectLanguageComboBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("Statistics", panel2);
@@ -184,6 +256,28 @@ public class MainActivity extends JFrame {
         movieInformationPanel.add(movieInformationLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         panel2.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**

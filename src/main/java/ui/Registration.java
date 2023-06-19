@@ -5,7 +5,6 @@ import classes.UserCredentials;
 import classes.console.TextColor;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 import ui.locale.Lang;
 
 import javax.swing.*;
@@ -57,31 +56,32 @@ public class Registration extends JFrame {
     private void $$$setupUI$$$() {
         createUIComponents();
         MainRegisterPanel = new JPanel();
-        MainRegisterPanel.setLayout(new GridLayoutManager(3, 5, new Insets(0, 0, 0, 0), -1, -1));
-        final Spacer spacer1 = new Spacer();
-        MainRegisterPanel.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, new Dimension(10, -1), new Dimension(10, -1), new Dimension(20, -1), 0, false));
-        final Spacer spacer2 = new Spacer();
-        MainRegisterPanel.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, 1, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 10), null, new Dimension(-1, 10), 0, false));
-        BackButton.setBackground(new Color(-2299922));
+        MainRegisterPanel.setLayout(new GridLayoutManager(2, 1, new Insets(10, 10, 10, 10), -1, -1));
+        MainRegisterPanel.setBackground(new Color(-16729671));
+        BackButton.setBackground(new Color(-16729671));
         BackButton.setFocusPainted(false);
-        BackButton.setForeground(new Color(-16777216));
+        BackButton.setForeground(new Color(-1));
         BackButton.setSelected(true);
         BackButton.setText("Назад");
-        MainRegisterPanel.add(BackButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(80, 30), new Dimension(80, 30), new Dimension(100, 30), 0, false));
+        MainRegisterPanel.add(BackButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(80, 30), new Dimension(80, 30), new Dimension(100, 30), 0, false));
         RegisterPanel = new JPanel();
         RegisterPanel.setLayout(new GridLayoutManager(6, 1, new Insets(10, 10, 10, 10), -1, 3));
-        MainRegisterPanel.add(RegisterPanel, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        RegisterPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-12743731)), "Регистрация", TitledBorder.CENTER, TitledBorder.BELOW_TOP, this.$$$getFont$$$(null, Font.BOLD, 14, RegisterPanel.getFont()), new Color(-12743731)));
+        RegisterPanel.setBackground(new Color(-16729671));
+        MainRegisterPanel.add(RegisterPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        RegisterPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-1)), "Регистрация", TitledBorder.CENTER, TitledBorder.BELOW_TOP, this.$$$getFont$$$(null, Font.BOLD, 14, RegisterPanel.getFont()), new Color(-1)));
+        LoginLabel.setBackground(new Color(-1));
+        LoginLabel.setForeground(new Color(-1));
         LoginLabel.setText("Логин");
         RegisterPanel.add(LoginLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        PasswordLabel.setForeground(new Color(-1));
         PasswordLabel.setText("Пароль");
         RegisterPanel.add(PasswordLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         RegisterPanel.add(LoginField, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        RegistrationButton.setBackground(new Color(-12743731));
+        RegistrationButton.setBackground(new Color(-1));
         RegistrationButton.setBorderPainted(true);
         RegistrationButton.setFocusPainted(false);
         RegistrationButton.setFocusable(true);
-        RegistrationButton.setForeground(new Color(-1));
+        RegistrationButton.setForeground(new Color(-16729671));
         RegistrationButton.setMargin(new Insets(0, 0, 0, 0));
         RegistrationButton.setSelected(true);
         RegistrationButton.setText("Зарегистрироваться");
@@ -97,8 +97,6 @@ public class Registration extends JFrame {
         ErrorLabel.setVisible(true);
         RegisterPanel.add(ErrorLabel, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         RegisterPanel.add(PasswordField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final Spacer spacer3 = new Spacer();
-        MainRegisterPanel.add(spacer3, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, new Dimension(10, -1), new Dimension(10, -1), new Dimension(20, -1), 0, false));
     }
 
     /**

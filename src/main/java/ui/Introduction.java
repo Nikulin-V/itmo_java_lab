@@ -41,7 +41,7 @@ public class Introduction extends JFrame {
         while (socket == null || !socket.isConnected()) {
             AuthorizationButton.setEnabled(false);
             RegistrationButton.setEnabled(false);
-            ConnectionLabel.setForeground(new Color(204, 204, 0));
+            ConnectionLabel.setForeground(new Color(0xFFFF00));
             ConnectionLabel.setText("Пытаюсь установить соединение с сервером...");
             try {
                 Thread.sleep(1000);
@@ -135,19 +135,22 @@ public class Introduction extends JFrame {
         MainPanel.setBackground(new Color(-1));
         ButtonField = new JPanel();
         ButtonField.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
+        ButtonField.setBackground(new Color(-16729671));
         MainPanel.add(ButtonField, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        RegistrationButton.setBackground(new Color(-2299922));
+        RegistrationButton.setBackground(new Color(-16729671));
         RegistrationButton.setEnabled(true);
-        RegistrationButton.setFocusPainted(false);
-        RegistrationButton.setForeground(new Color(-16777216));
+        RegistrationButton.setFocusPainted(true);
+        RegistrationButton.setFocusable(false);
+        RegistrationButton.setForeground(new Color(-1));
         RegistrationButton.setSelected(true);
         RegistrationButton.setText("Регистрация");
         ButtonField.add(RegistrationButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, 1, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 30), new Dimension(300, 30), new Dimension(500, 30), 0, false));
-        AuthorizationButton.setBackground(new Color(-12743731));
-        AuthorizationButton.setBorderPainted(false);
+        AuthorizationButton.setBackground(new Color(-1));
+        AuthorizationButton.setBorderPainted(true);
         AuthorizationButton.setEnabled(true);
-        AuthorizationButton.setFocusPainted(false);
-        AuthorizationButton.setForeground(new Color(-1));
+        AuthorizationButton.setFocusPainted(true);
+        AuthorizationButton.setFocusable(false);
+        AuthorizationButton.setForeground(new Color(-16729671));
         AuthorizationButton.setMargin(new Insets(0, 0, 0, 0));
         AuthorizationButton.setSelected(true);
         AuthorizationButton.setText("Войти");
@@ -158,6 +161,7 @@ public class Introduction extends JFrame {
         ButtonField.add(spacer2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 20), null, null, 0, false));
         IntroductionLabelsPanel = new JPanel();
         IntroductionLabelsPanel.setLayout(new GridLayoutManager(2, 1, new Insets(10, 10, 10, 10), -1, -1));
+        IntroductionLabelsPanel.setBackground(new Color(-16729671));
         MainPanel.add(IntroductionLabelsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         GreetingsDescriptionLabel = new JLabel();
         GreetingsDescriptionLabel.setIcon(new ImageIcon(getClass().getResource("/images/introduction.jpg")));
@@ -175,4 +179,5 @@ public class Introduction extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return MainPanel;
     }
+
 }

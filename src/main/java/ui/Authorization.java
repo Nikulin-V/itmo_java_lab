@@ -6,7 +6,6 @@ import classes.UserCredentials;
 import classes.console.TextColor;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -58,26 +57,29 @@ public class Authorization extends JFrame {
     private void $$$setupUI$$$() {
         createUIComponents();
         MainAuthPanel = new JPanel();
-        MainAuthPanel.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
-        final Spacer spacer1 = new Spacer();
-        MainAuthPanel.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, new Dimension(10, -1), new Dimension(10, -1), new Dimension(20, -1), 0, false));
+        MainAuthPanel.setLayout(new GridLayoutManager(2, 1, new Insets(10, 10, 10, 10), -1, -1));
+        MainAuthPanel.setBackground(new Color(-16729671));
         AuthPanel = new JPanel();
         AuthPanel.setLayout(new GridLayoutManager(6, 1, new Insets(10, 10, 10, 10), -1, 3));
-        MainAuthPanel.add(AuthPanel, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        AuthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-12743731)), "Авторизация", TitledBorder.CENTER, TitledBorder.BELOW_TOP, this.$$$getFont$$$(null, Font.BOLD, 14, AuthPanel.getFont()), new Color(-12743731)));
+        AuthPanel.setBackground(new Color(-16729671));
+        AuthPanel.setForeground(new Color(-1));
+        MainAuthPanel.add(AuthPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        AuthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-1)), "Авторизация", TitledBorder.CENTER, TitledBorder.BELOW_TOP, this.$$$getFont$$$(null, Font.BOLD, 14, AuthPanel.getFont()), new Color(-1)));
         LoginLabel = new JLabel();
+        LoginLabel.setForeground(new Color(-1));
         LoginLabel.setText("Логин");
         AuthPanel.add(LoginLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         PasswordLabel = new JLabel();
+        PasswordLabel.setForeground(new Color(-1));
         PasswordLabel.setText("Пароль");
         AuthPanel.add(PasswordLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         AuthPanel.add(LoginField, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         AuthPanel.add(PasswordField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        AuthButton.setBackground(new Color(-12743731));
+        AuthButton.setBackground(new Color(-1));
         AuthButton.setBorderPainted(true);
         AuthButton.setFocusPainted(false);
         AuthButton.setFocusable(true);
-        AuthButton.setForeground(new Color(-1));
+        AuthButton.setForeground(new Color(-16729671));
         AuthButton.setMargin(new Insets(0, 0, 0, 0));
         AuthButton.setSelected(true);
         AuthButton.setText("Войти");
@@ -92,16 +94,12 @@ public class Authorization extends JFrame {
         ErrorLabel.setText("");
         ErrorLabel.setVisible(true);
         AuthPanel.add(ErrorLabel, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
-        MainAuthPanel.add(spacer2, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, new Dimension(10, -1), new Dimension(10, -1), new Dimension(20, -1), 0, false));
-        BackButton.setBackground(new Color(-2299922));
+        BackButton.setBackground(new Color(-16729671));
         BackButton.setFocusPainted(false);
-        BackButton.setForeground(new Color(-16777216));
+        BackButton.setForeground(new Color(-1));
         BackButton.setSelected(true);
         BackButton.setText("Назад");
-        MainAuthPanel.add(BackButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(80, 30), new Dimension(80, 30), new Dimension(100, 30), 0, false));
-        final Spacer spacer3 = new Spacer();
-        MainAuthPanel.add(spacer3, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, 1, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 10), null, new Dimension(-1, 10), 0, false));
+        MainAuthPanel.add(BackButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(80, 30), new Dimension(80, 30), new Dimension(100, 30), 0, false));
     }
 
     /**
