@@ -8,7 +8,6 @@ import classes.movie.Movie;
 import classes.sql_managers.SQLManager;
 import interfaces.Commandable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +28,7 @@ public class RemoveById extends NamedCommand implements Commandable {
                 for (Movie movie : movies) {
                     if (movie.getId().equals(uuid)) {
                         if (movie.getUserID().equals(userID)){
-                            SQLManager.executeMovieDelete(uuid,userID);
+                            SQLManager.executeDeleteMovie(uuid, userID);
                             movies.remove(movie);
                         }
                         else return new Response(0).setData(TextColor.yellow("Нет прав доступа для выполнения команды"));

@@ -146,43 +146,20 @@
                     </properties>
                     <border type="none"/>
                     <children>
-                      <grid id="6f8be" binding="tableSettingsPanel" layout-manager="GridLayoutManager" row-count="11" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="6f8be" binding="tableSettingsPanel" layout-manager="GridLayoutManager" row-count="10" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
                           <background color="-16729671"/>
                         </properties>
                         <border type="none"/>
                         <children>
-                          <component id="a60b0" class="javax.swing.JButton" binding="removeAtIndexButton" default-binding="true">
-                            <constraints>
-                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <background color="-1"/>
-                              <borderPainted value="false"/>
-                              <focusable value="false"/>
-                              <foreground color="-16729671"/>
-                              <text value="Remove at index"/>
-                            </properties>
-                          </component>
-                          <component id="de05f" class="javax.swing.JButton" binding="removeByIdButton" default-binding="true">
-                            <constraints>
-                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <background color="-1"/>
-                              <focusable value="false"/>
-                              <foreground color="-16729671"/>
-                              <text value="Remove by id"/>
-                            </properties>
-                          </component>
                           <grid id="ea5b8" binding="sortPanel" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
-                              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <background color="-16729671"/>
@@ -246,7 +223,7 @@
                           </component>
                           <component id="f83b8" class="javax.swing.JButton" binding="clearCollectionButton" custom-create="true">
                             <constraints>
-                              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <background color="-1"/>
@@ -255,21 +232,9 @@
                               <text value="Clear"/>
                             </properties>
                           </component>
-                          <component id="e288d" class="javax.swing.JButton" binding="removeLowerButton" default-binding="true">
-                            <constraints>
-                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <autoscrolls value="false"/>
-                              <background color="-1"/>
-                              <focusable value="false"/>
-                              <foreground color="-16729671"/>
-                              <text value="Remove lower"/>
-                            </properties>
-                          </component>
                           <component id="e01a2" class="javax.swing.JButton" binding="oscarsCountButton">
                             <constraints>
-                              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <background color="-1"/>
@@ -280,7 +245,7 @@
                           </component>
                           <component id="cc846" class="javax.swing.JButton" binding="goldenPalmButton">
                             <constraints>
-                              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <background color="-1"/>
@@ -291,7 +256,7 @@
                           </component>
                           <component id="b4e61" class="javax.swing.JButton" binding="infoButton" custom-create="true">
                             <constraints>
-                              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <background color="-1"/>
@@ -328,6 +293,82 @@
                               <text value="Delete movie"/>
                             </properties>
                           </component>
+                          <grid id="92235" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <background color="-16729671"/>
+                            </properties>
+                            <border type="line">
+                              <title-color color="-1"/>
+                            </border>
+                            <children>
+                              <grid id="4ec8c" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                <margin top="0" left="0" bottom="0" right="0"/>
+                                <constraints>
+                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <background color="-16729671"/>
+                                </properties>
+                                <border type="none"/>
+                                <children>
+                                  <component id="4103e" class="javax.swing.JSpinner" binding="coordinateYSpinner" custom-create="true">
+                                    <constraints>
+                                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <background color="-1"/>
+                                      <foreground color="-16729671"/>
+                                      <requestFocusEnabled value="false"/>
+                                    </properties>
+                                  </component>
+                                  <component id="c1acc" class="javax.swing.JSpinner" binding="coordinateXSpinner" custom-create="true">
+                                    <constraints>
+                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <background color="-1"/>
+                                      <foreground color="-16729671"/>
+                                      <requestFocusEnabled value="false"/>
+                                    </properties>
+                                  </component>
+                                  <component id="53269" class="javax.swing.JLabel">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <foreground color="-1"/>
+                                      <text value="X"/>
+                                    </properties>
+                                  </component>
+                                  <component id="6b6c0" class="javax.swing.JLabel">
+                                    <constraints>
+                                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <foreground color="-1"/>
+                                      <text value="Y"/>
+                                    </properties>
+                                  </component>
+                                </children>
+                              </grid>
+                              <component id="e288d" class="javax.swing.JButton" binding="removeLowerButton" custom-create="true" default-binding="true">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <autoscrolls value="false"/>
+                                  <background color="-1"/>
+                                  <focusable value="false"/>
+                                  <foreground color="-16729671"/>
+                                  <text value="Remove lower"/>
+                                </properties>
+                              </component>
+                            </children>
+                          </grid>
                         </children>
                       </grid>
                     </children>

@@ -1,6 +1,5 @@
 package classes.movie;
 
-import classes.collection.CollectionManager;
 import exceptions.*;
 
 public class FieldHandler {
@@ -28,13 +27,6 @@ public class FieldHandler {
                 throw new BlankValueException();
             if (value != null && property == FieldProperty.LENGTH && ((int) property.getArgs()[0]) > ((String) value).length())
                 throw new BadValueLengthException((Integer) property.getArgs()[0]);
-            if (value != null && property == FieldProperty.UNIQUE) {
-                CollectionManager collectionManager = new CollectionManager();
-                for (Movie movie : collectionManager.getCollection()) {
-                    if (value.equals(movie.getDirector().getPassportID()))
-                        throw new NotUniqueException(movie.getId());
-                }
-            }
         }
         return (String) value;
     }

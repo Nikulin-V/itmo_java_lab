@@ -28,7 +28,7 @@ public class RemoveAt extends NamedCommand implements Commandable {
                 if (cm.getCollection().size() >= index + 1) {
                     if (cm.getCollection().get(index).getUserID().equals(userID)){
                         UUID uuid = cm.getCollection().get(index).getId();
-                        SQLManager.executeMovieDelete(uuid,userID);
+                        SQLManager.executeDeleteMovie(uuid, userID);
                         cm.getCollection().remove(index);
                     }
                     else return new Response(0, TextColor.yellow("Нет прав доступа для выполнения команды"));

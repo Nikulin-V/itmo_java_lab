@@ -146,9 +146,7 @@ public class SQLManager {
                         director,
                         moviesResultSet.getString("user_id")
                 );
-
                 movies.add(movie);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -157,10 +155,10 @@ public class SQLManager {
         return movies;
     }
 
-    public synchronized static int executeDelete(String username) {
+    public synchronized static int executeClearUser(String username) {
         String r = """
-            DELETE FROM movies WHERE user_id=?
-                    """;
+                DELETE FROM movies WHERE user_id=?
+                        """;
 
         try (Connection dbConnection = getDBConnection(); PreparedStatement statement = dbConnection.prepareStatement(r)) {
             statement.setString(1, username);
@@ -172,7 +170,7 @@ public class SQLManager {
         return Integer.MAX_VALUE;
     }
 
-    public synchronized static void executeMovieDelete(UUID uuid, String userID) {
+    public synchronized static void executeDeleteMovie(UUID uuid, String userID) {
 
         String r = """
                 DELETE FROM movies WHERE uuid_id=? AND user_id=?
@@ -231,7 +229,7 @@ public class SQLManager {
             psMovie.executeUpdate();
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
-            System.out.println(TextColor.grey("Возникла проблема при обращении к баз данных"));
+            System.out.println(TextColor.grey("Возникла проблема при обращении к базе данных"));
         }
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 public class Clear extends NamedCommand implements Commandable {
     @Override
     public Response execute(Object inputData, String userID) {
-        int countDeleted = SQLManager.executeDelete(userID);
+        int countDeleted = SQLManager.executeClearUser(userID);
 
         List<Movie> movies = new CollectionManager().getCollection();
         if (countDeleted > 0) movies.removeIf(movie -> userID.equals(movie.getUserID()));

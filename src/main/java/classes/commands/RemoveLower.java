@@ -12,7 +12,7 @@ import exceptions.NotGreatThanException;
 import exceptions.NullValueException;
 import interfaces.Commandable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RemoveLower extends NamedCommand implements Commandable {
     @Override
@@ -28,18 +28,15 @@ public class RemoveLower extends NamedCommand implements Commandable {
                 int y = Integer.parseInt(coordinatesArray[1]);
                 Coordinates inputCoordinates = new Coordinates(x, y);
                 CollectionManager cm = new CollectionManager();
-                ArrayList<Movie> movieToDelete = (ArrayList<Movie>) cm.getCollection()
+                List<Movie> movieToDelete = cm.getCollection()
                         .stream()
                         .filter(m -> inputCoordinates.compareTo(m.getCoordinates()) < 0 &&
-                                m.getUserID().equals(userID))
-                        .toList();
+                                m.getUserID().equals(userID)).toList();
                 for (Movie movie : movieToDelete)
                     if (movie.getUserID().equals(userID)) {
-                        SQLManager.executeMovieDelete(movie.getId(), userID);
+                        SQLManager.executeDeleteMovie(movie.getId(), userID);
                         cm.getCollection().remove(movie);
                     }
-
-
                 return new Response(0).setData(TextColor.cyan("Выполнено"));
             } catch (NotGreatThanException | GreatThanException e) {
                 return new Response(1, e.getMessage());
