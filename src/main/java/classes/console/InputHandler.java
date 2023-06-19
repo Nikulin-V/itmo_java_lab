@@ -93,14 +93,14 @@ public class InputHandler {
         return coordinates;
     }
 
-    private static Long readCoordinatesX() {
-        Long coordinatesX = null;
+    private static Integer readCoordinatesX() {
+        Integer coordinatesX = null;
         while (coordinatesX == null) {
             try {
                 coordinatesX = new FieldHandler(
                         scanner.nextLong(TextColor.green("\tX: ")),
                         MAX_VALUE
-                ).handleLong();
+                ).handleInt();
             } catch (NotGreatThanException | NullValueException | GreatThanException e) {
                 System.out.println(e.toString());
             }

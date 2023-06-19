@@ -20,6 +20,6 @@ public enum Color implements Serializable {
         return Color.values()[new Random().nextInt(4)];
     }
     public static Color getById(int id) {
-        return Color.values()[id-1];
+        return Color.values()[id];
     }
 }

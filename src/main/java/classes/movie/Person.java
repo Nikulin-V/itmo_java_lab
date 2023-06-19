@@ -19,6 +19,7 @@ public class Person implements Serializable {
     private UUID id; //Поле не может быть null
 
     public Person(String name, Date birthday, Double height, String passportID, Color eyeColor) throws BlankValueException, NullValueException, NotGreatThanException, BadValueLengthException, GreatThanException, NotUniqueException {
+        this.id = UUID.randomUUID();
         this.name = new FieldHandler(name, NOT_NULL, NOT_BLANK).handleString();
         this.birthday = birthday;
         this.height = new FieldHandler(height, GREAT_THAN_ZERO).handleDouble();
@@ -51,10 +52,6 @@ public class Person implements Serializable {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
     public Double getHeight() {
         return height;
     }
@@ -67,16 +64,8 @@ public class Person implements Serializable {
         return passportID;
     }
 
-    public void setPassportID(String passportID) {
-        this.passportID = passportID;
-    }
-
     public Color getEyeColor() {
         return eyeColor;
-    }
-
-    public void setEyeColor(Color eyeColor) {
-        this.eyeColor = eyeColor;
     }
 
     public UUID getID() {

@@ -83,7 +83,7 @@ public class SQLManager {
                         directorResultSet.getDate("birthday"),
                         directorResultSet.getDouble("height"),
                         directorResultSet.getString("passport_id"),
-                        Color.getById(directorResultSet.getInt("eye_color")));
+                        Color.getById(directorResultSet.getInt("eye_color") - 1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -142,7 +142,7 @@ public class SQLManager {
                         moviesResultSet.getLong("oscars_count"),
                         moviesResultSet.getLong("golden_palm_count"),
                         moviesResultSet.getFloat("budget"),
-                        MpaaRating.getById(moviesResultSet.getInt("id_mpaarating")),
+                        MpaaRating.getById(moviesResultSet.getInt("id_mpaarating") - 1),
                         director,
                         moviesResultSet.getString("user_id")
                 );

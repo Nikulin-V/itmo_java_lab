@@ -25,7 +25,6 @@ public enum MpaaRating implements Serializable {
         return MpaaRating.values()[new Random().nextInt(5)];
     }
     public static MpaaRating getById(int id) {
-        return MpaaRating.values()[id-1];
+        return MpaaRating.values()[id];
     }
-
 }

@@ -14,8 +14,9 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
 
 import static ui.Introduction.in;
@@ -28,7 +29,7 @@ public class Registration extends JFrame {
     private JLabel LoginLabel;
     private JLabel PasswordLabel;
     private JTextField LoginField;
-    private JPasswordField PasswordField;
+    private JTextField PasswordField;
     private JButton RegistrationButton;
     private JLabel ErrorLabel;
 
@@ -75,10 +76,7 @@ public class Registration extends JFrame {
         RegisterPanel.add(LoginLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         PasswordLabel.setText("Пароль");
         RegisterPanel.add(PasswordLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        LoginField = new JTextField();
         RegisterPanel.add(LoginField, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        PasswordField = new JPasswordField();
-        RegisterPanel.add(PasswordField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         RegistrationButton.setBackground(new Color(-12743731));
         RegistrationButton.setBorderPainted(true);
         RegistrationButton.setFocusPainted(false);
@@ -98,6 +96,7 @@ public class Registration extends JFrame {
         ErrorLabel.setText("");
         ErrorLabel.setVisible(true);
         RegisterPanel.add(ErrorLabel, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        RegisterPanel.add(PasswordField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final Spacer spacer3 = new Spacer();
         MainRegisterPanel.add(spacer3, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, new Dimension(10, -1), new Dimension(10, -1), new Dimension(20, -1), 0, false));
     }
@@ -141,11 +140,39 @@ public class Registration extends JFrame {
 
         RegistrationButton = new JButton();
         RegistrationButton.addActionListener(this::registerButtonPressed);
+
+        KeyListener enterListener = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                    RegistrationButton.doClick();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        };
+        LoginField = new JTextField();
+        LoginField.addKeyListener(enterListener);
+        PasswordField = new JTextField();
+        PasswordField.addKeyListener(enterListener);
     }
 
     private void registerButtonPressed(ActionEvent e) {
         String login = LoginField.getText();
-        String password = Arrays.toString(PasswordField.getPassword());
+        if (login.isBlank()) {
+            printErrorMessage("Введите логин");
+            return;
+        }
+        String password = PasswordField.getText();
+        if (password.isEmpty()) {
+            printErrorMessage("Введите пароль");
+            return;
+        }
         UserCredentials credentials = new UserCredentials(login, password);
         credentials.setRegistration(true);
         try {

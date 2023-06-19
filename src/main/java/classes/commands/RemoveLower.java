@@ -24,21 +24,20 @@ public class RemoveLower extends NamedCommand implements Commandable {
     public Response execute(Object inputData, String userID) {
         if (inputData instanceof String[] coordinatesArray && coordinatesArray.length == 2) {
             try {
-                long x = Long.parseLong(coordinatesArray[0]);
-                long y = Long.parseLong(coordinatesArray[1]);
+                int x = Integer.parseInt(coordinatesArray[0]);
+                int y = Integer.parseInt(coordinatesArray[1]);
                 Coordinates inputCoordinates = new Coordinates(x, y);
                 CollectionManager cm = new CollectionManager();
-                ArrayList<Movie> movieToDelete  = (ArrayList<Movie>) cm.getCollection()
+                ArrayList<Movie> movieToDelete = (ArrayList<Movie>) cm.getCollection()
                         .stream()
                         .filter(m -> inputCoordinates.compareTo(m.getCoordinates()) < 0 &&
                                 m.getUserID().equals(userID))
                         .toList();
-                for (Movie movie: movieToDelete)
-                    if (movie.getUserID().equals(userID)){
-                        SQLManager.executeMovieDelete(movie.getId(),userID);
+                for (Movie movie : movieToDelete)
+                    if (movie.getUserID().equals(userID)) {
+                        SQLManager.executeMovieDelete(movie.getId(), userID);
                         cm.getCollection().remove(movie);
                     }
-
 
 
                 return new Response(0).setData(TextColor.cyan("Выполнено"));

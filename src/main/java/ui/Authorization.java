@@ -14,6 +14,8 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
@@ -69,9 +71,7 @@ public class Authorization extends JFrame {
         PasswordLabel = new JLabel();
         PasswordLabel.setText("Пароль");
         AuthPanel.add(PasswordLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        LoginField = new JTextField();
         AuthPanel.add(LoginField, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        PasswordField = new JPasswordField();
         AuthPanel.add(PasswordField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         AuthButton.setBackground(new Color(-12743731));
         AuthButton.setBorderPainted(true);
@@ -140,10 +140,34 @@ public class Authorization extends JFrame {
 
         AuthButton = new JButton();
         AuthButton.addActionListener(this::authButtonPressed);
+
+        KeyListener enterListener = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                    AuthButton.doClick();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        };
+        LoginField = new JTextField();
+        LoginField.addKeyListener(enterListener);
+        PasswordField = new JPasswordField();
+        PasswordField.addKeyListener(enterListener);
     }
 
     private void authButtonPressed(ActionEvent e) {
         String login = LoginField.getText();
+        if (login.isBlank()) {
+            printErrorMessage("Введите логин");
+            return;
+        }
         String password = Arrays.toString(PasswordField.getPassword());
         UserCredentials credentials = new UserCredentials(login, password);
         try {
