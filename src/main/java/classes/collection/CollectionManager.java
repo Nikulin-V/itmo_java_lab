@@ -3,6 +3,8 @@ package classes.collection;
 import classes.console.TextColor;
 import classes.movie.Coordinates;
 import classes.movie.Movie;
+import classes.movie.MpaaRating;
+import classes.movie.Person;
 import classes.sql_managers.SQLManager;
 import exceptions.*;
 
@@ -16,11 +18,7 @@ public class CollectionManager {
 
     private static final String type = "ArrayList";
     private static final Date initDate = new Date();
-    private String[][] tableInformation;
-
-    public CollectionManager(){
-        renderMainJTable();
-    }
+    private Object[][] tableInformation;
 
     public List<Movie> getCollection() {
         return CollectionManager.collection;
@@ -83,16 +81,30 @@ public class CollectionManager {
     }
 
     public void renderMainJTable() {
-        String[][] renderedTable = new String[collection.size()][10];
-
+        Object[][] renderedTable = new Object[collection.size()][10];
         for (int i = 0; i < renderedTable.length; i++) {
             renderedTable[i] = collection.get(i).toSQLRepresentation();
         }
-
         this.tableInformation = renderedTable;
     }
 
-    public  String[][] getTableContent() {
+    public Object[][] getTableContent() {
         return tableInformation;
+    }
+
+    public static List<Class> getColumnsClasses() {
+        return new ArrayList<>() {{
+            add(String.class);
+            add(Coordinates.class);
+            //should be Date.sql but swing doesn't want to work with that type of date
+            add(Date.class);
+            add(Integer.class);
+            add(Integer.class);
+            add(Integer.class);
+            add(MpaaRating.class);
+            add(String.class);
+            add(Person.class);
+            add(String.class);
+        }};
     }
 }

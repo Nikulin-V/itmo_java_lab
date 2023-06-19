@@ -241,16 +241,17 @@ public class Movie implements Serializable {
         return movieString.toString();
     }
 
+//    public List<Class> getColumnsClasses(){
+//        Object[] fieldValues = {name , coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, userID, director, name};
+//        List<Class> classes = new ArrayList<>();
+//        for (int i = 0; i < fieldValues.length; i++) {
+//            classes.add(fieldValues[i].getClass());
+//        }
+//        return classes;
+//    }
 
-    public String[] toSQLRepresentation() {
-        Object[] fieldValues = {name , coordinates, creationDate, oscarsCount, goldenPalmCount, budget, mpaaRating, userID, director, name};
-        String[] arr = new String[fieldValues.length];
-
-        for (int i = 0; i < fieldValues.length; i++) {
-            arr[i] = fieldValues[i].toString();
-        }
-
-        return arr;
+    public Object[] toSQLRepresentation() {
+        return new Object[]{this.name, this.coordinates, this.creationDate, this.oscarsCount, this.goldenPalmCount, this.budget, this.mpaaRating, this.userID, this.director, this.name};
     }
 }
 

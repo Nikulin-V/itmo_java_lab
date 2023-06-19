@@ -25,7 +25,7 @@ public enum Languages {
                 return lang.index;
             }
         }
-        return -1;
+        return -997;
     }
 
 }

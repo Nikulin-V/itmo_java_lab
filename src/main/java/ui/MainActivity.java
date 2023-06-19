@@ -6,6 +6,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import ui.locale.Lang;
+import ui.locale.NumberCellRenderer;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -13,7 +14,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends JFrame {
@@ -38,7 +41,6 @@ public class MainActivity extends JFrame {
     private JPanel userInformationPanel;
     private final UserCredentials credentials;
     private JTabbedPane tabbedPane1;
-    private JPanel movieActionsButtonPanel;
     private JPanel rightMenuPanel;
     private JPanel tableSettingsPanel;
     private JButton addAddRandomWilButton;
@@ -46,6 +48,7 @@ public class MainActivity extends JFrame {
     private JButton remove_by_idButton;
     private JPanel sortPanel;
     private JLabel welcomeBackLabel;
+    private JPanel movieActionsButtonPanel;
     private Lang lang;
 
     public MainActivity(UserCredentials credentials) {
@@ -114,7 +117,7 @@ public class MainActivity extends JFrame {
         rightMenuPanel.setLayout(new GridLayoutManager(2, 1, new Insets(5, 10, 5, 5), -1, -1));
         collectionPanel.add(rightMenuPanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
         tableSettingsPanel = new JPanel();
-        tableSettingsPanel.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
+        tableSettingsPanel.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
         rightMenuPanel.add(tableSettingsPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tableSettingsPanel.add(clearCollectionButton, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         addAddRandomWilButton = new JButton();
@@ -129,7 +132,7 @@ public class MainActivity extends JFrame {
         sortPanel = new JPanel();
         sortPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         sortPanel.setName("Sort");
-        tableSettingsPanel.add(sortPanel, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
+        tableSettingsPanel.add(sortPanel, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
         sortASCButton.setIcon(new ImageIcon(getClass().getResource("/images/down_arrow_sorting.png")));
         sortASCButton.setText("");
         sortPanel.add(sortASCButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -137,6 +140,13 @@ public class MainActivity extends JFrame {
         sortDESCButton.setText("");
         sortPanel.add(sortDESCButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         sortPanel.add(selectSortByComboBox, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        movieActionsButtonPanel = new JPanel();
+        movieActionsButtonPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        tableSettingsPanel.add(movieActionsButtonPanel, new GridConstraints(4, 0, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, 1, null, null, null, 0, false));
+        deleteMovieButton.setInheritsPopupMenu(false);
+        deleteMovieButton.setLabel("");
+        movieActionsButtonPanel.add(deleteMovieButton, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        movieActionsButtonPanel.add(updateMovieButton, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         selectLanguageComboBox.setEditable(false);
         rightMenuPanel.add(selectLanguageComboBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
@@ -149,16 +159,9 @@ public class MainActivity extends JFrame {
         canvasRatingPanel.setForeground(new Color(-4489393));
         panel2.add(canvasRatingPanel, new GridConstraints(0, 0, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         canvasRatingPanel.setBorder(BorderFactory.createTitledBorder(null, "Рейтинг фильмов", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        movieInformationPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        movieInformationPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel2.add(movieInformationPanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         movieInformationPanel.setBorder(BorderFactory.createTitledBorder(null, "Дополнительная информация", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        movieActionsButtonPanel = new JPanel();
-        movieActionsButtonPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        movieInformationPanel.add(movieActionsButtonPanel, new GridConstraints(0, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        deleteMovieButton.setInheritsPopupMenu(false);
-        deleteMovieButton.setLabel("");
-        movieActionsButtonPanel.add(deleteMovieButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        movieActionsButtonPanel.add(updateMovieButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         movieInformationLabel.setText("Label");
         movieInformationPanel.add(movieInformationLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
@@ -177,8 +180,6 @@ public class MainActivity extends JFrame {
         componentsInitialization();
 
         selectLanguageComboBox.addActionListener(e -> {
-            //TODO
-            System.out.println(selectLanguageComboBox.getSelectedItem());
             lang.setLanguage(selectLanguageComboBox.getSelectedIndex());
             changeComponentsLanguage();
         });
@@ -217,27 +218,49 @@ public class MainActivity extends JFrame {
         collectionLabel.setText((lang.getString("collection_label")));
         selectSortByComboBox.setModel(getNewLanguageTableColumnsComboBoxModel());
         collectionTable.setColumnModel(getNewLanguageColumnModel());
+        collectionTable.setDefaultRenderer(Date.class, new DateCellRenderer(lang.getCurrentLocale()));
+        collectionTable.setDefaultRenderer(Integer.class, new NumberCellRenderer(lang.getCurrentLocale()));
     }
 
     private JTable getCollectionTable() {
         CollectionManager.readDB();
         CollectionManager collectionManager = new CollectionManager();
         collectionManager.renderMainJTable();
-        String[][] data = collectionManager.getTableContent();
-        DefaultTableModel tableModel = new DefaultTableModel(data, lang.getTableColumns());
+        Object[][] data = collectionManager.getTableContent();
+        DefaultTableModel tableModel = new DefaultTableModel(data, lang.getTableColumns()) {
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (collectionManager.getCollection().isEmpty()) {
+                    return Object.class;
+                }
+                return CollectionManager.getColumnsClasses().get(columnIndex);
+            }
+        };
         JTable table = new JTable(tableModel) {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
         table.setAutoCreateRowSorter(true);
-
+        table.getColumnModel().getColumn(2).setCellRenderer(new DateCellRenderer(lang.getCurrentLocale()));
+//        table.setDefaultRenderer(Date.class, new DateCellRenderer(lang.getCurrentLocale()));
+        table.setDefaultRenderer(Integer.class, new NumberCellRenderer(lang.getCurrentLocale()));
+//        TableColumn mpaartingColumn = table.getColumnModel().getColumn(6);
+//        JComboBox<String> comboBox = new JComboBox<>();
+//        comboBox.addItem("Snowboarding");
+//        comboBox.addItem("Rowing");
+//        comboBox.addItem("Chasing toddlers");
+//        comboBox.addItem("Speed reading");
+//        comboBox.addItem("Teaching high school");
+//        comboBox.addItem("None");
+//        mpaartingColumn.setCellEditor(new DefaultCellEditor(comboBox));
         scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         table.setBounds(10, 20, 150, 100);
         getContentPane().add(scrollPane);
-        table.setCellSelectionEnabled(true);
+        table.setRowSelectionAllowed(true);
         ListSelectionModel select = table.getSelectionModel();
         select.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         select.addListSelectionListener(this::tableCellClicked);
@@ -260,9 +283,10 @@ public class MainActivity extends JFrame {
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(collectionTable.getModel());
         collectionTable.setRowSorter(sorter);
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>(5);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>(1);
         sortKeys.add(new RowSorter.SortKey(columnIndexSortBy, SortOrder.DESCENDING));
         sorter.setSortKeys(sortKeys);
+        sorter.sort();
     }
 
     private void ascButtonSortClicked(ActionEvent e) {
@@ -271,9 +295,10 @@ public class MainActivity extends JFrame {
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(collectionTable.getModel());
         collectionTable.setRowSorter(sorter);
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>(5);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>(1);
         sortKeys.add(new RowSorter.SortKey(columnIndexSortBy, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
+        sorter.sort();
     }
 
     private JComboBox<Icon> getLanguageIconComboBox() {
@@ -281,11 +306,14 @@ public class MainActivity extends JFrame {
             add(new ImageIcon(getClass().getResource("/images/canada_flag.png")));
             add(new ImageIcon(getClass().getResource("/images/russia_flag.png")));
             add(new ImageIcon(getClass().getResource("/images/belorussia_flag.png")));
+            add(new ImageIcon(getClass().getResource("/images/hungarian_flag.png")));
+
+
         }};
         DefaultComboBoxModel<Icon> comboBoxModel = new DefaultComboBoxModel<>();
         comboBoxModel.addAll(iconList);
         JComboBox<Icon> comboBox = new JComboBox<>(comboBoxModel);
-        comboBox.setSelectedItem(lang.getCurrentLocaleIndex());
+        comboBox.setSelectedIndex(lang.getCurrentLocaleIndex());
         comboBox.setPreferredSize(new Dimension(50, 60));
         return comboBox;
     }
@@ -300,10 +328,12 @@ public class MainActivity extends JFrame {
     private DefaultComboBoxModel<String> getNewLanguageTableColumnsComboBoxModel() {
         return new DefaultComboBoxModel<>(lang.getTableColumns());
     }
+
+
     private DefaultTableColumnModel getNewLanguageColumnModel() {
         DefaultTableColumnModel columnModel = new DefaultTableColumnModel();
         for (int i = 0; i < lang.getTableColumns().length; i++) {
-            TableColumn tableColumn =  new TableColumn(i);
+            TableColumn tableColumn = new TableColumn(i);
             tableColumn.setHeaderValue(lang.getTableColumns()[i]);
             columnModel.addColumn(tableColumn);
         }

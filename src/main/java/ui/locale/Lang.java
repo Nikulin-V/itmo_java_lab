@@ -59,10 +59,19 @@ public class Lang {
                 currentLocale);
     }
 
+    public Locale getCurrentLocale() {
+        return currentLocale;
+    }
     public int getCurrentLocaleIndex() {
         return Languages.getIndex(currentLocaleTag);
     }
-
-
-
+    public String getCurrentLocaleTag() {
+        return currentLocaleTag;
+    }
+    public String changeNumberFormat(int number) {
+        return NumberFormat.getCurrencyInstance(currentLocale).format(number);
+    }
+    public String changeDateFormat(int number) {
+        return NumberFormat.getCurrencyInstance(currentLocale).format(number);
+    }
 }
