@@ -187,14 +187,6 @@
                               <text value="Clear"/>
                             </properties>
                           </component>
-                          <component id="1d0e4" class="javax.swing.JButton" binding="countByOscarsCountButton" default-binding="true">
-                            <constraints>
-                              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Count by Oscars count"/>
-                            </properties>
-                          </component>
                           <component id="7d84a" class="javax.swing.JButton" binding="countGreaterThanDirectorButton" default-binding="true">
                             <constraints>
                               <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -227,7 +219,7 @@
                               <text value="Count by Golden palm count"/>
                             </properties>
                           </component>
-                          <component id="b4e61" class="javax.swing.JButton" binding="infoButton">
+                          <component id="b4e61" class="javax.swing.JButton" binding="infoButton" custom-create="true">
                             <constraints>
                               <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>

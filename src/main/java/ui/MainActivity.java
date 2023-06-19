@@ -2,6 +2,7 @@ package ui;
 
 import classes.UserCredentials;
 import classes.collection.CollectionManager;
+import classes.commands.Info;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -47,7 +48,6 @@ public class MainActivity extends JFrame {
     private JButton removeByIdButton;
     private JPanel sortPanel;
     private JLabel welcomeBackLabel;
-    private JButton countByOscarsCountButton;
     private JButton countGreaterThanDirectorButton;
     private JButton removeLowerButton;
     private JButton oscarsCountButton;
@@ -143,9 +143,6 @@ public class MainActivity extends JFrame {
         tableSettingsPanel.add(addButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearCollectionButton.setText("Clear");
         tableSettingsPanel.add(clearCollectionButton, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        countByOscarsCountButton = new JButton();
-        countByOscarsCountButton.setText("Count by Oscars count");
-        tableSettingsPanel.add(countByOscarsCountButton, new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         countGreaterThanDirectorButton = new JButton();
         countGreaterThanDirectorButton.setText("Count greater than Director");
         tableSettingsPanel.add(countGreaterThanDirectorButton, new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -158,7 +155,6 @@ public class MainActivity extends JFrame {
         goldenPalmButton = new JButton();
         goldenPalmButton.setText("Count by Golden palm count");
         tableSettingsPanel.add(goldenPalmButton, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        infoButton = new JButton();
         infoButton.setText("Info");
         tableSettingsPanel.add(infoButton, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         updateMovieButton.setHorizontalTextPosition(0);
@@ -213,6 +209,15 @@ public class MainActivity extends JFrame {
 
         addButton = new JButton();
         addButton.addActionListener((ActionEvent e) -> new AddPopup());
+
+        infoButton = new JButton();
+        infoButton.addActionListener(this::infoButtonClicked);
+    }
+
+    private void infoButtonClicked(ActionEvent e) {
+        String info = (String) new Info().execute(null, credentials.getUsername()).getData();
+        info = "<html><p style=\"white-space: nowrap; font-size: 14px;\">" + info.replace("\n", "<br>") + "</p></html>";
+        new InfoPopup("Информация о коллекции", info, new Color(39, 169, 169), 600, 300);
     }
 
     private void componentsInitialization() {

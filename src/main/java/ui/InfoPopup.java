@@ -18,13 +18,13 @@ public class InfoPopup extends JFrame {
     private final String message;
     private final Color messageColor;
 
-    InfoPopup(String title, String message, Color color) {
+    InfoPopup(String title, String message, Color color, int width, int height) {
         this.message = message == null ? "Текст сообщения" : message;
         this.messageColor = color == null ? new Color(0, 0, 0) : color;
         $$$setupUI$$$();
         setContentPane(mainPanel);
         setTitle(title);
-        pack();
+        setSize(width, height);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -40,7 +40,7 @@ public class InfoPopup extends JFrame {
     }
 
     public static void main(String[] args) {
-        new InfoPopup("Создание фильма", "Фильм добавлен успешно", new Color(0, 80, 0));
+        new InfoPopup("Создание фильма", "Фильм добавлен успешно", new Color(0, 80, 0), 400, 200);
     }
 
     /**
@@ -54,11 +54,14 @@ public class InfoPopup extends JFrame {
         createUIComponents();
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(3, 1, new Insets(10, 10, 10, 10), -1, -1));
+        mainPanel.setOpaque(false);
+        mainPanel.setPreferredSize(new Dimension(500, 300));
+        mainPanel.setRequestFocusEnabled(false);
         Font messageLabelFont = this.$$$getFont$$$(null, Font.BOLD, 16, messageLabel.getFont());
         if (messageLabelFont != null) messageLabel.setFont(messageLabelFont);
         messageLabel.setHorizontalAlignment(0);
         messageLabel.setHorizontalTextPosition(0);
-        mainPanel.add(messageLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(300, 100), new Dimension(300, 100), new Dimension(500, 300), 0, false));
+        mainPanel.add(messageLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(300, 100), new Dimension(300, 100), new Dimension(1920, 1080), 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_SOUTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

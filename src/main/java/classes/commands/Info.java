@@ -3,7 +3,6 @@ package classes.commands;
 import classes.Response;
 import classes.abs.NamedCommand;
 import classes.collection.CollectionManager;
-import classes.console.TextColor;
 import interfaces.Commandable;
 
 public class Info extends NamedCommand implements Commandable {
@@ -15,11 +14,10 @@ public class Info extends NamedCommand implements Commandable {
     @Override
     public Response execute(Object inputData, String userID) {
         CollectionManager collectionManager = new CollectionManager();
-        return new Response(0, TextColor.cyan(
-                "Информация о коллекции:\n" +
-                        "\tТип коллекции: " + CollectionManager.getType() + "\n" +
-                        "\tДата инициализации: " + CollectionManager.getInitDate() + "\n" +
-                        "\tКоличество элементов: " + collectionManager.getCollection().size()
-        ));
+        return new Response(0,
+                "Тип коллекции: " + CollectionManager.getType() + "\n" +
+                        "Дата инициализации: " + CollectionManager.getInitDate() + "\n" +
+                        "Количество элементов: " + collectionManager.getCollection().size()
+        );
     }
 }

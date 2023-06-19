@@ -150,7 +150,7 @@ public class AddPopup extends JFrame {
         if (obj instanceof Movie) {
             SQLManager.insertMovie((Movie) obj);
             this.dispose();
-            new InfoPopup("Создание фильма", "Фильм добавлен успешно", new Color(0, 80, 0));
+            new InfoPopup("Создание фильма", "Фильм добавлен успешно", new Color(0, 80, 0), 400, 200);
         } else printErrorMessage((String) obj);
     }
 
